@@ -1,0 +1,142 @@
+{% extends 'adminside/basedashboard.html' %}
+{% block title %}Products{% endblock %}
+{% load static %}
+{% block dashbody %}
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            {% comment %} <h2 class="content-title card-title">User List</h2> {% endcomment %}
+            {% comment %} <p>All Users of Refined Radiance.</p> {% endcomment %}
+        </div>
+
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <div class="row gx-3">
+                <div class="col-lg-2 col-6 col-md-3">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#addCategory">
+                        <button type="submit" class="btn btn-primary"><i class="ti ti-plus"></i> Add product</button>
+
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 me-auto">
+                    <input type="text" placeholder="Search..." class="form-control" />
+                </div>
+
+                <div class="col-lg-2 col-6 col-md-3">
+                    <select class="form-select">
+                        <option>sort</option>
+                        <option>Show 30</option>
+                        <option>Show 40</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+        <!-- card-header end// -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price</th>
+                            <th scope="col" class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in product %}
+                        <tr>
+                            <td style="text-align: center;"><b>{{user.id}}</td>
+                            <td>
+                                <div style="width: 60px;" class="overflow-hidden">
+                                    <img class="w-100" src=" {{user.product_image.url}}" alt="">
+                                </div>
+                            </td>
+
+                            </td>
+                            <td><b>{{ user.product_name }}</td>
+                            <td><b>{{ user.category }}</td>
+                            <td><b>{{ user.product_quantity }}</td>
+                            <td><b>{{ user.product_price }}</td>
+                            <td><b></td>
+                            <td><b></td>   
+                           
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- table-responsive //end -->
+        </div>
+        <!-- card-body end// -->
+    </div>
+    <!-- card end// -->
+
+</section>
+
+<div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Product</h1>
+                <br>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form action="{% url 'addproduct' %}" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    <div style="width: 100px;" class="">
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Name</label>
+                        <input name="product_name" value="" type="text" id="form3Example3cg"
+                            class="form-control form-control-lg" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Price</label>
+                        <input name="product_price" value="" type="text" id="form3Example3cg"
+                            class="form-control form-control-lg" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Image</label>
+                        <input name="product_image" type="file" accept="image/png, image/jpeg, image/svg, image/avif"
+                            class="form-control" id="image-input" />
+                        <small id="image-error" class="text-danger text-center"></small>
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Category</label>
+                        <select class="form-select">
+                            {% for c in category %}
+                            <option value="{{c.id}}">{{c.categories}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Quantity</label>
+                        <input name="quantity" value="" type="text" id="form3Example3cg"
+                            class="form-control form-control-lg" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3cg">Description</label>
+                        <input name='product_description' value="" type="text" id="form3Example3cg"
+                            class="form-control form-control-lg" />
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light"
+                            type="submit">Save </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <style>
+    .message {
+        padding: 2px;
+        margin-bottom: 2px;
+    }
+  
+    .message.success {
+        color: rgb(54, 169, 68);
+        background-color: rgb(255, 255, 255);
+    }
+  
+    .message.warning {
+        color: rgb(252, 248, 6);
+        background-color: rgb(255, 255, 255);
+    }
+  
+    .message.error {
+        color: rgb(255, 0, 0);
+        background-color: rgb(255, 255, 255);
+    }
+  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/png" href="{% static 'images/icons/icon.png' %}" />
+  <link rel="stylesheet" href="{% static 'asset1/css/styles.min.css'%}" />
+  <title>{% block title %}{% endblock  %}  </title>
+
+ {% block adminbody %}  {% endblock  %}
+ 
+</head>
+
+  <script src="{% static 'asset1/libs/jquery/dist/jquery.min.js'%}"></script>
+  <script src="{% static 'asset1/libs/bootstrap/dist/js/bootstrap.bundle.min.js'%}"></script>
+
+
+</html>

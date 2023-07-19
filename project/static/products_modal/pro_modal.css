@@ -1,0 +1,86 @@
+/* CSS for Add Product Modal */
+
+.modal-content {
+    border-radius: 10px;
+  }
+  
+  .modal-header {
+    background-color: #f8f9fa;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  .modal-title {
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .modal-body {
+    padding-top: 0;
+  }
+  
+  .form-control {
+    border-radius: 10px;
+  }
+  
+  .form-outline {
+    position: relative;
+  }
+  
+  .form-label {
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    color: #888;
+    font-size: 14px;
+    pointer-events: none;
+    transition: all 0.2s ease-out;
+  }
+  
+  .form-control:focus + .form-label,
+  .form-control:not(:placeholder-shown) + .form-label {
+    top: -8px;
+    left: 8px;
+    font-size: 12px;
+    color: #333;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+  }
+  
+  .gradient-custom-4 {
+    background-image: linear-gradient(to right, #dd5e89, #f7bb97);
+  }
+  
+  .text-light {
+    color: #fff;
+  }
+  
+  .w-50 {
+    width: 50%;
+  }
+  
+  /* Adjustments for specific elements */
+  
+  .category-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    background-color: #eee;
+  }
+  
+  /* Additional styles for checkboxes */
+  
+  input[type="checkbox"] {
+    margin-top: 10px;
+  }
+  
+  

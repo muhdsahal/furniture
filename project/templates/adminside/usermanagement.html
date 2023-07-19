@@ -1,0 +1,93 @@
+{% extends 'adminside/basedashboard.html' %}
+{% block title %}User_management{% endblock %}
+{% load static %}
+{% block dashbody %}
+
+<div class="container-fluid">
+
+
+  <section class="content-main">
+
+    <div class="card mb-4">
+      <header class="card-header">
+        <div class="row gx-3">
+          <div class="col-lg-4 col-md-6 me-auto">
+            <input type="text" placeholder="Search..." class="form-control" />
+          </div>
+          <div class="col-lg-2 col-6 col-md-3">
+            <select class="form-select">
+              <option>status</option>
+              <option>Blocked</option>
+              <option>Verified</option>
+            </select>
+          </div>
+          <div class="col-lg-2 col-6 col-md-3">
+            <select class="form-select">
+              <option>Show 20</option>
+              <option>Show 30</option>
+              <option>Show 40</option>
+            </select>
+          </div>
+        </div>
+      </header>
+      <!-- card-header end// -->
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td style="text-align: center;">{{user.id}}</td>
+                <td><b>{{ user.first_name }}</td>
+                <td><b>{{ user.username }}</td>
+                <td><b>{{ user.email }}</td>
+
+
+                <td>{% if user.is_active %}
+                  <b style="color: rgb(25, 228, 25);">active
+
+                    {% else %}
+                    <b style="color: red">Deactive
+                      {% endif %}
+                </td>
+
+                <td class="text-end">
+
+                  {% if user.is_active %}
+                  <a href="{% url 'blockuser' user.id %}" class="btn btn-md rounded font-sm"
+                    style="background-color: red; color: white;">Block</a>
+
+                  {% else %}
+                  <a href="{% url 'blockuser' user.id %}" class="btn btn-md rounded font-sm"
+                    style="background-color: green; color: white;">Unblock</a>
+
+                  {% endif %}
+                 
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- table-responsive //end -->
+      </div>
+      <!-- card-body end// -->
+    </div>
+    <!-- card end// -->
+
+  </section>
+
+
+</div>
+
+{% endblock %}
