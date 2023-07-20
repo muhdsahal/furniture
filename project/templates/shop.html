@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}aranoz{% endblock %}
+{% load static %}
+{% block body %}
+
+
+<!--
+<section class="product_list section_padding">
+  <div class="container">
+      <div class="row justify-content-center">
+          <div class="col-lg-12">
+              <div class="section_tittle text-center">
+                  <h2>shop </h2>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-lg-12">
+              <div class="product_list_slider owl-carousel">
+                  <div class="single_product_list_slider">
+                      <div class="row align-items-center justify-content-between">
+                          <div class="col-lg-3 col-sm-6">
+                          {% for product in products  %}
+                              <div class="single_product_item">
+                                  <img src="{{product.product_image.url}}" alt="im">
+                                  <div class="single_product_text">
+                                      <h4>{{product.product_name}}</h4>
+                                      <h3>{{product.product_price}}</h3>
+                                      <a href="#" class="add_cart">+ add to cart<i class="ti-heart"></i></a>
+                                  </div>
+                              </div>
+                              {% endfor %}
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>-->
+
+  <style>
+    /* Add this CSS for grid-based layout */
+    .product_grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .single_product_item {
+      /* Optional: Add any styling you want for each product item */
+      /* For example, you can add a fixed height for each product item */
+      /* height: 300px; */
+    }
+  </style>
+
+<section class="product_list section_padding">
+<div class="container">
+    <div class="row justify-content-center">
+    <div class="col-lg-12">
+        <div class="section_tittle text-center">
+        <h2>Shop</h2>
+        </div>
+    </div>
+    </div>
+    <div class="product_list_slider owl-carousel">
+    <div class="product_grid">
+        {% for product in products %}
+        <div class="single_product_item">
+        <img src="{{product.product_image.url}}" alt="img">
+        <div class="single_product_text">
+            <h4>{{product.product_name}}</h4>
+            <h3>{{product.product_price}}</h3>
+            <a href="#" class="add_cart">+ Add to Cart<i class="ti-heart"></i></a>
+        </div>
+        </div>
+        {% endfor %}
+    </div>
+    </div>
+</div>
+</section>
+
+
+{% endblock %}

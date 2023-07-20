@@ -22,8 +22,8 @@ def addproduct(request):
     
     # product deatil
     if request.method == 'POST':
-        name=request.POST['product_name']
-        price=request.POST['product_price']
+        name=request.POST.get('product_name')
+        price=request.POST.get('product_price')
         image=request.FILES.get('product_image',None)
         quantity=request.POST.get('quantity')
         category_id=request.POST.get('category')
@@ -41,16 +41,29 @@ def addproduct(request):
         if not image:
             messages.error(request,'image not found')
             return redirect('product')
-        category=Category.objects.get(id=category_id)
+        if category_id:
+            category=Category.objects.get(id=category_id)
+        else:
+            category = None
 
         # save
         product=Product(
             product_image=image,
             product_name=name,
             category=category,
+            product_price=price,
             product_quantity=quantity,
         
         )
         product.save()
         return redirect('product')
     return render(request,'product/products.html')
+
+def deleteproduct(request,deleteproduct_slug):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
+    
+    pro = Product.objects.get(slug=deleteproduct_slug)
+    pro.delete()
+    
+    return redirect('product')

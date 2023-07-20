@@ -208,7 +208,7 @@ def forgot_password(request):
                 UserOTP.objects.create(user=user, otp=user_otp)
                 message = f'Hello {user.username},\nYour OTP to verify your account for Aranoz is {user_otp}\nThank you.'
                 send_mail(
-                    "Welcome to Plantex - Verify Your Email",
+                    "Welcome to Aranoz - Verify Your Email",
                     message,
                     settings.EMAIL_HOST_USER,
                     [user.email],

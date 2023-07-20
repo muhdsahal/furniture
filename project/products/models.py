@@ -5,11 +5,11 @@ from categories.models import Category
 
 
 class Product(models.Model):
-    product_name = models.CharField(unique=True, max_length=50)
-    product_price = models.IntegerField()
+    product_name = models.CharField(unique=True, max_length=50,null=True, blank=True)
+    product_price = models.IntegerField(null=True, blank=True)
     product_image = models.ImageField(upload_to='photos/product', default='No image available')
-    product_quantity=models.IntegerField()
-    category = models.ForeignKey(Category,on_delete=models.CASCADE)
+    product_quantity=models.IntegerField(null=True, blank=True)
+    category = models.ForeignKey(Category,on_delete=models.CASCADE,null=True, blank=True)
     slug = models.SlugField(max_length=250, unique=True)
     def save(self, *args, **kwargs):
         if not self.slug:

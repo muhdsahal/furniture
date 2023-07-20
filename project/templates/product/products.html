@@ -101,7 +101,7 @@
                     </div>
                     <div class="form-outline mb-4">
                         <label class="form-label" for="form3Example3cg">Price</label>
-                        <input name="product_price" value="" type="text" id="form3Example3cg"
+                        <input name="product_price"  type="number" id="form3Example3cg"
                             class="form-control form-control-lg" />
                     </div>
                     <div class="form-outline mb-4">
@@ -112,15 +112,14 @@
                     </div>
                     <div class="form-outline mb-4">
                         <label class="form-label" for="form3Example3cg">Category</label>
-                        <select class="form-select">
+                        <select class="form-select" name="category">
                             {% for c in category %}
                             <option value="{{c.id}}">{{c.categories}}</option>
                             {% endfor %}
-                        </select>
                     </div>
                     <div class="form-outline mb-4">
                         <label class="form-label" for="form3Example3cg">Quantity</label>
-                        <input name="quantity" value="" type="text" id="form3Example3cg"
+                        <input name="quantity" value="" type="number" id="form3Example3cg"
                             class="form-control form-control-lg" />
                     </div>
                     <div class="form-outline mb-4">

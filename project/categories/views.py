@@ -14,7 +14,7 @@ def categories (request):
 
 
 @login_required(login_url='admin_login1')
-def cretecategory(request):
+def createcategory(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
     
@@ -41,4 +41,48 @@ def cretecategory(request):
         category_instance.save()
          
         return redirect('categories')
+    
 
+def deletecategory(request,deletecategory_id):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
+    cate=Category.objects.get(id=deletecategory_id)
+    cate.delete()
+    return redirect('categories')
+
+@login_required(login_url='admin_login1')
+def editcategory(request,editcategory_id):
+    if not request.user.is_superuser:
+        return redirect ('admin_login1')
+    if request.method == 'POST':
+        name=request.POST.get('categories')
+        description=request.POST.get('categories_discription')
+
+
+        try:
+            cate=Category.objects.get(slug=editcategory_id)
+            image=request.FILES.get('image')
+            if image:
+                cate.categories_image=image
+                cate.save()
+        except Category.DoesNotExist:
+            messages.error(request,'image not found')
+            return redirect('categories')
+        if name.strip()=='':
+            messages.error(request,'Name field is empty')
+            return redirect('categories')
+        if Category.objects.filter(categories=name).exists():
+            check=Category.objects.get(slug=editcategory_id)
+
+            if name == check.categories:
+                pass
+            else:
+                messages.error(request,'category images already exist !')
+                return redirect('categories')
+            
+        cate=Category.objects.get(slug=editcategory_id)
+        cate.categories = name
+        cate.categories_description=description
+        cate.save()
+        return redirect('categories')
+    # return redirect('categories')
