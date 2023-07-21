@@ -8,7 +8,6 @@ class Category(models.Model):
     categories = models.CharField(max_length=100)
     categories_description = models.TextField(max_length=300)  # This is an example of a TextField for the description
     categories_image = models.ImageField(upload_to='categories_images/')
-    
     slug = models.SlugField(max_length=250,unique=True)
 
     def save(self, *args, **kwargs):

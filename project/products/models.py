@@ -11,6 +11,8 @@ class Product(models.Model):
     product_quantity=models.IntegerField(null=True, blank=True)
     category = models.ForeignKey(Category,on_delete=models.CASCADE,null=True, blank=True)
     slug = models.SlugField(max_length=250, unique=True)
+    is_availble=models.BooleanField(default=False)
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.product_name)

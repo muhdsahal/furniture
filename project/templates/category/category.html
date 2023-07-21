@@ -93,10 +93,15 @@
           <!-- edit -->
           <td>
              <!-- Button trigger modal -->
-            <button type="button" class="btn btn-danger text-black"  data-bs-toggle="modal" data-bs-target="#confirmEdit{{forloop.counter}}">
+            <button type="button" class="btn btn-danger text-white"  data-bs-toggle="modal" data-bs-target="#confirmEdit{{forloop.counter}}">
               edit
             </button>  
-          
+            <style>
+              /* Custom CSS rule to change the button color to blue */
+              .btn-danger {
+                background-color: #33FF74;
+              }
+            </style>
          
             <!--Edit Modal -->
              <div class="modal fade" id="confirmEdit{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -121,7 +126,7 @@
                       </div>
 
                       <div class="form-outline mb-4">
-                        <input name='categories' value="{{c.categories}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
+                        <input name='categories' value="{{ c.categories }}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
                         <label class="form-label" for="form3Example3cg">Category name</label>
                       </div>
                     <div class="form-outline mb-4">
@@ -154,7 +159,7 @@
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      delete Category {{c.categories }}
+                      delete Category {{ c.categories }}
                     </div>
                     <div class="modal-footer">
                         <!-- one here -->
