@@ -26,19 +26,19 @@
     <div class="row justify-content-center">
     <div class="col-lg-12">
         <div class="section_tittle text-center">
-        <h2>Shop</h2>
+        <h2>category</h2>
         </div>
     </div>
     </div>
     <div class="product_list_slider owl-carousel">
     <div class="product_grid">
-        {% for product in products %}
+        {% for item in categories %}
         <div class="single_product_item">
-        <img src="{{product.product_image.url}}" alt="img">
+        <img src="{{item.categories_image.url}}" alt="img">
         <div class="single_product_text">
-            <h4>{{product.product_name}}</h4>
-            <h3>{{product.product_price}}</h3>
-            <a href="#" class="add_cart">+ Add to Cart<i class="ti-heart"></i></a>
+            <h4>{{item.categories}}</h4>
+            <h3>{{item.categories_description}}</h3>
+            <a href="#" class="add_cart"> See More<i class="ti-heart"></i></a>
         </div>
         </div>
         {% endfor %}

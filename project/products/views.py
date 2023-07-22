@@ -139,12 +139,12 @@ def editproduct(request,editproduct_id):
         
         return redirect('product')
     else:
-        dict_list={
+        contex={
             'product':product,
             'category':Category.objects.all(),
 
         }
-        return render (request,'product/editproduct.html',dict_list)
+        return render (request,'product/editproduct.html',contex)
 
     
 

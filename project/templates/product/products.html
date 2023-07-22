@@ -30,76 +30,139 @@
             </div>
         </header>
         <!-- card-header end// -->
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Id</th>
-                            <th scope="col">Image</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Price</th>
-                            <th scope="col" class="text-end">Action</th>
-                            <th scope="col"></th> 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in product %}
-                        <tr>
-                            <td style="text-align: center;"><b>{{user.id}}</td>
-                            <td>
-                                <div style="width: 60px;" class="overflow-hidden">
-                                    <img class="w-100" src=" {{ user.product_image.url }}" alt="">
-                                </div>
-                            </td>
 
-                            </td>
-                            <td><b>{{ user.product_name }}</td>
-                            <td><b>{{ user.category }}</td>
-                            <td><b>{{ user.product_quantity }}</td>
-                            <td><b>{{ user.product_price }}</td>
-                            <td>
-                                <!-- <a href="{% url 'deleteproduct' user.slug %}" type="button" class="btn btn-warning">edit</a> -->
-                                <a type="submit" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.slug }}"  class="btn btn-danger">delete</a>
-                                
-                                <div class="modal fade" id="deleteModal{{ user.slug }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="deleteModalLabel">Delete Product</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Are you sure you want to delete this product?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                <a href="{% url 'deleteproduct' user.slug %}" class="btn btn-danger">Delete</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            
-                            </td>
-                            <td><b></td>   
-                           
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+<div class="card-body">
+<div class="table-responsive">
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Image</th>
+            <th scope="col">Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th scope="col" class="text-end">Action</th>
+            <th scope="col"></th> 
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in product %}
+        <tr>
+            <td style="text-align: center;"><b>{{c.id}}</td>
+            <td>
+                <div style="width: 60px;" class="overflow-hidden">
+                    <img class="w-100" src=" {{ c.product_image.url }}" alt="img">
+                </div>
+            </td>
+
+            </td>
+            <td><b>{{ c.product_name }}</td>
+            <td><b>{{ c.category }}</td>
+            <td><b>{{ c.product_quantity }}</td>
+            <td><b>{{ c.product_price }}</td>
+            <td>
+                <a type="submit"  data-bs-toggle="modal" data-bs-target="#confirmEdit{{c.slug}}" class="btn btn-danger">edit</a>
+            </td>    
+            <!--softdelete product-->
+            {% if c.slug %}
+            <td>
+            <a type="submit" data-bs-toggle="modal" data-bs-target="#deleteModal{{ c.slug }}"  class="btn btn-danger">delete</a>
+            </td>
+            {% else %}
+            <td>
+                <h6>product  slug not available </h6>
+
+            </td>
+            {% endif %}
+            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!--delete product-->
+<div class="modal fade" id="deleteModal{{ c.slug }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <!-- table-responsive //end -->
+            <div class="modal-body">
+                Are you sure you want to delete this product?
+            </div>
+            <div class="modal-footer">
+                <a href="{% url 'product'  %}" class="btn btn-secondary" data-dismiss="modal">Cancel</a>
+                <a href="{% url 'deleteproduct' c.slug %}" class="btn btn-danger">Delete</a>
+            </div>
         </div>
-        <!-- card-body end// -->
     </div>
-    <!-- card end// -->
+</div>
+                            
+                          
+                           
+          
 
-</section>
+<!-- 
+<a type="button" class="fs-4 btn btn-warning" data-bs-toggle="modal" data-bs-target="#confirmEdit{{forloop.counter}}">
+    <i title="" class="fa fa-edit">edit</i>
+  </a> 
+-->
+  <!--Edit Modal -->
+   <div class="modal fade" id="confirmEdit{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
 
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Product</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form  method="POST" action="{% url 'editproduct' c.slug %}"  enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-outline mb-4">
+              <input name='product_name' value="{{c.product_name}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
+              <label class="form-label" for="form3Example3cg">Product name</label>
+            </div>
+            <div class="form-outline mb-4">
+              <input name='product_price' value="{{c.product_price}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
+              <label class="form-label" for="form3Example3cg">Price</label>
+            </div>
+        
+            <div class="form-outline mb-4">
+              <select class="form-select form-select-sm mt-3" aria-label=".form-select-sm example" name="category">
+                {% for c in category %}
+                <option value="{{ c.id }}">{{ c.categories }}</option>
+                {% endfor %}
+            </select>
+              <label class="form-label" for="form3Example3cg">Category</label>
+            </div>
+          <div class="form-outline mb-4">
+            <input name='product_desciption' value="{{c.product_desciption}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
+            <label class="form-label" for="form3Example3cg">Disciption</label>
+          </div>
+          
+          <div class="form-outline mb-4">
+            <label class="form-label">Is Availble</label>
+            <input type="checkbox" name='checkbox'>
+          </div> 
+        </div>
+           <div class="d-flex justify-content-center">
+              <button type="submit"
+                class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light mb-3" type="submit" >Save Changes</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+   </div>
+
+<!--add product-->
 <div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -144,8 +207,8 @@
                     </div>  
                     
                     <div class="form-outline mb-4">
-                        <label class="form-label" for="form3Example3cg">Description</label>
-                        <input name='product_description'  type="text" id="form3Example3cg"
+                        <label class="form-label" for="form3Example3cg">Desciption</label>
+                        <input name='product_desciption'  type="text" id="form3Example3cg"
                             class="form-control form-control-lg" />
                     </div>
 
@@ -158,5 +221,11 @@
         </div>
     </div>
 </div>
+</section>
+
+
+
+
+
 
 {% endblock %}
