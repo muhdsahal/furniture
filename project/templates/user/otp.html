@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% comment %} {% block title %}OTP{% endblock %} {% endcomment %}
 
 {% block body %}
 
@@ -40,7 +39,7 @@
                                 <button type="submit" value="submit" class="btn_3">
                                     varifie
                                 </button>
-                                <a class="lost_pass" href="#">forget password?</a>
+                                <a class="lost_pass" href="{% url 'forgot_password' %}">forget password?</a>
                             </div>
                         </form>
                     </div>

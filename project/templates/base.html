@@ -65,8 +65,7 @@
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdownPages">
                                         <a class="dropdown-item" href="{% url 'user_login1' %}">Login</a>
-                                        <a class="dropdown-item" href="{% url 'product_details'%}">Product Checkout</a>
-                                        <a class="dropdown-item" href="#">Shopping Cart</a>
+                                        {% comment %} <a class="dropdown-item" href="{% url 'product_details' product_id=product.id %}">Shopping Cart</a> {% endcomment %}
                                         <a class="dropdown-item" href="#">Confirmation</a>
                                         <a class="dropdown-item" href="#">Elements</a>
                                     </div>

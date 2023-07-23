@@ -9,6 +9,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.views.decorators.csrf import csrf_protect
 # email verification
 from user.models import UserOTP
+from user.models import ForgotPasswordForm
 
 import re
 from django.core.validators import validate_email
@@ -93,9 +94,9 @@ def user_signup(request):
             user.save()
             user_otp = random.randint(100000, 999999)
             UserOTP.objects.create(user=user, otp=user_otp)
-            message = f'Hello {user.username},\nYour OTP to verify your account for Plantex is {user_otp}\nThank you.'
+            message = f'Hello {user.username},\nYour OTP to verify your account for Aranoz  is {user_otp}\nThank you.'
             send_mail(
-                "Welcome to Plantex - Verify Your Email",
+                "Welcome to Aranoz - Verify Your Email",
                 message,
                 settings.EMAIL_HOST_USER,
                 [user.email],
@@ -155,56 +156,109 @@ def logout1(request):
     return redirect('home') 
 
 
+# def forgot_password(request):
+#     if request.method == 'POST':
+        
+#         get_otp = request.POST.get('otp')
+
+#         if get_otp:
+#             get_email = request.POST.get('email')
+#             user = User.objects.get(email=get_email)
+
+#             if int(get_otp) == UserOTP.objects.filter(user=user).last().otp:
+#                 password1 = request.POST.get('password1')
+#                 password2 = request.POST.get('password2')
+#                 context = {'pre_otp': get_otp}
+
+#                 if password1.strip() == '' or password2.strip() == '':
+#                     messages.error(request, 'Fields cannot be empty!')
+#                     return render(request, 'user\password_forgot.html', {'otp': True, 'user': user, 'pre_otp': get_otp})
+
+#                 elif password1 != password2:
+#                     messages.error(request, 'Passwords do not match!')
+#                     return render(request, 'user\password_forgot.html', {'otp': True, 'user': user, 'pre_otp': get_otp})
+
+#                 password_valid = validate_password(password1)
+#                 if not password_valid:
+#                     messages.error(request, 'Please enter a valid password')
+#                     return render(request, 'user\password_forgot.html', {'otp': True, 'user': user, 'pre_otp': get_otp})
+
+#                 user.set_password(password1)
+#                 user.save()
+#                 UserOTP.objects.filter(user=user).delete()
+#                 messages.success(request, 'Your password has been changed!')
+#                 return redirect('user_login1')
+#             else:
+#                 messages.warning(request, 'You entered a wrong OTP')
+#                 return render(request, 'user\password_forgot.html', {'otp': True, 'user': user})
+#         else:
+#             email = request.POST['email']
+
+#             if email.strip() == '':
+#                 messages.error(request, 'Fields cannot be empty!')
+#                 return render(request, 'user\password_forgot.html')
+
+#             email_check = validate_email(email)
+#             if not email_check:
+#                 messages.error(request, 'Invalid email!')
+#                 return render(request, 'user\password_forgot.html')
+
+#             if User.objects.filter(email=email).exists():
+#                 user = User.objects.get(email=email)
+#                 user_otp = random.randint(100000, 999999)
+#                 UserOTP.objects.create(user=user, otp=user_otp)
+#                 message = f'Hello {user.username},\nYour OTP to verify your account for Aranoz is {user_otp}\nThank you.'
+#                 send_mail(
+#                     "Welcome to Aranoz - Verify Your Email",
+#                     message,
+#                     settings.EMAIL_HOST_USER,
+#                     [user.email],
+#                     fail_silently=False
+#                 )
+#                 return render(request, 'user\password_forgot.html', {'otp': True, 'user': user})
+#             else:
+#                 messages.error(request, 'Email does not exist!')
+#                 return render(request, 'user\password_forgot.html')
+#     return render(request, 'user\password_forgot.html')
+
+# def forgot_password(request):
+#     if request.method == 'POST':
+#         form = ForgotPasswordForm(request.POST)
+
+#         if form.is_valid():
+#             email = form.cleaned_data['email']
+#             user_otp = random.randint(100000, 999999)
+
+#             if User.objects.filter(email=email).exists():
+#                 user = User.objects.get(email=email)
+#                 UserOTP.objects.create(user=user, otp=user_otp)
+#                 message = f'Hello {user.username},\nYour OTP to verify your account for Aranoz is {user_otp}\nThank you.'
+#                 send_mail(
+#                     "Welcome to Aranoz - Verify Your Email",
+#                     message,
+#                     settings.EMAIL_HOST_USER,
+#                     [user.email],
+#                     fail_silently=False
+#                 )
+#                 return render(request, 'user/password_forgot.html', {'otp': True, 'user': user})
+#             else:
+#                 messages.error(request, 'Email does not exist!')
+#     else:
+#         form = ForgotPasswordForm()
+
+#     return render(request, 'user/password_forgot.html', {'form': form})
+
+
 def forgot_password(request):
     if request.method == 'POST':
-        
-        get_otp = request.POST.get('otp')
+        form = ForgotPasswordForm(request.POST)
 
-        if get_otp:
-            get_email = request.POST.get('email')
-            user = User.objects.get(email=get_email)
-
-            if int(get_otp) == UserOTP.objects.filter(user=user).last().otp:
-                password1 = request.POST.get('password1')
-                password2 = request.POST.get('password2')
-                context = {'pre_otp': get_otp}
-
-                if password1.strip() == '' or password2.strip() == '':
-                    messages.error(request, 'Fields cannot be empty!')
-                    return render(request, 'user\password_forgot.html', {'otp': True, 'user': user, 'pre_otp': get_otp})
-
-                elif password1 != password2:
-                    messages.error(request, 'Passwords do not match!')
-                    return render(request, 'user\password_forgot.html', {'otp': True, 'user': user, 'pre_otp': get_otp})
-
-                password_valid = validate_password(password1)
-                if not password_valid:
-                    messages.error(request, 'Please enter a valid password')
-                    return render(request, 'user\password_forgot.html', {'otp': True, 'user': user, 'pre_otp': get_otp})
-
-                user.set_password(password1)
-                user.save()
-                UserOTP.objects.filter(user=user).delete()
-                messages.success(request, 'Your password has been changed!')
-                return redirect('user_login1')
-            else:
-                messages.warning(request, 'You entered a wrong OTP')
-                return render(request, 'user\password_forgot.html', {'otp': True, 'user': user})
-        else:
-            email = request.POST['email']
-
-            if email.strip() == '':
-                messages.error(request, 'Fields cannot be empty!')
-                return render(request, 'user\password_forgot.html')
-
-            email_check = validate_email(email)
-            if not email_check:
-                messages.error(request, 'Invalid email!')
-                return render(request, 'user\password_forgot.html')
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            user_otp = random.randint(100000, 999999)
 
             if User.objects.filter(email=email).exists():
                 user = User.objects.get(email=email)
-                user_otp = random.randint(100000, 999999)
                 UserOTP.objects.create(user=user, otp=user_otp)
                 message = f'Hello {user.username},\nYour OTP to verify your account for Aranoz is {user_otp}\nThank you.'
                 send_mail(
@@ -214,9 +268,11 @@ def forgot_password(request):
                     [user.email],
                     fail_silently=False
                 )
-                return render(request, 'user\password_forgot.html', {'otp': True, 'user': user})
+                return render(request, 'user/password_forgot.html', {'otp': True, 'user': user})
             else:
                 messages.error(request, 'Email does not exist!')
-                return render(request, 'user\password_forgot.html')
-    return render(request, 'user\password_forgot.html')
 
+    else:
+        form = ForgotPasswordForm()
+
+    return render(request, 'user/password_forgot.html', {'form': form})

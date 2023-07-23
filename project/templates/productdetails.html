@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}aranoz{% endblock %}
+{% block title %}product details{% endblock %}
 {% load static %}
 {% block body %}
 
@@ -13,8 +13,8 @@
         <div class="col-lg-7 col-xl-7">
           <div class="product_slider_img">
             <div id="vertical">
-              <div data-thumb="{% static 'img/product/single-product/product_1.png' %} ">
-                <img src="{% static 'img/product/single-product/product_1.png' %} " />
+              <div data-thumb="{{prod.product_image.url}} ">
+                <img src="{{prod.product_image.url}} " />
               </div>
               <div data-thumb="{% static 'img/product/single-product/product_1.png' %} ">
                 <img src="{% static 'img/product/single-product/product_1.png' %} " />
@@ -30,17 +30,16 @@
         </div>
         <div class="col-lg-5 col-xl-4">
           <div class="s_product_text">
-            <h5>previous <span>|</span> next</h5>
-            <h3>Faded SkyBlu Denim Jeans</h3>
-            <h2>$149.99</h2>
+            <h3>{{prod.product_name}}</h3>
+            <h2>{{prod.product_price}}</h2>
             <ul class="list">
               <li>
                 <a class="active" href="#">
-                  <span>Category</span> : Household</a>
+                  <span>{{prod.category}}</span> : Household</a>
               </li>
-              <li>
+             <!-- <li>
                 <a href="#"> <span>Availibility</span> : In Stock</a>
-              </li>
+              </li>-->
             </ul>
             <p>
               First replenish living. Creepeth image image. Creeping can't, won't called.
@@ -60,5 +59,30 @@
       </div>
     </div>
   </div>
+                {% for k in allpro %}
+                <div class="product product-7">
+                    <figure class="product-media">
+                        <a href="">
+                            <img src="{{k.product_image.url}}" alt="Product_image" class="product-image"> <!-- image fields -->
+                        </a>
+                        <div class="product-action-vertical">
+                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                        
+                        </div><!-- End .product-action -->
+                        <div class="product-action-vertical">
+                        
+                    
+                    </figure><!-- End .product-media -->
+                    <div class="product-body">
+                        <div class="product-cat">
+                            <a href="#">{{k.category}}</a>
+                        </div><!-- End .product-cat -->
+                        <h3 class="product-title"><a href="product.html">{{k.product_name}}</a></h3><!-- End .product-title -->
+                        <div class="product-price">
+                            ₹ {{k.product_price}}
+                        </div><!-- End .product-price -->
+                    </div><!-- End .product-body -->
+                </div><!-- End .product -->
+                {% endfor %}
   <!--================End Single Product Area =================-->
 {% endblock %}
