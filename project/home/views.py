@@ -1,7 +1,6 @@
 from django.shortcuts import render
-from products.models import Product
-from categories.models import Category
-from django.shortcuts import get_object_or_404
+from products.models import *
+from categories.models import *
 
 
 
@@ -14,18 +13,27 @@ def home(request):
 
 def shop(request):
     product = Product.objects.filter(is_available=True).order_by('id')
-    return render (request,'shop.html',{'products':product})
+    context={
+        'products':product,
+        
+    }
+    return render (request,'shop.html',context)
 
 
 def items(request):
-    category=Category.objects.all().order_by('id')
-    return render(request,'categoryhome.html',{'categories':category})
+    cat = Category.objects.all()
+    return render(request,'categoryhome.html', {'cat':cat})
 
-def product_details(request,product_id):
-    product = get_object_or_404(Product, id=product_id)
+def cat_detail(request, id):
+    product=Product.objects.select_related('category').filter(category__id=id)
+    return render(request,'shop.html',{'products':product}) 
+                  
 
-    product=Product.objects.get(id=product_id)
 
-    related=Product.objects.order_by('?')[:5]
+def product_details(request,id):
+
+    product=Product.objects.get(id=id)
+
+    # related=Product.objects.order_by()[:5]
     product_id = product.id
-    return render(request,'home/productdetails.html',{'prod':product,'allpro':related}) 
+    return render(request,'productdetails.html',{'prod':product}) 

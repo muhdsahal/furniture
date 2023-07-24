@@ -37,8 +37,11 @@
         <img src="{{product.product_image.url}}" alt="img">
         <div class="single_product_text">
             <h4>{{product.product_name}}</h4>
-            <h3>{{product.product_price}}</h3>
+            <h3>${{product.product_price}}</h3>
             <a href="#" class="add_cart">+ Add to Cart<i class="ti-heart"></i></a>
+            
+            <a href="{% url 'product_details' product.id %}" class="add_cart">seemore</a>
+            
         </div>
         </div>
         {% endfor %}

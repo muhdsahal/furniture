@@ -28,6 +28,7 @@
                             {% csrf_token %}
 
                             <div class="col-md-12 form-group p_star">
+                                <input name="email" type="email" value="{{ usr.email }}" hidden>
                                 <input type="text" class="form-control" id="otp" name="otp" value=""
                                     placeholder="enter your otp">
                             </div>

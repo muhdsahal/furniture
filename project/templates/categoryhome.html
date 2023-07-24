@@ -6,46 +6,93 @@
 
 
 
-  <style>
-    /* Add this CSS for grid-based layout */
-    .product_grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-
-    .single_product_item {
-      /* Optional: Add any styling you want for each product item */
-      /* For example, you can add a fixed height for each product item */
-      /* height: 300px; */
-    }
-  </style>
-
-<section class="product_list section_padding">
-<div class="container">
-    <div class="row justify-content-center">
-    <div class="col-lg-12">
-        <div class="section_tittle text-center">
-        <h2>category</h2>
-        </div>
-    </div>
-    </div>
-    <div class="product_list_slider owl-carousel">
-    <div class="product_grid">
-        {% for item in categories %}
-        <div class="single_product_item">
-        <img src="{{item.categories_image.url}}" alt="img">
-        <div class="single_product_text">
-            <h4>{{item.categories}}</h4>
-            <h3>{{item.categories_description}}</h3>
-            <a href="#" class="add_cart"> See More<i class="ti-heart"></i></a>
-        </div>
-        </div>
-        {% endfor %}
-    </div>
-    </div>
-</div>
-</section>
 
 
-{% endblock %}
+  <!--================Category Product Area =================-->
+  <section class="cat_product_area section_padding">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-3">
+                  <div class="left_sidebar_area">
+                      <aside class="left_widgets p_filter_widgets">
+                          <div class="l_w_title">
+                              <h3>Browse Categories</h3>
+                          </div>
+                          <div class="widgets_inner">
+                              <ul class="list">
+                                {% for i in cat %}
+                                  <li>
+                                      <a href="{% url 'cat_detail' i.id %}">{{i.categories}}</a>
+                                      <span>(250)</span>
+                                  </li>
+                                  {% endfor %}
+                              </ul>
+                          </div>
+                        </aside>
+                  </div>
+              </div>
+              <div class="col-lg-9">
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <div class="product_top_bar d-flex justify-content-between align-items-center">
+                              <div class="single_product_menu">
+                                  <p><span>100 </span> Prodict Found</p>
+                              </div>
+                              
+                              <div class="single_product_menu d-flex">
+                                  <h5>show :</h5>
+                                  <div class="top_pageniation">
+                                      <ul>
+                                          <li>1</li>
+                                          <li>2</li>
+                                          <li>3</li>
+                                      </ul>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row align-items-center latest_product_inner">
+                      <div class="col-lg-4 col-sm-6">
+                        {% for product in products %}
+
+                          <div class="single_product_item">
+                              <img src="{% url product.product_image.url %}" alt="">
+                              <div class="single_product_text">
+                                  <h4>{% url 'product.product_name' %}</h4>
+                                  <h3>{% url 'product.product_price' %}</h3>
+                                  <a href="#" class="add_cart">+ add to cart<i class="ti-heart"></i></a>
+                                {% endfor %}
+                              </div>
+                          </div>
+                      </div>
+                      {% comment %} <div class="col-lg-4 col-sm-6">
+                          <div class="single_product_item">
+                              <img src="{% static 'img/product/product_2.png' %}" alt="">
+                              <div class="single_product_text">
+                                  <h4>Quartz Belt Watch</h4>
+                                  <h3>$150.00</h3>
+                                  <a href="#" class="add_cart">+ add to cart<i class="ti-heart"></i></a>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-lg-4 col-sm-6">
+                          <div class="single_product_item">
+                              <img src="{% static 'img/product/product_3.png' %}" alt="">
+                              <div class="single_product_text">
+                                  <h4>Quartz Belt Watch</h4>
+                                  <h3>$150.00</h3>
+                                  <a href="#" class="add_cart">+ add to cart<i class="ti-heart"></i></a>
+                              </div>
+                          </div>
+                      </div> {% endcomment %}
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  <!--================End Category Product Area =================-->
+
+ 
+  {% endblock %}

@@ -13,17 +13,13 @@
         <div class="col-lg-7 col-xl-7">
           <div class="product_slider_img">
             <div id="vertical">
-              <div data-thumb="{{prod.product_image.url}} ">
-                <img src="{{prod.product_image.url}} " />
+              <div data-thumb="{{prod.product_image.url}}">
+                <img src="{{prod.product_image.url}}" />
               </div>
-              <div data-thumb="{% static 'img/product/single-product/product_1.png' %} ">
-                <img src="{% static 'img/product/single-product/product_1.png' %} " />
-              </div>
-              <div data-thumb="{% static 'img/product/single-product/product_1.png' %} ">
-                <img src="{% static 'img/product/single-product/product_1.png' %} " />
-              </div>
-              <div data-thumb="{% static 'img/product/single-product/product_1.png' %} ">
-                <img src="{% static 'img/product/single-product/product_1.png' %} " />
+              <!--<div data-thumb="{{prod.product_image.url}}">
+                <img src="{{prod.product_image.url}}" />
+              </div>-->
+              
               </div>
             </div>
           </div>
@@ -35,11 +31,8 @@
             <ul class="list">
               <li>
                 <a class="active" href="#">
-                  <span>{{prod.category}}</span> : Household</a>
+                  <span>category</span> : {{prod.category}}</a>
               </li>
-             <!-- <li>
-                <a href="#"> <span>Availibility</span> : In Stock</a>
-              </li>-->
             </ul>
             <p>
               First replenish living. Creepeth image image. Creeping can't, won't called.
@@ -59,7 +52,7 @@
       </div>
     </div>
   </div>
-                {% for k in allpro %}
+                {% for k in product %}
                 <div class="product product-7">
                     <figure class="product-media">
                         <a href="">
@@ -78,7 +71,7 @@
                             <a href="#">{{k.category}}</a>
                         </div><!-- End .product-cat -->
                         <h3 class="product-title"><a href="product.html">{{k.product_name}}</a></h3><!-- End .product-title -->
-                        <div class="product-price">
+                        <div class="product_price">
                             ₹ {{k.product_price}}
                         </div><!-- End .product-price -->
                     </div><!-- End .product-body -->

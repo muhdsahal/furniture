@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django import forms
 
 # Create your models here.
 class UserOTP(models.Model):
@@ -9,5 +8,3 @@ class UserOTP(models.Model):
     otp=models.IntegerField()
 
 
-class ForgotPasswordForm(forms.Form):
-    email = forms.EmailField()
