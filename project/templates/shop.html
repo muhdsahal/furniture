@@ -3,51 +3,32 @@
 {% load static %}
 {% block body %}
 
+<style>
+  /* Custom CSS to add distance between the navbar and cards */
+  .custom-card-container {
+    margin-top: 50px;
+  }
+</style>
 
-
-
-  <style>
-    /* Add this CSS for grid-based layout */
-    .product_grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-
-    .single_product_item {
-      /* Optional: Add any styling you want for each product item */
-      /* For example, you can add a fixed height for each product item */
-      /* height: 300px; */
-    }
-  </style>
-
-<section class="product_list section_padding">
-<div class="container">
-    <div class="row justify-content-center">
-    <div class="col-lg-12">
-        <div class="section_tittle text-center">
-        <h2>Shop</h2>
+<section style="background-color: white;">
+  <div class="container py-5 custom-card-container">
+    <div class="row">
+      {% for product in products %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card">
+          <img src="{{product.product_image.url}}" class="card-img-top" alt="Laptop" />
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <h5>{{product.product_name}}</h5>
+              <h6> ${{product.product_price}}</h6>
+              <a href="{% url 'product_details' product.id %}" class="add_cart">seemore</a>
+            </div>
+          </div>
         </div>
+      </div>
+      {% endfor %}
     </div>
-    </div>
-    <div class="product_list_slider owl-carousel">
-    <div class="product_grid">
-        {% for product in products %}
-        <div class="single_product_item">
-        <img src="{{product.product_image.url}}" alt="img">
-        <div class="single_product_text">
-            <h4>{{product.product_name}}</h4>
-            <h3>${{product.product_price}}</h3>
-            <a href="#" class="add_cart">+ Add to Cart<i class="ti-heart"></i></a>
-            
-            <a href="{% url 'product_details' product.id %}" class="add_cart">seemore</a>
-            
-        </div>
-        </div>
-        {% endfor %}
-    </div>
-    </div>
-</div>
+  </div>
 </section>
 
 

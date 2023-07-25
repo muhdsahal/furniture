@@ -12,7 +12,7 @@ def home(request):
 
 
 def shop(request):
-    product = Product.objects.filter(is_available=True).order_by('id')
+    product = Product.objects.all().order_by('id')
     context={
         'products':product,
         
@@ -22,7 +22,12 @@ def shop(request):
 
 def items(request):
     cat = Category.objects.all()
-    return render(request,'categoryhome.html', {'cat':cat})
+    product = Product.objects.all().order_by('id')
+    context={
+        'products':product,
+        'cat':cat
+    }
+    return render(request,'categoryhome.html',context)
 
 def cat_detail(request, id):
     product=Product.objects.select_related('category').filter(category__id=id)
@@ -31,9 +36,6 @@ def cat_detail(request, id):
 
 
 def product_details(request,id):
-
     product=Product.objects.get(id=id)
-
-    # related=Product.objects.order_by()[:5]
     product_id = product.id
     return render(request,'productdetails.html',{'prod':product}) 

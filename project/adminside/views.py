@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render ,redirect
-# from categories.models import category
+from .models import Banner
+from categories.models import Category
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -131,16 +132,6 @@ def dashboard(request):
     return render(request,'adminside/dashboard.html')
 
 
-# def dashboard(request):
-#     if not request.user.is_superuser:
-#         return redirect('admin_login1')
-
-# def dashboard(request):
-#     if not request.user.is_superuser:
-#         return redirect('admin_login1')
-#     else:
-#         # Replace 'your_template.html' with the actual template you want to render
-#         return render(request, 'home.html')
 
 @login_required(login_url='admin_login1')
 def admin_logout1(request):
@@ -166,9 +157,44 @@ def blockuser(request,user_id):
         user.save()
     return redirect('usermanagement_1')
 
-  
+def banner(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
+    dict_banner = {
+        'banner':Banner.objects.all(),
+        'category':Category.objects.all()
+    }
+    return render(request,'banner/banner.html',dict_banner)
+def createbanner(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
+    if request.method == 'POST':
+        name=request.POST.get('banner_name')
+        discription=request.POST.get('banner_discription')
+        categories=request.POST.get('categories')
+        image=request.FILES.get('image',None)
+
+        if name.strip() == '':
+            messages.error(request,'name is empty !')
+            return render('banner')
+        if not image:
+            messages.error(request,'image not uploaded !')
+            return render('banner')
+        
+        cat=Category.objects.filter(id=categories)
+        ban=Banner(
+        banner_image=image,
+        banner_name=name,
+        banner_discription=discription,
+        Category=cat,
+        )
+        ban.save()
+    return redirect('banner')
 
 
 
 
-# Create your views here.
+
+
+
+
