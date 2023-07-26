@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url='admin_login1')
 def categories (request):
     if not request.user.is_superuser:
-        return redirect ('admin_login')
+        return redirect ('admin_login1')
     Category_data=Category.objects.all().order_by('id')
     return render(request,'category/category.html',{'Category': Category_data})
 
