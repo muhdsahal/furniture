@@ -30,7 +30,9 @@ def addproduct(request):
     if request.method == 'POST':
         name=request.POST.get('product_name')
         price=request.POST.get('product_price')
-        image=request.FILES.get('product_image',None)
+        image1=request.FILES.get('product_image1',None)
+        image2=request.FILES.get('product_image2',None)
+        image3=request.FILES.get('product_image3',None)
         quantity=request.POST.get('quantity')
         category_id=request.POST.get('category')
     
@@ -44,7 +46,7 @@ def addproduct(request):
             messages.error(request,'name or price is empty ')
             return redirect('product')
         
-        if not image:
+        if not image1:
             messages.error(request,'image not found')
             return redirect('product')
         if category_id:
@@ -54,7 +56,9 @@ def addproduct(request):
 
         # save
         product=Product(
-            product_image=image,
+            product_image1=image1,
+            product_image2=image2,
+            product_image3=image3,
             product_name=name,
             category=category,
             product_price=price,

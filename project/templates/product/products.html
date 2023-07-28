@@ -52,7 +52,7 @@
                             <td style="text-align: center;"><b>{{c.id}}</td>
                             <td>
                                 <div style="width: 60px;" class="overflow-hidden">
-                                    <img class="w-100" src=" {{ c.product_image.url }}" alt="img">
+                                    <img class="w-100" src=" {{ c.product_image1.url }}" alt="img">
                                 </div>
                             </td>
 
@@ -191,7 +191,21 @@
                                 </div>
                                 <div class="form-outline mb-4">
                                     <label class="form-label" for="form3Example3cg">Image</label>
-                                    <input name="product_image" type="file"
+                                    <input name="product_image1" type="file"
+                                        accept="image/png, image/jpeg, image/svg, image/avif" class="form-control"
+                                        id="image-input" />
+                                    <small id="image-error" class="text-danger text-center"></small>
+                                </div>
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example3cg">Image</label>
+                                    <input name="product_image2" type="file"
+                                        accept="image/png, image/jpeg, image/svg, image/avif" class="form-control"
+                                        id="image-input" />
+                                    <small id="image-error" class="text-danger text-center"></small>
+                                </div>
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example3cg">Image</label>
+                                    <input name="product_image3" type="file"
                                         accept="image/png, image/jpeg, image/svg, image/avif" class="form-control"
                                         id="image-input" />
                                     <small id="image-error" class="text-danger text-center"></small>
