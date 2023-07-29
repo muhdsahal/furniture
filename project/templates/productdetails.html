@@ -5,8 +5,63 @@
 
 
  
-
-  <!--================Single Product Area =================-->
+ <!--================Single Product Area =================-->
+ <div class="product_image_area section_padding">
+  <div class="container">
+    <div class="row s_product_inner justify-content-between">
+      <div class="col-lg-7 col-xl-7">
+        <div class="product_slider_img">
+          <div id="vertical">
+            <div data-thumb="{{prod.product_image1.url}}">
+              <img src="{{prod.product_image1.url}}" />
+              
+            </div>
+            <div data-thumb="{{prod.product_image1.url}}">
+              <img src="{{prod.product_image1.url}}" />
+            </div>
+            <div data-thumb="{{prod.product_image1.url}}">
+              <img src="{{prod.product_image1.url}}" />
+            </div>
+            <div data-thumb="{{prod.product_image1.url}}">
+              <img src="{{prod.product_image1.url}}" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 col-xl-4">
+        <div class="s_product_text">
+         
+          <h3>{{prod.product_name}}</h3>
+          <h2>${{prod.product_price}}</h2>
+          <ul class="list">
+            <li>
+              <a class="active" href="#">
+                <span>Category</span>{{prod.category}}</a>
+            </li>
+            {% comment %} <li>
+              <a href="#"> <span>Availibility</span> : In Stock</a>
+            </li> {% endcomment %}
+          </ul>
+          <p>
+            First replenish living. Creepeth image image. Creeping can't, won't called.
+            Two fruitful let days signs sea together all land fly subdue
+          </p>
+          <div class="card_area d-flex justify-content-between align-items-center">
+            <div class="product_count">
+              <span class="inumber-decrement"> <i class="ti-minus"></i></span>
+              <input class="input-number" type="text" value="1" min="0" max="100">
+              <span class="number-increment"> <i class="ti-plus"></i></span>
+            </div>
+            <a href="#" class="btn_3">add to cart</a>
+            <a href="#" class="like_us"> <i class="ti-heart"></i> </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--================End Single Product Area =================-->
+  {% comment %} <!--================Single Product Area =================-->
   <div class="product_image_area section_padding">
     <div class="container">
       <div class="row s_product_inner justify-content-between">
@@ -14,7 +69,12 @@
           <div class="product_slider_img">
             <div id="vertical">
               <div data-thumb="{{prod.product_image1.url}}">
+                <img src="{{prod.product_image1.url}}" />
+              </div>
+              <div data-thumb="{{prod.product_image2.url}}">
                 <img src="{{prod.product_image2.url}}" />
+              </div>
+              <div data-thumb="{{prod.product_image3.url}}">
                 <img src="{{prod.product_image3.url}}" />
               </div>
               </div>
@@ -48,12 +108,14 @@
         </div>
       </div>
     </div>
-  </div>
-                {% for k in product %}
+  </div> {% endcomment %}
+                {% comment %} {% for k in product %}
                 <div class="product product-7">
                     <figure class="product-media">
                         <a href="">
-                            <img src="{{k.product_image.url}}" alt="Product_image" class="product-image"> <!-- image fields -->
+                          <img src="{{k.product_image1.url}}" alt="product_image1" class="product-image"> <!-- image fields -->
+                          <img src="{{k.product_image2.url}}" alt="product_image2" class="product-image"> <!-- image fields -->
+                          <img src="{{k.product_image3.url}}" alt="product_image3" class="product-image"> <!-- image fields -->
                         </a>
                         <div class="product-action-vertical">
                             <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
@@ -73,6 +135,6 @@
                         </div><!-- End .product-price -->
                     </div><!-- End .product-body -->
                 </div><!-- End .product -->
-                {% endfor %}
+                {% endfor %} {% endcomment %}
   <!--================End Single Product Area =================-->
 {% endblock %}

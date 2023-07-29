@@ -3,6 +3,7 @@
 {% load static %}
 {% block body %}
 
+
   <!--================Category Product Area =================-->
   <section class="cat_product_area section_padding">
       <div class="container">
@@ -38,7 +39,7 @@
                                     {% for product in products %}
                                     <div class="col-md-6 col-lg-4 mb-4">
                                       <div class="card">
-                                        <img src="{{product.product_image.url}}" class="card-img-top" alt="Laptop" />
+                                        <img src="{{product.product_image1.url}}" class="card-img-top" alt="Laptop" />
                                         <div class="card-body">
                                           <div class="d-flex justify-content-between">
                                             <h5>{{product.product_name}}</h5>

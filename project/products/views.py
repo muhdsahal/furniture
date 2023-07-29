@@ -110,16 +110,6 @@ def editproduct(request,editproduct_id):
             messages.error(request, 'Category not found')
             return redirect('product')
 
-        # Validation and saving the changes
-        # try:
-        #     pro = Product.objects.get(slug=editproduct_id)
-        #     image = request.FILES.get('product_image')
-        #     if image:
-        #         pro.product_image = image
-        #         pro.save()
-        # except Product.DoesNotExist:
-        #     messages.error(request, 'Image not found')
-        #     return redirect('product')
 
         try:
             is_availables = request.POST.get('checkbox', False)
