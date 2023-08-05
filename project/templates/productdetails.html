@@ -6,7 +6,7 @@
 
  
  <!--================Single Product Area =================-->
- <div class="product_image_area section_padding">
+ <div class="product_image_area section_padding product_data">
   <div class="container">
     <div class="row s_product_inner justify-content-between">
       <div class="col-lg-7 col-xl-7">
@@ -38,9 +38,9 @@
               <a class="active" href="#">
                 <span>Category</span>{{prod.category}}</a>
             </li>
-            {% comment %} <li>
-              <a href="#"> <span>Availibility</span> : In Stock</a>
-            </li> {% endcomment %}
+            <li>
+            <a href="#"> <span>Availibility</span>{{prod.product_quantity}}</a>
+            </li> 
           </ul>
           <p>
             First replenish living. Creepeth image image. Creeping can't, won't called.
@@ -49,10 +49,14 @@
           <div class="card_area d-flex justify-content-between align-items-center">
             <div class="product_count">
               <span class="inumber-decrement"> <i class="ti-minus"></i></span>
-              <input class="input-number" type="text" value="1" min="0" max="100">
+              <input class="input-number" type="text" value="1" min="0" max="10">
               <span class="number-increment"> <i class="ti-plus"></i></span>
             </div>
-            <a href="{% url 'add_cart' %}" class="btn_3">add to cart</a>
+            <input type="hidden" value="{{prod.id}}" class="prod_id" >
+
+            <button type="submit" class="btn_3 addToCartBtn"  >{% if prod.product_quantity > 0  %}Add to cart {% else %}Out of stock{% endif %}</button>        
+
+            {% comment %} <a href="{% url 'add_cart' %}" class="btn_3">add to cart</a> {% endcomment %}
             <a href="#" class="like_us"> <i class="ti-heart"></i> </a>
           </div>
         </div>
@@ -60,81 +64,57 @@
     </div>
   </div>
 </div>
-<!--================End Single Product Area =================-->
-  {% comment %} <!--================Single Product Area =================-->
-  <div class="product_image_area section_padding">
-    <div class="container">
-      <div class="row s_product_inner justify-content-between">
-        <div class="col-lg-7 col-xl-7">
-          <div class="product_slider_img">
-            <div id="vertical">
-              <div data-thumb="{{prod.product_image1.url}}">
-                <img src="{{prod.product_image1.url}}" />
-              </div>
-              <div data-thumb="{{prod.product_image2.url}}">
-                <img src="{{prod.product_image2.url}}" />
-              </div>
-              <div data-thumb="{{prod.product_image3.url}}">
-                <img src="{{prod.product_image3.url}}" />
-              </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-5 col-xl-4">
-          <div class="s_product_text">
-            <h3>{{prod.product_name}}</h3>
-            <h2>{{prod.product_price}}</h2>
-            <ul class="list">
-              <li>
-                <a class="active" href="#">
-                  <span>category</span> : {{prod.category}}</a>
-              </li>
-            </ul>
-            <p>
-              First replenish living. Creepeth image image. Creeping can't, won't called.
-              Two fruitful let days signs sea together all land fly subdue
-            </p>
-            <div class="card_area d-flex justify-content-between align-items-center">
-              <div class="product_count">
-                <span class="inumber-decrement"> <i class="ti-minus"></i></span>
-                <input class="input-number" type="text" value="1" min="0" max="10">
-                <span class="number-increment"> <i class="ti-plus"></i></span>
-              </div>
-              <a href="#" class="btn_3">add to cart</a>
-              <a href="#" class="like_us"> <i class="ti-heart"></i> </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> {% endcomment %}
-                {% comment %} {% for k in product %}
-                <div class="product product-7">
-                    <figure class="product-media">
-                        <a href="">
-                          <img src="{{k.product_image1.url}}" alt="product_image1" class="product-image"> <!-- image fields -->
-                          <img src="{{k.product_image2.url}}" alt="product_image2" class="product-image"> <!-- image fields -->
-                          <img src="{{k.product_image3.url}}" alt="product_image3" class="product-image"> <!-- image fields -->
-                        </a>
-                        <div class="product-action-vertical">
-                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                        
-                        </div><!-- End .product-action -->
-                        <div class="product-action-vertical">
-                        
-                    
-                    </figure><!-- End .product-media -->
-                    <div class="product-body">
-                        <div class="product-cat">
-                            <a href="#">{{k.category}}</a>
-                        </div><!-- End .product-cat -->
-                        <h3 class="product-title"><a href="product.html">{{k.product_name}}</a></h3><!-- End .product-title -->
-                        <div class="product_price">
-                            ₹ {{k.product_price}}
-                        </div><!-- End .product-price -->
-                    </div><!-- End .product-body -->
-                </div><!-- End .product -->
-                {% endfor %} {% endcomment %}
-  <!--================End Single Product Area =================-->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+  <script>
+    $('.addToCartBtn').click(function (e) {
+        e.preventDefault();prod_id
+
+        var prod_id = $(this).closest('.product_data').find('.prod_id').val();
+        var product_qty = $('.input-number').val();
+       
+        //var selected_size = $(this).closest('.product_data').find('#size').val(); // Get the selected size value
+        console.log(prod_id,'daxoooooo')
+        console.log(product_qty,'daxoooooo')
+      
+        $.ajax({
+            method: "POST",
+            url: "{% url 'add_cart' %}",
+            data: {
+                'product_qty': product_qty,
+                'prod_id': prod_id,
+                //'size': selected_size, // Include the selected size in the data
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            
+            success: function (response) {
+
+              console.log(response);
+
+
+
+              if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'Product already in cart' ) {
+                  swal("Error!", response.status, "error");
+                  $('.cartdata').load(location.href + " .cartdata");
+              } else if (response.status === 'Product added successfully') { 
+                  swal("", response.status, "success");
+                  $('.cartdata').load(location.href + " .cartdata");
+              } else if (response.status === 'you are not login please Login to continue') {
+                  swal("", response.status, "warning");
+                  $('.cartdata').load(location.href + " .cartdata");
+              } 
+              else if (response.status === 'Sorry! this variant not available') {
+                  swal("", response.status, "warning");
+                  $('.cartdata').load(location.href + " .cartdata");
+              } 
+              else {
+                  swal("Error!", response.status, "error");
+                  $('.cartdata').load(location.href + " .cartdata");
+              }
+          }
+        });
+    });
+</script>
 {% endblock %}

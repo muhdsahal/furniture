@@ -1,10 +1,12 @@
 from django.shortcuts import render,redirect
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
-
+from wishlist.models import Wishlist
 from products.models import Product
 from django.http.response import JsonResponse
+from django.http import HttpResponseBadRequest
 from cart.models import Cart
+
 
 # Create your views here.
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -12,20 +14,38 @@ def add_cart(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
             prod_id=request.POST.get('prod_id')
+            print(prod_id,'daxooo')
 
             try:
                 product_check=Product.objects.get(id=prod_id)
             
             except Product.DoesNotExist:
-                return JsonResponse({'status':'no such product found '})
+                return JsonResponse({'status':'No such prodcut found '})
             
             if Cart.objects.filter(user=request.user,product_id=prod_id).exists():
+                print(prod_id,'vgggggggggggggggggggggh')
+                print('product alreayd in cart')
                 return JsonResponse({'status':'Product already in cart'})
+                
             else:
                 prod_qty=int(request.POST.get('product_qty'))
+                if product_check.product_quantity>=prod_qty:
+                    Cart.objects.create(user=request.user,product_id=prod_id,product_qty=prod_qty)
+                    try:
+                        if Wishlist.objects.filter(user=request.user,product_id=prod_id,product_qty=prod_qty):
+                            wishlist = Wishlist.objects.filter(user=request.user,product_id=prod_id,product_qty=prod_qty)
+                            wishlist.delete()
+                    except:
+                        pass
+                    return JsonResponse({'status':'Product added successfully'})
+                else:
+                    return JsonResponse({'status':'Only few quantity available'})
         else:
-            return JsonResponse({'status':'login to continue'})
-    return redirect('product_details')
+            return JsonResponse({'status':'you are not login please Login to continue'})
+    return redirect('user_login1')
+            
+                
+    
 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -37,8 +57,8 @@ def cart(request):
     grand_total=0
     single_product_total=[0]
     for item in cart:
-        total_price = total_price + item.prodcut.product_price * item.product_qty
-        single_product_total.append(item.prodcut.product_price * item.product_qty)
+        total_price = total_price + item.product.product_price * item.product_qty
+        single_product_total.append(item.product.product_price * item.product_qty)
         tax =total_price * 0.18
         grand_total = total_price + tax
     
@@ -53,3 +73,37 @@ def cart(request):
     return render(request,'cart/cart.html',context)
 
 
+
+
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@login_required(login_url='user_login1')
+def update_cart(request, cart_item_id):
+    try:
+        cart_item = Cart.objects.get(id=cart_item_id, user=request.user)
+        new_qty = int(request.POST.get('new_qty'))
+
+        if new_qty > 0:
+            cart_item.product_qty = new_qty
+            cart_item.save()
+            
+        else:
+            return HttpResponseBadRequest("Invalid quantity")
+
+    except Cart.DoesNotExist:
+        return HttpResponseBadRequest("Cart item not found")
+
+    return redirect('cart')
+
+
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@login_required(login_url='user_login1')
+def deletecartitem(request):
+    if request.method == 'POST':
+        try:
+            product_id = int(request.POST.get('product_id'))
+            cart_items = Cart.objects.filter(user=request.user, product__id=product_id)
+            cart_items.delete()
+        except ValueError:
+            return HttpResponseBadRequest("Invalid product ID")  # Return a 400 Bad Request response for invalid input
+        
+    return redirect('cart')

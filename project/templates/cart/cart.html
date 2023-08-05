@@ -50,11 +50,11 @@
                             <thead>
                                 <tr>
 
+                                    <th>image</th>
                                     <th>Product</th>
-                                    <th></th>
                                     <th>Quantity</th>
                                     <th>Total</th>
-                                    <th></th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,42 +68,51 @@
                                 <tr id="product-div{{item.variation.id}}" >
                                         <td class="product_cart_item">
                                             <div class="product_cart_item_pic ">
-                                                <img src="{{ item.product.image1.url }}" height="90px" alt="IMG"  >
+                                                <img src="{{ item.product.product_image1.url }}" height="90px" alt="IMG"  >
                                             </div>
                                         </td>
                                         <td class="product_cart_item_text">
                                             <h5 style="font-weight: bold;">{{ item.product.product_name }}</h5>
                                             <h5>{% if item.product.offer %}₹ <del class="text-danger"> {{item.product.product_price}}</del> {% else %} ₹ {{item.product.product_price}} {% endif %}</h5>
                                         </td>                
-    
+                                        
     
                                         <td>
     
                                             <div class="input-group quantity mx-auto " style="width: 100px;">
                                                 <div class="input-group-btn">
-                                                    <button data-price="{{item.product.price}}" data-variantid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-minus changeQuantity" >
+                                                    <button data-price="{{item.product.product_name}}" data-variantid="{{item.product.product.id}}" class="btn btn-sm border border-secondary btn-minus changeQuantity" >
                                                         <i class="fa fa-minus"></i>
                                                     </button>
                                                 </div>
     
-                                                <input readonly id="pro_qty{{item.product.id}}" type="text" class="form-control form-control-sm  text-center" value="{{item.product_qty}}">
+                                                <input readonly id="pro_qty{{item.product.product.id}}" type="text" class="form-control form-control-sm  text-center" value="{{item.product_qty}}">
     
                                                 <div class="input-group-btn sifan">
-                                                    <button data-price="{{item.product.price}}" data-variantid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-plus changeQuantity">
+                                                    <button data-price="{{item.product.product.price}}" data-variantid="{{item.product.product.id}}" class="btn btn-sm border border-secondary btn-plus changeQuantity">
                                                         <i class="fa fa-plus"></i>
                                                     </button>
                                                 </div>
                                             </div>
-    
-                                        </td>
+
+                                        </td>                                       
                                         {% with counter=forloop.counter  %}
                                         <td class="cart__price total">₹
-                                            <span id="single_product_total{{item.product.id}}"> {{ item.product.product_price| mul:item.product_qty }} </span>
+                                            <span id="single_product_total{{item.product.product.id}}"> {{ item.product.product_price| mul:item.product_qty }} </span>
                                         </td>
                                         {% endwith %}
-                                        <td class="cart__close">
-                                            <a data-variantid="{{item.product.id}}" class="delete-cart-item" href="" ><i class="fa fa-close"></i></a> 
+                                        {% comment %} <td class="cart__close">
+                                        <a data-variantid="{{item.product.product.id}}" class="delete-cart-item" href="" ><i class="fa fa-close"></i></a> 
+                                        </td> {% endcomment %}
+                                        <td>
+                                            <form method="post" action="{% url 'deletecartitem' %}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                                                <button type="submit" style="background-color: black; color: white; border: none; padding: 5px 10px; cursor: pointer;">Delete</button>
+
+                                            </form>
                                         </td>
+
                                 </tr>
                                  
                                 {% endfor %}
@@ -118,11 +127,11 @@
                                 <a href="{%url 'shop' %}">Continue Shopping</a>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
+                        {% comment %} <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="continue__btn update__btn">
-                                <a href="{%url 'cart' %}"><i class="fa fa-spinner"></i> Update cart</a>
+                                <a href="{%url 'update_cart' %}"><i class="fa fa-spinner"></i> Update cart</a>
                             </div>
-                        </div>
+                        </div> {% endcomment %}
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -141,7 +150,7 @@
                             <li>Grand Total ₹<span id="grand_total">{{grand_total |floatformat:2}}</span></li>
                         </ul >
                         {%if cart%}
-                        <a href="{%url 'checkout'%}" class="primary-btn">Proceed to checkout</a>
+                        <a href="" class="primary-btn">Proceed to checkout</a>
                         {% else %}
                         <a href="" class="primary-btn">Cart is Empty</a>
                         {% endif %}
@@ -169,74 +178,77 @@ $('.quantity button').on('click', function () {
     input.val(newVal);
 });
 
-
-$('.changeQuantity').click(function(e) {
-    e.preventDefault();
-    var variant_id = $(this).data('variantid')
-
-    var product_qty = $('#pro_qty' + variant_id).val() 
-
-    $.ajax({
-        method: "POST",
-        url: "update_cart/",
-        data: {
-            //'variant_id': variant_id,
-            'product_qty': product_qty,
-            csrfmiddlewaretoken: '{{csrf_token}}'
-        },
-     
-        success: function(response) {
-            console.log(response);
-            if (response.status === 'Not allowed this Quantity') {
-                swal("Error!", response.status, "error")
-                var checkoutLink = '<a href="#" class="primary-btn">Not allowed this quantity</a>';
-                 $("a.primary-btn").replaceWith(checkoutLink);
-            }else{
-            var checkoutLink = '<a href="#" class="primary-btn">Proceed to checkout</a>';
-            $("a.primary-btn").replaceWith(checkoutLink);
-            }
-            sub_total = parseInt(response.sub_total)
-            
-            document.getElementById('sub_total').textContent = sub_total
-            document.getElementById('tax_field').textContent = sub_total *0.18
-            document.getElementById('grand_total').textContent = sub_total + (sub_total *0.18)
-            document.getElementById('single_product_total'+variant_id).textContent = parseInt(response.product_price) * parseInt(response.quantity)
-            
-        }
-    });
-});
-</script>
-<script>
 $(document).ready(function() {
-    $(document).on('click', '.delete-cart-item', function(e) {
+    $('.changeQuantity').click(function(e) {
         e.preventDefault();
-
+        
         var variant_id = $(this).data('variantid');
-        var token = $('input[name=csrfmiddlewaretoken]').val();
-
+        var product_qty = $('#pro_qty' + variant_id).val();
+        
         $.ajax({
             method: "POST",
-            url: "/cart/delete-cart-item/",
+            url: "update_cart/",
             data: {
                 'variant_id': variant_id,
+                'product_qty': product_qty,
                 csrfmiddlewaretoken: '{{csrf_token}}'
             },
             success: function(response) {
-                
-                sub_total = parseFloat(response.sub_total);
-                var tax = Math.floor(sub_total *0.18);
                 console.log(response);
+                if (response.status === 'Not allowed this Quantity') {
+                    swal("Error!", response.status, "error");
+                } else {
+                    var checkoutLink = '<a href="#" class="primary-btn">Proceed to checkout</a>';
+                    $("a.primary-btn").replaceWith(checkoutLink);
+                }
+                
+                var sub_total = parseInt(response.sub_total);
                 document.getElementById('sub_total').textContent = sub_total;
-                document.getElementById('tax_field').textContent = tax
+                document.getElementById('tax_field').textContent = sub_total * 0.18;
                 document.getElementById('grand_total').textContent = sub_total + (sub_total * 0.18);
-                $('.cartdata').load(location.href + " .cartdata");
+                document.getElementById('single_product_total' + variant_id).textContent = parseInt(response.product_price) * parseInt(response.quantity);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                // Handle error, if needed
             }
         });
     });
 });
 </script>
 
-    
+<!-- Include jQuery library if not already included -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $(".delete-cart-item").click(function(e) {
+        e.preventDefault();  // Prevent the default behavior of the anchor element
+        
+        var product_id = $(this).data("variantid");
+        
+        // Get the CSRF token from the cookie
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        
+        $.ajax({
+            type: "POST",
+            url: "{% url 'deletecartitem' %}",  // Replace with your actual URL
+            data: {
+                csrfmiddlewaretoken: csrftoken,
+                product_id: product_id,
+            },
+            success: function(response) {
+                // Handle success, such as updating the cart or refreshing the page
+                location.reload();  // For example, refresh the page after deletion
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                // Handle error, if needed
+            }
+        });
+    });
+});
+</script>
 
 
 <script src="{%static 'single/js/main.js'%}"></script>
