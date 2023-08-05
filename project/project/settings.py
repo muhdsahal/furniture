@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'categories',
     'adminside',
     'cart',
+    'userprofile',
+    'mathfilters',
+    'wishlist',
     
     ]
 

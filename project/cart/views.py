@@ -25,7 +25,7 @@ def add_cart(request):
                 prod_qty=int(request.POST.get('product_qty'))
         else:
             return JsonResponse({'status':'login to continue'})
-    return render('single')
+    return redirect('product_details')
 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
