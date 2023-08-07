@@ -4,66 +4,71 @@
 {% block body %}
 
 
- 
  <!--================Single Product Area =================-->
- <div class="product_image_area section_padding product_data">
-  <div class="container">
-    <div class="row s_product_inner justify-content-between">
-      <div class="col-lg-7 col-xl-7">
-        <div class="product_slider_img">
-          <div id="vertical">
-            <div data-thumb="{{prod.product_image1.url}}">
-              <img src="{{prod.product_image1.url}}" />
-              
-            </div>
-            <div data-thumb="{{prod.product_image1.url}}">
-              <img src="{{prod.product_image1.url}}" />
-            </div>
-            <div data-thumb="{{prod.product_image1.url}}">
-              <img src="{{prod.product_image1.url}}" />
-            </div>
-            <div data-thumb="{{prod.product_image1.url}}">
-              <img src="{{prod.product_image1.url}}" />
-            </div>
+ 
+
+   <!--================End Home Banner Area =================-->
+ 
+   <!--================Single Product Area =================-->
+   <div class="product_image_area section_padding">
+    <div class="container">
+      <div class="row s_product_inner justify-content-between">
+        <div class="col-lg-7 col-xl-7">
+          <div class="product_slider_img">
+            <div class="lSSlideOuter  vertical" style="padding-right: 105px;"><div class="lSSlideWrapper usingCss" style="height: 450px; transition-duration: 600ms; transition-timing-function: ease;"><div id="vertical" class="lightSlider lsGrab lSSlide" style="height: 1800px; transform: translate3d(0px, -450px, 0px);">
+              <div data-thumb="{{prod.product_image1.url}}" class="lslide" style="height: 450px; margin-bottom: 0px;">
+                <img src="{{prod.product_image1.url}}">
+              </div>
+              <div data-thumb="{{prod.product_image1.url}}" class="lslide active" style="height: 450px; margin-bottom: 0px;">
+                <img src="{{prod.product_image1.url}}">
+              </div>
+              <div data-thumb="{{prod.product_image1.url}}" class="lslide" style="height: 450px; margin-bottom: 0px;">
+                <img src="{{prod.product_image1.url}}">
+              </div>
+              <div data-thumb="{{prod.product_image1.url}}" class="lslide" style="height: 450px; margin-bottom: 0px;">
+                <img src="{{prod.product_image1.url}}">
+              </div>
+            </div><div class="lSAction"><a class="lSPrev"></a><a class="lSNext"></a></div></div><ul class="lSPager lSGallery" style="margin-left: 5px; width: 100px; transition-duration: 600ms; height: 607.167px; transform: translate3d(0px, 0px, 0px);"><li style="width:100%;height:146.66666666666666px;margin-bottom:5px" class=""><a href="#"><img src="{{prod.product_image1.url}}"></a></li><li style="width:100%;height:146.66666666666666px;margin-bottom:5px" class="active"><a href="#"><img src="{{prod.product_image1.url}}"></a></li><li style="width:100%;height:146.66666666666666px;margin-bottom:5px"><a href="#"><img src="{{prod.product_image1.url}}"></a></li><li style="width:100%;height:146.66666666666666px;margin-bottom:5px"><a href="#"><img src="{{prod.product_image1.url}}"></a></li></ul></div>
           </div>
         </div>
-      </div>
-      <div class="col-lg-5 col-xl-4">
-        <div class="s_product_text">
-         
-          <h3>{{prod.product_name}}</h3>
-          <h2>${{prod.product_price}}</h2>
-          <ul class="list">
-            <li>
-              <a class="active" href="#">
-                <span>Category</span>{{prod.category}}</a>
-            </li>
-            <li>
-            <a href="#"> <span>Availibility</span>{{prod.product_quantity}}</a>
-            </li> 
-          </ul>
-          <p>
-            First replenish living. Creepeth image image. Creeping can't, won't called.
-            Two fruitful let days signs sea together all land fly subdue
-          </p>
-          <div class="card_area d-flex justify-content-between align-items-center">
-            <div class="product_count">
-              <span class="inumber-decrement"> <i class="ti-minus"></i></span>
-              <input class="input-number" type="text" value="1" min="0" max="10">
-              <span class="number-increment"> <i class="ti-plus"></i></span>
-            </div>
-            <input type="hidden" value="{{prod.id}}" class="prod_id" >
+         <div class="col-lg-5 col-xl-4">
+           <div class="s_product_text">
+             <h5>previous <span>|</span> next</h5>
+             <h3>Faded SkyBlu Denim Jeans</h3>
+             <h2>$149.99</h2>
+             <ul class="list">
+               <li>
+                 <a class="active" href="#">
+                   <span>Category</span> : Household</a>
+               </li>
+               <li>
+                 <a href="#"> <span>Availibility</span> : In Stock</a>
+               </li>
+             </ul>
+             <p>
+               First replenish living. Creepeth image image. Creeping can't, won't called.
+               Two fruitful let days signs sea together all land fly subdue
+             </p>
+             <div class="card_area d-flex justify-content-between align-items-center">
+               <div class="product_count">
+                 <span class="inumber-decrement"> <i class="ti-minus"></i></span>
+                 <input class="input-number" type="text" value="1" min="0" max="10">
+                 <span class="number-increment"> <i class="ti-plus"></i></span>
+               </div>
+               <button type="submit" class="btn_3 addToCartBtn  " >{% if prod.product_quantity > 0  %}Add to cart {% else %}Out of stok{% endif %}</button>        
 
-            <button type="submit" class="btn_3 addToCartBtn"  >{% if prod.product_quantity > 0  %}Add to cart {% else %}Out of stock{% endif %}</button>        
-
-            {% comment %} <a href="{% url 'add_cart' %}" class="btn_3">add to cart</a> {% endcomment %}
-            <a href="#" class="like_us"> <i class="ti-heart"></i> </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+               <a href="#" class="like_us"> <i class="ti-heart"></i> </a>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+   <!--================End Single Product Area =================-->
+ 
+   <!--================Product Description Area =================-->
+   
+   
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -117,4 +122,6 @@
         });
     });
 </script>
+<script src="{% static 'assets/js/owl.carousel.min.js'%}"></script>
+
 {% endblock %}

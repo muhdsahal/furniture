@@ -33,26 +33,40 @@
                           <div class="product_top_bar d-flex justify-content-between align-items-center">
                               <div class="single_product_menu">
                           
-                              <section style="background-color: white;">
-                                <div class="container py-5 custom-card-container">
-                                  <div class="row">
-                                    {% for product in products %}
-                                    <div class="col-md-6 col-lg-4 mb-4">
-                                      <div class="card">
-                                        <img src="{{product.product_image1.url}}" class="card-img-top" alt="Laptop" />
-                                        <div class="card-body">
-                                          <div class="d-flex justify-content-between">
-                                            <h5>{{product.product_name}}</h5>
-                                            <h6> ${{product.product_price}}</h6>
-                                            <a href="{% url 'product_details' product.id %}" class="add_cart">seemore</a>
+                                <section style="background-color: white;">
+                                  <div class="container py-5 custom-card-container">
+                                    <div class="row">
+                                      {% for product in products %}
+                                      {% if forloop.counter0|divisibleby:3 %}
+                                      </div>
+                                      <div class="row">
+                                      {% endif %}
+                                      <div class="col-md-4 mb-4">
+                                        <div class="card">
+                                          <div class="position-relative">
+                                            <a href="{% url 'product_details' product.id %}">
+                                              <img src="{{ product.product_image1.url }}" class="card-img-top" alt="Laptop" />
+                                            </a>
+                                            
+                                          </div>
+                                          <div class="card-body">
+                                            <h5 class="card-title">{{ product.product_name }}</h5>
+                                            <h6 class="card-price"> ${{ product.product_price }}</h6>
+                                            <div class="d-flex justify-content-between mt-3">
+                                              <button  class="btn_3 addToCartBtn" data-product_id ="{{ product.id }}">{% if product.product_quantity > 0  %}Add to cart {% else %}Out of stock{% endif %}</button> 
+                                              <div class="icon-overlay">
+                                                <a href="" data-product_id ="{{ product.id }}" class="wishlist-icon">
+                                                  <i class="fas fa-heart fa-2x"></i>
+                                                </a>
+                                              </div>
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
+                                      {% endfor %}
                                     </div>
-                                    {% endfor %}
                                   </div>
-                                </div>
-                              </section>
+                                </section>
                           </div>
                       </div>
                   </div>
@@ -61,6 +75,94 @@
       </div>
   </section>
   <!--================End Category Product Area =================-->
-
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script>
+      $('.addToCartBtn').click(function (e) {
+          e.preventDefault();
+  
+          var product_id = $(this).data('product_id');
+          var product_qty = 1;
+          console.log(product_id, product_qty)
+         
+          //var selected_size = $(this).closest('.product_data').find('#size').val(); // Get the selected size value
+          console.log(product_id,'daxoooooo')
+          console.log(product_qty,'daxoooooo')
+        
+          $.ajax({
+              method: "POST",
+              url: "{% url 'add_cart' %}",
+              data: {
+                  'product_qty': product_qty,
+                  'prod_id': product_id,
+                  //'size': selected_size, // Include the selected size in the data
+                  'csrfmiddlewaretoken': '{{ csrf_token }}'
+              },
+              
+              success: function (response) {
+  
+                console.log(response);
+  
+  
+  
+                if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'product already in cart' ) {
+                    swal("Error!", response.status, "error");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } else if (response.status === 'Product added successfully') { 
+                    swal("", response.status, "success");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } else if (response.status === 'you are not login please Login to continue') {
+                    swal("", response.status, "warning");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } 
+                else if (response.status === 'Sorry! this variant not available') {
+                    swal("", response.status, "warning");
+                    $('.cartdata').load(location.href + " .cartdata");
+                } 
+                else {
+                    swal("Error!", response.status, "error");
+                    $('.cartdata').load(location.href + " .cartdata");
+                }
+            }
+          });
+      });
+  </script>
  
+  <script>
+    $('.wishlist-icon').click(function (e) {
+        e.preventDefault();
+
+        var product_id = $(this).data('product_id');
+
+        $.ajax({
+            method: "POST",
+            url: "{% url 'add_wishlist' %}",
+            data: {
+                'prod_id': product_id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function (response) {
+                console.log(response);
+
+                if (response.status === 'product already in wishlist') {
+                    swal("Error!", response.status, "error");
+                } else if (response.status === 'product added to wishlist') {
+                    swal("", response.status, "success");
+                } else if (response.status === 'login and continue') {
+                    swal("", response.status, "warning");
+                } else if (response.status === 'something went wrong ,reload page') {
+                    swal("", response.status, "warning");
+                } else {
+                    swal("Error!", response.status, "error");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText); // Log the detailed error response
+                swal("Error!", "An error occurred. Please try again later.", "error");
+            }
+        });
+    });
+</script>
+
   {% endblock %}

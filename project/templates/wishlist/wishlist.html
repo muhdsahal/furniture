@@ -1,72 +1,166 @@
 {% extends 'base.html' %}
-{% block title %}aranoz{% endblock %}
-{% load static %}
+{% block title %}Wishlist{% endblock %}
 {% block body %}
-
-
-
-
-<section class="cart_area padding_top">
-    <center>
-        <h3>Wish List</h3>
-    </center>
-    <div class="container">
-        {%if not wishlist%}
-            <h2 class="text-center">Your wish list is empty</h2>
-            <div class="text-center">
-                <a href="{%url 'shop' 0 %}">Continue shopping..</a>
-            </div>
-        {%else%}
-
-        <div class="cart_inner">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                    <tr style="height:2px;">
-                    <th scope="col">Product</th>
-                    <th scope="col">Price</th>
-                    <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    {% for item in wishlist%}
-                    <tr>
-                    <td>
-                    <div class="media">
-                        <div class="d-flex">
-                            <img style="height:71px"  src="{{item.product.image1.url}}" alt=""/>
-                        </div>
-                        <div class="media-body">
-                            <p>{{item.product.product_name}}</p>
+{% load static %}
+<!-- ajax end-->
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Wishlist</h4>
+                        <div class="breadcrumb__links">
+                            <a href="{%url 'home'%}">Home</a>
+                            {% comment %} <a href="{%url 'shop'%}">Shop</a> {% endcomment %}
+                            <span>Wishlist</span>
                         </div>
                     </div>
-                </td>
-                <td>
-                    <h5>${{item.product.product_price}}</h5>
-                </td>
-                <td class="text-right">
-                    {% comment %} {% if item.product.stock > 0 %}
-                        <a href="{% url 'add_to_cart' item.product.id %}"><i class="fas fa-cart-plus"></i></a>
-                    {%else%}
-                        <a> Currently, Out of Stock </a>
-                    {%endif%} {% endcomment %}
-
-                </td>
-                <td class="text-right">
-                    <a href="{% url 'deletewishlist' item.product.id %}"><i class="fas fa-trash"></i></a>
-
-                </td>
+                </div>
             </div>
-
-            </tr>
-                {% endfor %}
-                </tbody>
-                </table>
         </div>
-        {%endif%}
-    </div>
-</section>
+    </section>
+    <!-- Breadcrumb Section End -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs/build/css/alertify.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs/build/css/themes/default.min.css"/>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+    <!-- Css Styles -->
+
+    <link rel="stylesheet" href="{%static 'cart/css/style.css'%}" type="text/css">
+
+    <!-- Shopping Cart Section Begin -->
+    <section class="shopping-cart spad">
+        <div class="container product_data cartdata">
+            <div class="row ">
+                <div class="col-lg-12 ">
+                    <div class="shopping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+
+                                    <th>Product</th>
+                                    <th>Product name</th>
+                                    <th>Rate</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if not wishlist %}
+                                <h2 class="text-center font-weight-bold" style="color: #c5c1c1;" >Your Wishlist is Empty</h2>
+                                <br>
+                                <br>
+                                <br>
+                                {% else %}
+                                {% for item in wishlist %}
+                                <tr class="product_data">
+                                    <td class="product_cart_item">
+                                        <div class="product_cart_item_pic ">
+                                            <img src="{{ item.product.product_image1.url}}" height="90px" alt="IMG"  >
+                                        </div>
+                                    </td>
+                                    <td class="product_cart_item_text">
+                                        <h5 style="font-weight: bold;">{{ item.product.product_name }}</h5>
+                                    </td>                
+                                    <td>
+                                    <h5>{% if item.product.product.offer %} <del class="text-danger">₹ {{item.product.product_price}}</del> ₹{{item.variation.product.get_offer}}{% else %} ₹ {{item.product.product_price}} {% endif %}</h5>
+                                    </td>
+                                    <td>
+                                        <div class="continue__btn">
+                                            <a href="" class="addToCartBtn"  data-variantid="{{item.product.id}}" data-productid="{{item.product.id}}">Add to Cart</a>
+                                        </div>
+                                    </td>                                 
+                                    <td class="cart__close">
+                                        <a data-variantid="{{item.product.id}}" class="deleteWishlit" href="" ><i class="fa fa-close"></i></a> 
+                                    </td>
+                                </tr>
+                                 
+                                {% endfor %}
+                                {% endif %}
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="continue__btn">
+                                <a href="{%url 'shop'%}">Continue Shopping</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="continue__btn update__btn">
+                                <a href="{%url 'wishlist'%}"><i class="fa fa-spinner"></i> Update Wishlist</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </section>
+    <!-- Shopping Cart Section End -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(document).on('click', '.deleteWishlit', function(e) {
+            e.preventDefault();
+            
+            var prod_id = $(this).data('prod_id');
+            var token = $('input[name=csrfmiddlewaretoken]').val();
+            $.ajax({
+                method: "POST",
+                url: "/wishlist/deletewishlist/",
+                data: {
+                    'prod_id': prod_id,
+                    csrfmiddlewaretoken: '{{csrf_token}}'
+                },
+                success: function(response) {
+                    $('.cartdata').load(location.href + " .cartdata");
+                }
+            });
+        });
+    });
+ </script>
+ <script>
+$(document).on('click', '.addToCartBtn', function(e) {
+  e.preventDefault();
+
+  //var variant_id = $(this).data('variantid');
+  var prod_id = $(this).data('productid');
+  var product_qty = 1;
+  $.ajax({
+    method: "POST",
+    url: "{% url 'add_cart' %}",
+    data: {
+      //'variation_id': variant_id,
+      'product_qty': product_qty,
+      'prod_id': prod_id,
+      csrfmiddlewaretoken: '{{csrf_token }}'
+    },
+    success: function (response){
+        console.log(response)
+      if (response.status === 'Product already in Cart' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
+          swal("Error!", response.status, "error")
+          $('.cartdata').load(location.href + " .cartdata");
+      }else if (response.status === 'Product added successfully'){
+        swal("Congratulations!.", response.status, "success")
+          $('.cartdata').load(location.href + " .cartdata");
+      }else{
+        swal("Error!.", response.status, "error")
+        $('.cartdata').load(location.href + " .cartdata");
+      }
+    }
+  });
+});
+
+</script>   
+
+
 {% endblock %}
+
 
 

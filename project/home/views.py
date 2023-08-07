@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from products.models import *
 from categories.models import *
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 
 
@@ -43,25 +45,46 @@ def product_details(request,id):
     return render(request,'productdetails.html',{'prod':product}) 
 
 def search_product(request):
-    if 'keyword' in request.GET:
-        keyword=request.GET['keyword']
-        if keyword:
-            products=Product.objects.order_by('id').filter(product_name__icontains=keyword)
-            if products.exists():
-                product_ids=products.values_list('id',flat=True)
-                context={
-                    'cate':Category.objects.all(),
-                    'products': products,
+    keyword = request.GET.get('keyword', '')
+    if not keyword:
+        return redirect('shop')
 
-                }
-                return render(request,'shop.html',context)
-            else:
-                message='product not found !'
-                return render(request,'shop.html',{'message':message})
-        else:
-            message='please enter a valid  search keyword'
-            return render(request,'shop.html',{'message':message})
+    products = Product.objects.order_by('id').filter(product_name__icontains=keyword)
+    if products.exists():
+        product_ids = products.values_list('id', flat=True)
+        context = {
+            'cate': Category.objects.all(),
+            'products': products,
+        }
+        return render(request, 'shop.html', context)
     else:
-        return render(request,'404.html')
+        message = 'Product not found!'
+        return render(request, 'shop.html', {'message': message})
 
 
+def product_list(request):
+    products = Product.objects.all()
+
+    sort_option = request.GET.get('sort', '')
+    size_filter = request.GET.get('size_filter', '')
+
+    if sort_option == 'atoz':
+        products = products.order_by('product_name')
+    elif sort_option == 'ztoa':
+        products = products.order_by('-product_name')
+
+    if size_filter == 'small':
+        products = products.filter(size='Small')
+    elif size_filter == 'medium':
+        products = products.filter(size='Medium')
+    elif size_filter == 'large':
+        products = products.filter(size='Large')
+
+    paginator = Paginator(products, per_page=10)  # Number of products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj
+    }
+    return render(request, 'shop.html', context)

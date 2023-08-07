@@ -81,15 +81,15 @@
     
                                             <div class="input-group quantity mx-auto " style="width: 100px;">
                                                 <div class="input-group-btn">
-                                                    <button data-price="{{item.product.product_name}}" data-variantid="{{item.product.product.id}}" class="btn btn-sm border border-secondary btn-minus changeQuantity" >
+                                                    <button data-price="{{item.product.product_name}}" data-productid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-minus changeQuantity" >
                                                         <i class="fa fa-minus"></i>
                                                     </button>
                                                 </div>
     
-                                                <input readonly id="pro_qty{{item.product.product.id}}" type="text" class="form-control form-control-sm  text-center" value="{{item.product_qty}}">
+                                                <input readonly id="pro_qty{{item.product.id}}" type="text" class="form-control form-control-sm  text-center" value="{{item.product_qty}}">
     
                                                 <div class="input-group-btn sifan">
-                                                    <button data-price="{{item.product.product.price}}" data-variantid="{{item.product.product.id}}" class="btn btn-sm border border-secondary btn-plus changeQuantity">
+                                                    <button data-price="{{item.product.product.price}}" data-productid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-plus changeQuantity">
                                                         <i class="fa fa-plus"></i>
                                                     </button>
                                                 </div>
@@ -182,12 +182,12 @@ $(document).ready(function() {
     $('.changeQuantity').click(function(e) {
         e.preventDefault();
         
-        var variant_id = $(this).data('variantid');
+        var variant_id = $(this).data('productid');
         var product_qty = $('#pro_qty' + variant_id).val();
-        
+        console.log(variant_id,product_qty,'vrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr')
         $.ajax({
             method: "POST",
-            url: "update_cart/",
+            url: "{% url 'update_cart' %}",
             data: {
                 'variant_id': variant_id,
                 'product_qty': product_qty,
@@ -207,6 +207,7 @@ $(document).ready(function() {
                 document.getElementById('tax_field').textContent = sub_total * 0.18;
                 document.getElementById('grand_total').textContent = sub_total + (sub_total * 0.18);
                 document.getElementById('single_product_total' + variant_id).textContent = parseInt(response.product_price) * parseInt(response.quantity);
+               
             },
             error: function(xhr, status, error) {
                 console.error(error);

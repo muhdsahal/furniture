@@ -24,20 +24,22 @@ def profile(request):
 #add address
 def addaddress(request):
     if request.method == 'POST':
-        first_name=request.POST.get('first_name')
-        last_name=request.POST.get('last_name')
+        first_name=request.POST.get('firstname')
+        last_name=request.POST.get('lastname')
         country=request.POST.get('country')
         address =request.POST.get('address')
         city= request.POST.get('city')
         pincode=request.POST.get('pincode')
         phone=request.POST.get('phone')
         email=request.POST.get('email')
-        state=request.POS.get('state')
+        state=request.POST.get('state')
         order_note=request.POST.get('ordernote')
+        print(first_name,last_name,country,address,city,pincode,phone,email,state,order_note)
+              
         
         if request.user is None:
             return
-        if first_name.strip()=='' or last_name.strip()=='':
+        if first_name=='' or last_name=='':
             messages.error(request,'first name or lastname  is empty ')
             return redirect('profile')
         if country.strip()=='':
@@ -109,6 +111,10 @@ def changepassword(request):
         new_password=request.POST.get('new_password')
         confirm_new_password=request.POST.get('confirm_new_password')
 
+        if new_password.strip() == '' or confirm_new_password.strip() == '':
+            messages.error(request,'first password  or confirm password is empty!')
+            return redirect('profile')
+
         if new_password != confirm_new_password:
             messages.error(request,'password didnt match!')
             return redirect('profile')
@@ -117,11 +123,16 @@ def changepassword(request):
             user.set_password(new_password)
             user.save()
 
-        update_session_auth_hash(request,user)
+            update_session_auth_hash(request,user)
 
 
-        messages.success(request,'password updated successfully')
-        return redirect('profile')
+            messages.success(request,'password updated')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Invalid old password')
+            return redirect('profile')
+    return redirect('profile')
+
 
 def deleteaddress(request,delete_id):
     address=Address.objects.get(id=delete_id)

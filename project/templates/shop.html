@@ -31,14 +31,14 @@
                       </div>
                   </aside>
                   
-                  {% comment %} <aside class="left_widgets p_filter_widgets">
+                   <aside class="left_widgets p_filter_widgets">
                       <div class="l_w_title">
                           <h3>Product filters</h3>
                       </div>
                       <div class="widgets_inner">
                           <ul class="list">
                               <li>
-                                  <a href="#">Apple</a>
+                                  <a href="#"  id="sort-atoz">A to Z </a>
                               </li>
                               <li>
                                   <a href="#">Asus</a>
@@ -71,7 +71,7 @@
                               </li>
                           </ul>
                       </div>
-                  </aside> {% endcomment %}
+                  </aside> 
 {% comment %} 
                   <aside class="left_widgets p_filter_widgets">
                       <div class="l_w_title">
@@ -118,7 +118,7 @@
                               </div>
                           </div>
                       </div>
-                  </aside> {% endcomment %}
+                  </aside>  {% endcomment %}
               </div>
           </div>
           <div class="col-lg-9">
@@ -128,15 +128,15 @@
                           <div class="single_product_menu">
                               <p><span>10000 </span> Prodict Found</p>
                           </div>
-                          {% comment %} <div class="single_product_menu d-flex">
+                         {% comment %} <div class="single_product_menu d-flex">
                               <h5>short by : </h5>
                               <select>
                                   <option data-display="Select">name</option>
                                   <option value="1">price</option>
                                   <option value="2">product</option>
                               </select>
-                          </div> {% endcomment %}
-                          {% comment %} <div class="single_product_menu d-flex">
+                          </div> 
+                          <div class="single_product_menu d-flex">
                               <h5>show :</h5>
                               <div class="top_pageniation">
                                   <ul>
@@ -145,16 +145,17 @@
                                       <li>3</li>
                                   </ul>
                               </div>
-                          </div> {% endcomment %}
+                          </div>  {% endcomment %}
                           <div class="single_product_menu d-flex">
                               <div class="input-group">
-                                <form action="{% url 'search_product' %}">
+                                <form action="{% url 'search_product'  %}">
                                   <input type="text" class="form-control" placeholder="search"
                                       aria-describedby="inputGroupPrepend">
                                   <div class="input-group-prepend">
                                       <button type='submit' id="inputGroupPrepend"><i
                                               class="ti-search"></i></button>
                                 </form>
+                                
                                   </div>
                               </div>
                           </div>
@@ -165,14 +166,30 @@
                 <div class="container py-5 custom-card-container">
                   <div class="row">
                     {% for product in products %}
-                    <div class="col-md-6 col-lg-4 mb-4">
+                    {% if forloop.counter0|divisibleby:3 %}
+                    </div>
+                    <div class="row">
+                    {% endif %}
+                    <div class="col-md-4 mb-4">
                       <div class="card">
-                        <img src="{{product.product_image1.url}}" class="card-img-top" alt="Laptop" />
+                        <div class="position-relative">
+                          <a href="{% url 'product_details' product.id %}">
+                            <img src="{{ product.product_image1.url }}" class="card-img-top" alt="Laptop" />
+                          </a>
+                          
+                        </div>
                         <div class="card-body">
-                          <div class="d-flex justify-content-between">
-                            <h5>{{product.product_name}}</h5>
-                            <h6> ${{product.product_price}}</h6>
-                            <a href="{% url 'product_details' product.id %}" class="add_cart">seemore</a>
+                          <h5 class="card-title">{{ product.product_name }}</h5>
+                          <h6 class="card-price"> ${{ product.product_price }}</h6>
+                          <div class="d-flex justify-content-between mt-3">
+                            
+                            
+                            <button  class="btn_3 addToCartBtn" data-product_id ="{{ product.id }}">{% if product.product_quantity > 0  %}Add to cart {% else %}Out of stock{% endif %}</button> 
+                            <div class="icon-overlay">
+                                <a href="" data-product_id ="{{ product.id }}" class="wishlist-icon">
+                                  <i class="fas fa-heart fa-2x"></i>
+                                </a>
+                              </div>
                           </div>
                         </div>
                       </div>
@@ -181,6 +198,33 @@
                   </div>
                 </div>
               </section>
+             <!-- ... -->
+            <ul>
+                {% for product in page_obj %}
+                <li>{{ product.name }} - Price: {{ product.price }} - Size: {{ product.size }}</li>
+                {% endfor %}
+            </ul>
+
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+            <!-- ... -->
+                
+              
                   <div class="col-lg-12">
                       <div class="pageination">
                           <nav aria-label="Page navigation example">
@@ -192,10 +236,6 @@
                                   </li>
                                   <li class="page-item"><a class="page-link" href="#">1</a></li>
                                   <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                  <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                  <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                  <li class="page-item"><a class="page-link" href="#">6</a></li>
                                   <li class="page-item">
                                       <a class="page-link" href="#" aria-label="Next">
                                           <i class="ti-angle-double-right"></i>
@@ -210,5 +250,96 @@
       </div>
   </div>
 </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    $('.wishlist-icon').click(function (e) {
+        e.preventDefault();
 
+        var product_id = $(this).data('product_id');
+
+        $.ajax({
+            method: "POST",
+            url: "{% url 'add_wishlist' %}",
+            data: {
+                'prod_id': product_id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function (response) {
+                console.log(response);
+
+                if (response.status === 'product already in wishlist') {
+                    swal("Error!", response.status, "error");
+                } else if (response.status === 'product added to wishlist') {
+                    swal("", response.status, "success");
+                } else if (response.status === 'login and continue') {
+                    swal("", response.status, "warning");
+                } else if (response.status === 'something went wrong ,reload page') {
+                    swal("", response.status, "warning");
+                } else {
+                    swal("Error!", response.status, "error");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText); // Log the detailed error response
+                swal("Error!", "An error occurred. Please try again later.", "error");
+            }
+        });
+    });
+</script>
+
+
+
+
+<script>
+    $('.addToCartBtn').click(function (e) {
+        e.preventDefault();
+
+        var product_id = $(this).data('product_id');
+        var product_qty = 1;
+        console.log(product_id, product_qty)
+       
+        //var selected_size = $(this).closest('.product_data').find('#size').val(); // Get the selected size value
+        console.log(product_id,'daxoooooo')
+        console.log(product_qty,'daxoooooo')
+      
+        $.ajax({
+            method: "POST",
+            url: "{% url 'add_cart' %}",
+            data: {
+                'product_qty': product_qty,
+                'prod_id': product_id,
+                //'size': selected_size, // Include the selected size in the data
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            
+            success: function (response) {
+
+              console.log(response);
+
+
+
+              if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'product already in cart' ) {
+                  swal("Error!", response.status, "error");
+                  $('.cartdata').load(location.href + " .cartdata");
+              } else if (response.status === 'Product added successfully') { 
+                  swal("", response.status, "success");
+                  $('.cartdata').load(location.href + " .cartdata");
+              } else if (response.status === 'you are not login please Login to continue') {
+                  swal("", response.status, "warning");
+                  $('.cartdata').load(location.href + " .cartdata");
+              } 
+              else if (response.status === 'Sorry! this variant not available') {
+                  swal("", response.status, "warning");
+                  $('.cartdata').load(location.href + " .cartdata");
+              } 
+              else {
+                  swal("Error!", response.status, "error");
+                  $('.cartdata').load(location.href + " .cartdata");
+              }
+          }
+        });
+    });
+</script>
 {% endblock %}

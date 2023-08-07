@@ -2,20 +2,48 @@
 {% block title %}User_Page{% endblock  %}
 {% block body %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'dashboard/css/styles.min.css' %}"/>
+
+<style>
+  .message {
+      padding: 2px;
+      margin-bottom: 2px;
+  }
+
+  .message.success {
+      color: rgb(54, 169, 68);
+      background-color: rgb(255, 255, 255);
+  }
+
+  .message.warning {
+      color: rgb(252, 248, 6);
+      background-color: rgb(255, 255, 255);
+  }
+
+  .message.error {
+      color: rgb(255, 0, 0);
+      background-color: rgb(255, 255, 255);
+  }
+
+</style>
+
+<link rel="stylesheet" href="{% static 'dashboard/css/styles.min.css'%}"/>
+
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-option">
-  <div class="container">
-      <div class="row">
-          <div class="col-lg-12">
-              <div class="breadcrumb__text">
-                  <div class="breadcrumb__links">
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  </section>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="breadcrumb__text">
+                <h4>Shop</h4>
+                 <div class="breadcrumb__links"> 
+                     <a href="{%url 'home' %}">Home</a>
+                    <span>Profile</span> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
 <!-- Breadcrumb Section End -->
 <section>
     <div class="container py-5">  
@@ -74,13 +102,13 @@
                 <p class="mb-0">Wallet</p>
                 <a href="#" class="btn btn-outline-dark ">Orders</a>
               </div>
-              {% comment %} <div class="col-sm-6">
-                {% for wallet in wallets %}
+              <div class="col-sm-6">
+                {% comment %} {% for wallet in wallets %}
                   <p class="text-danger mb-0 h5 text-end" style="font-weight: bold;">
                     ₹ {{ wallet.wallet|floatformat:0 }} 
                   </p>
-                {% endfor %}
-              </div> {% endcomment %}
+                {% endfor %} {% endcomment %}
+              </div>
               
             </div>
             
@@ -132,12 +160,12 @@
           </div>
 
            <!-- Button trigger modal -->
-        <a type="submit" data-bs-toggle="modal" data-bs-target="#editprofile">
+        <a type="button" data-bs-toggle="modal" data-bs-target="#editprofile">
           <button class="btn btn-outline-dark"> Edit Profile </button>
         </a>
 
            <!-- Button trigger modal -->
-           <a type="submit" data-bs-toggle="modal" data-bs-target="#changepassword">
+           <a type="button" data-bs-toggle="modal" data-bs-target="#changepassword">
             <button class="btn btn-outline-dark"> Change Password </button>
           </a>
 
@@ -152,7 +180,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form id="myForm"  action="{%url 'changepassword' %}" enctype="multipart/form-data" method="POST">
+          
+                  <form action="{% url 'changepassword' %}" enctype="multipart/form-data" method="POST"> 
                   {% csrf_token %}
                   <div style="display: none;" class="alert alert-danger text-center changepassmessage" id="message" role="alert">
                     
@@ -171,7 +200,7 @@
                   </div>
   
                   <div class="d-flex justify-content-center">
-                    <button type="submit" onclick="submitForm(event)"
+                    <button type="submit"
                       class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light">Save Changes</button>
                   </div>
   
@@ -192,7 +221,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <form action="{%url 'editprofile'%}" enctype="multipart/form-data" method="POST">
+              <form action="{% url 'editprofile'%}" enctype="multipart/form-data" method="POST">
                 {% csrf_token %}
                 <div class="form-outline mb-4">
                   <input value="{{user.username}}"  name='username'  type="text" id="id_usernam" class="form-control form-control-lg" />
@@ -459,18 +488,19 @@
 
     </div>
   </section>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <script>
- {% for msg in messages %}
-   swal({
-     title: "Error!",
-     text: "{{msg}}",
-     icon: "error",
-     button: "ok",
-   });
-   {% endfor %}
-  </script>
-  <script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+
+  
+  {% for message in messages %}
+      <script>
+          document.addEventListener('DOMContentLoaded', function() {
+              Swal.fire({
+                  text: "{{ message }}",
+                  timer: 5000, // Adjust the timer to control how long each alert stays visible (in milliseconds)
+              });
+          });
+      </script>
+    {% endfor %}
 {% comment %} 
       const myTextField = document.getElementById("id_fullname");
       myTextField.addEventListener("keypress", function(event) {

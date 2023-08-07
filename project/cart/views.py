@@ -77,22 +77,30 @@ def cart(request):
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='user_login1')
-def update_cart(request, cart_item_id):
-    try:
-        cart_item = Cart.objects.get(id=cart_item_id, user=request.user)
-        new_qty = int(request.POST.get('new_qty'))
+def update_cart(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('variant_id')
+        if (Cart.objects.filter(user=request.user, product=product_id)):
+            prod_qty = request.POST.get('product_qty')
+            cart = Cart.objects.get(product=product_id, user=request.user)
+            cartes = cart.product.product_quantity
+            if int(cartes) >= int(prod_qty):
+                cart.product_qty = prod_qty
+                cart.save()
+               
 
-        if new_qty > 0:
-            cart_item.product_qty = new_qty
-            cart_item.save()
-            
-        else:
-            return HttpResponseBadRequest("Invalid quantity")
-
-    except Cart.DoesNotExist:
-        return HttpResponseBadRequest("Cart item not found")
-
-    return redirect('cart')
+                carts = Cart.objects.filter(user = request.user).order_by('id')
+                total_price = 0
+                for item in carts:
+                    # if item.product.offer == None:
+                    #     total_price = total_price + item.product.product_price * item.product_qty
+                    # else :
+                    total_price = total_price + item.product.product_price * item.product_qty
+                    # total_price = total_price-item.product.offer.discount_amount
+                return JsonResponse({'status': 'Updated successfully','sub_total':total_price,'product_price':cart.product.product_price,'quantity':prod_qty})
+            else:
+                return JsonResponse({'status': 'Not allowed this Quantity'})
+    return JsonResponse('something went wrong, reload page',safe=False)
 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
