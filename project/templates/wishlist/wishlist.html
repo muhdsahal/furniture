@@ -72,8 +72,17 @@
                                             <a href="" class="addToCartBtn"  data-variantid="{{item.product.id}}" data-productid="{{item.product.id}}">Add to Cart</a>
                                         </div>
                                     </td>                                 
-                                    <td class="cart__close">
+                                    {% comment %} <td class="cart__close">
                                         <a data-variantid="{{item.product.id}}" class="deleteWishlit" href="" ><i class="fa fa-close"></i></a> 
+                                    </td> {% endcomment %}
+
+                                    <td>
+                                        <form method="post" action="{% url 'deletewishlist' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                                            <button type="submit" style="background-color: black; color: white; border: none; padding: 5px 10px; cursor: pointer;">Delete</button>
+
+                                        </form>
                                     </td>
                                 </tr>
                                  
@@ -113,7 +122,7 @@
             var token = $('input[name=csrfmiddlewaretoken]').val();
             $.ajax({
                 method: "POST",
-                url: "/wishlist/deletewishlist/",
+                url: "{% url 'deletewishlist' %}",
                 data: {
                     'prod_id': prod_id,
                     csrfmiddlewaretoken: '{{csrf_token}}'

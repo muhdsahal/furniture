@@ -31,7 +31,7 @@
                       </div>
                   </aside>
                   
-                   <aside class="left_widgets p_filter_widgets">
+                   {% comment %} <aside class="left_widgets p_filter_widgets">
                       <div class="l_w_title">
                           <h3>Product filters</h3>
                       </div>
@@ -71,7 +71,7 @@
                               </li>
                           </ul>
                       </div>
-                  </aside> 
+                  </aside>  {% endcomment %}
 {% comment %} 
                   <aside class="left_widgets p_filter_widgets">
                       <div class="l_w_title">
@@ -147,18 +147,20 @@
                               </div>
                           </div>  {% endcomment %}
                           <div class="single_product_menu d-flex">
-                              <div class="input-group">
-                                <form action="{% url 'search_product'  %}">
-                                  <input type="text" class="form-control" placeholder="search"
-                                      aria-describedby="inputGroupPrepend">
-                                  <div class="input-group-prepend">
-                                      <button type='submit' id="inputGroupPrepend"><i
-                                              class="ti-search"></i></button>
+                            <div class="input-group">
+                                <form action="{% url 'search_product' %}">
+                                    <input type="text" class="form-control" name="keyword" placeholder="Search"
+                                        aria-describedby="inputGroupPrepend">
+                                    <div class="input-group-append"> <!-- Changed from input-group-prepend -->
+                                        <button type='submit' class="btn btn-outline-secondary" id="inputGroupPrepend">
+                                            <i class="ti-search"></i> <!-- Use an appropriate icon class -->
+                                        </button>
+                                    </div>
                                 </form>
-                                
-                                  </div>
-                              </div>
-                          </div>
+                            </div>
+                        </div>
+                          
+
                       </div>
                   </div>
               </div>
@@ -187,7 +189,7 @@
                             <button  class="btn_3 addToCartBtn" data-product_id ="{{ product.id }}">{% if product.product_quantity > 0  %}Add to cart {% else %}Out of stock{% endif %}</button> 
                             <div class="icon-overlay">
                                 <a href="" data-product_id ="{{ product.id }}" class="wishlist-icon">
-                                  <i class="fas fa-heart fa-2x"></i>
+                                   <img src="{% static 'img/heart.png'%}" alt="img"> </i>
                                 </a>
                               </div>
                           </div>

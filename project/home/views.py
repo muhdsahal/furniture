@@ -45,21 +45,28 @@ def product_details(request,id):
     return render(request,'productdetails.html',{'prod':product}) 
 
 def search_product(request):
-    keyword = request.GET.get('keyword', '')
-    if not keyword:
-        return redirect('shop')
-
-    products = Product.objects.order_by('id').filter(product_name__icontains=keyword)
-    if products.exists():
-        product_ids = products.values_list('id', flat=True)
-        context = {
-            'cate': Category.objects.all(),
-            'products': products,
-        }
-        return render(request, 'shop.html', context)
+    if 'keyword' in request.GET:
+        keyword = request.GET.get('keyword')
+        if keyword:
+            products = Product.objects.order_by('id').filter(product_name__icontains=keyword)
+            if products.exists():
+                context = {
+                    'cate': Category.objects.all(),
+                    'products': products,
+                }
+                return render(request, 'shop.html', context)
+            else:
+                context = {
+                    'cate': Category.objects.all(),
+                    'message': 'Product not found!',  # Add the error message to the context
+                }
+                return render(request, 'shop.html', context)
+        else:
+            message = 'Please enter a valid search keyword'
+            return render(request, 'shop.html', {'message': message})
     else:
-        message = 'Product not found!'
-        return render(request, 'shop.html', {'message': message})
+        return render(request, '404.html')
+
 
 
 def product_list(request):

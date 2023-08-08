@@ -45,7 +45,7 @@ def add_wishlist(request):
 @login_required(login_url='user_login1')
 def deletewishlist(request):
     if request.method == "POST"  :
-        product_id= int(request.POST.get(product_id))
+        product_id = request.POST.get('product_id')
         wishlist=Wishlist.objects.filter(user=request.user,product=product_id)
         if wishlist.exists():
             wishlist.delete()

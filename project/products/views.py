@@ -35,6 +35,8 @@ def addproduct(request):
         image3=request.FILES.get('product_image3',None)
         quantity=request.POST.get('quantity')
         category_id=request.POST.get('category')
+        description=request.POST.get('product_description','')
+        print(description,'jhbbbbbbbbbbbbbbbbbbbbbbbb')
     
     
     #validation
@@ -63,6 +65,7 @@ def addproduct(request):
             category=category,
             product_price=price,
             product_quantity=quantity,
+            product_description=description,
         
         )
         product.save()
@@ -98,9 +101,9 @@ def editproduct(request,editproduct_id):
         return redirect('product')
 
     if request.method == 'POST':
-        pname = request.POST['product_name']
-        pprice = request.POST['product_price']
-        cdescription = request.POST['product_description']
+        pname = request.POST.get('product_name')
+        pprice = request.POST.get('product_price')
+        pdescription = request.POST.get('product_description')
         category_id = request.POST.get('category')
         quantit = request.POST.get('quantity')
         try:
@@ -138,6 +141,7 @@ def editproduct(request,editproduct_id):
         cat.product_price = pprice
         cat.is_available = is_availables
         cat.category = cates
+        cat.product_description = pdescription
         cat.save()
         return redirect('product')
     else:

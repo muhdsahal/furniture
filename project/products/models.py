@@ -12,6 +12,7 @@ class Product(models.Model):
     product_image3 = models.ImageField(upload_to='photos/product', default='No image available')
     product_quantity=models.IntegerField(null=True, blank=True)
     category = models.ForeignKey(Category,on_delete=models.CASCADE,null=True, blank=True)
+    product_description = models.TextField()
     slug = models.SlugField(max_length=250, unique=True)
     is_available=models.BooleanField(default=True)
 

@@ -10,7 +10,7 @@
    <!--================End Home Banner Area =================-->
  
    <!--================Single Product Area =================-->
-   <div class="product_image_area section_padding">
+   <div class="product_image_area section_padding  product_data" >
     <div class="container">
       <div class="row s_product_inner justify-content-between">
         <div class="col-lg-7 col-xl-7">
@@ -19,45 +19,57 @@
               <div data-thumb="{{prod.product_image1.url}}" class="lslide" style="height: 450px; margin-bottom: 0px;">
                 <img src="{{prod.product_image1.url}}">
               </div>
-              <div data-thumb="{{prod.product_image1.url}}" class="lslide active" style="height: 450px; margin-bottom: 0px;">
+              <div data-thumb="{{prod.product_image2.url}}" class="lslide active" style="height: 450px; margin-bottom: 0px;">
+                <img src="{{prod.product_image2.url}}">
+              </div>
+              <div data-thumb="{{prod.product_imageurl}}" class="lslide" style="height: 450px; margin-bottom: 0px;">
                 <img src="{{prod.product_image1.url}}">
               </div>
               <div data-thumb="{{prod.product_image1.url}}" class="lslide" style="height: 450px; margin-bottom: 0px;">
                 <img src="{{prod.product_image1.url}}">
               </div>
-              <div data-thumb="{{prod.product_image1.url}}" class="lslide" style="height: 450px; margin-bottom: 0px;">
-                <img src="{{prod.product_image1.url}}">
-              </div>
-            </div><div class="lSAction"><a class="lSPrev"></a><a class="lSNext"></a></div></div><ul class="lSPager lSGallery" style="margin-left: 5px; width: 100px; transition-duration: 600ms; height: 607.167px; transform: translate3d(0px, 0px, 0px);"><li style="width:100%;height:146.66666666666666px;margin-bottom:5px" class=""><a href="#"><img src="{{prod.product_image1.url}}"></a></li><li style="width:100%;height:146.66666666666666px;margin-bottom:5px" class="active"><a href="#"><img src="{{prod.product_image1.url}}"></a></li><li style="width:100%;height:146.66666666666666px;margin-bottom:5px"><a href="#"><img src="{{prod.product_image1.url}}"></a></li><li style="width:100%;height:146.66666666666666px;margin-bottom:5px"><a href="#"><img src="{{prod.product_image1.url}}"></a></li></ul></div>
+             </div><div class="lSAction"><a class="lSPrev"></a><a class="lSNext"></a></div></div><ul class="lSPager lSGallery" style="margin-left: 5px; width: 100px; transition-duration: 600ms; height: 607.167px; transform: translate3d(0px, 0px, 0px);"><li style="width:100%;height:146.66666666666666px;margin-bottom:5px" class=""><a href="#"><img src="{{prod.product_image1.url}}"></a></li><li style="width:100%;height:146.66666666666666px;margin-bottom:5px" class="active"><a href="#"><img src="{{prod.product_image1.url}}"></a></li><li style="width:100%;height:146.66666666666666px;margin-bottom:5px"><a href="#"><img src="{{prod.product_image1.url}}"></a></li><li style="width:100%;height:146.66666666666666px;margin-bottom:5px"><a href="#"><img src="{{prod.product_image1.url}}"></a></li></ul></div> 
           </div>
         </div>
-         <div class="col-lg-5 col-xl-4">
+         <div class="col-lg-5 col-xl-4"> 
            <div class="s_product_text">
-             <h5>previous <span>|</span> next</h5>
-             <h3>Faded SkyBlu Denim Jeans</h3>
-             <h2>$149.99</h2>
+             {% comment %} <h5>previous <span>|</span> next</h5> {% endcomment %}
+             <h3>{{prod.product_name}}</h3>
+             <h2>${{prod.product_price}}</h2>
              <ul class="list">
                <li>
                  <a class="active" href="#">
-                   <span>Category</span> : Household</a>
+                   <span>Category</span>{{prod.category}}</a>
                </li>
                <li>
-                 <a href="#"> <span>Availibility</span> : In Stock</a>
+                 <a href="#"> <span>Availibility</span>{{prod.product_quantity}}</a>
                </li>
              </ul>
-             <p>
-               First replenish living. Creepeth image image. Creeping can't, won't called.
-               Two fruitful let days signs sea together all land fly subdue
-             </p>
+             <p>{{prod.product_description}}</p>
+              
+             
              <div class="card_area d-flex justify-content-between align-items-center">
                <div class="product_count">
                  <span class="inumber-decrement"> <i class="ti-minus"></i></span>
                  <input class="input-number" type="text" value="1" min="0" max="10">
                  <span class="number-increment"> <i class="ti-plus"></i></span>
                </div>
-               <button type="submit" class="btn_3 addToCartBtn  " >{% if prod.product_quantity > 0  %}Add to cart {% else %}Out of stok{% endif %}</button>        
+               <input type="hidden" value="{{prod.id}}" class="prod_id" >
 
-               <a href="#" class="like_us"> <i class="ti-heart"></i> </a>
+               <button type="submit" class="btn_3 addToCartBtn  " >{% if prod.product_quantity > 0  %}Add to cart {% else %}Out of stok{% endif %}</button>  
+               
+               
+               
+               {% comment %} <a href="#" data-product_id ="{{ prod.id }}"   class="like_us"> <i class="ti-heart wishlist-icon "></i></a> {% endcomment %}
+               <a href="#" type="submit" data-product_id="{{ prod.product_id }}" class="like_us wishlist-icon"> <i class="ti-heart "></i></a>
+
+               {% comment %} <div class="icon-overlay">
+                <a href="" data-product_id ="{{ product.id }}" class="wishlist-icon">
+                  <i class="fas fa-heart fa-2x"></i>
+                </a>
+              </div> {% endcomment %}
+              
+          
              </div>
            </div>
          </div>
@@ -69,8 +81,8 @@
    <!--================Product Description Area =================-->
    
    
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
   <script>
@@ -123,5 +135,49 @@
     });
 </script>
 <script src="{% static 'assets/js/owl.carousel.min.js'%}"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% comment %} <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Make sure you have included SweetAlert 2 --> {% endcomment %}
+
+<script>
+$(document).ready(function() {
+  $('.wishlist-icon').click(function (e) {
+    e.preventDefault();
+
+    var product_id = $(this).data('product_id');
+    console.log(product_id,'reeeeeeeeeeeeeeeeee')
+
+    $.ajax({
+      method: "POST",
+      url: "{% url 'add_wishlist' %}", // Make sure this URL is correctly generated
+      data: {
+        'prod_id': product_id,
+        'csrfmiddlewaretoken': '{{ csrf_token }}' // Make sure this token is correctly rendered
+      },
+      success: function (response) {
+        console.log(response);
+
+        // Assuming the server sends JSON response with a 'status' field
+        if (response.status === 'product already in wishlist') {
+          Swal.fire("Error!", response.status, "error"); // Using SweetAlert 2
+        } else if (response.status === 'product added to wishlist') {
+          Swal.fire("", response.status, "success"); // Using SweetAlert 2
+        } else if (response.status === 'login and continue') {
+          Swal.fire("", response.status, "warning"); // Using SweetAlert 2
+        } else if (response.status === 'something went wrong ,reload page') {
+          Swal.fire("", response.status, "warning"); // Using SweetAlert 2
+        } else {
+          Swal.fire("Error!", response.status, "error"); // Using SweetAlert 2
+        }
+      },
+      error: function (xhr, status, error) {
+        console.log(xhr.responseText); // Log the detailed error response
+        Swal.fire("Error!", "An error occurred. Please try again later.", "error"); // Using SweetAlert 2
+      }
+    });
+  });
+});
+</script>
 
 {% endblock %}
