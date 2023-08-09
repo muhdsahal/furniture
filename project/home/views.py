@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from products.models import *
 from categories.models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.contrib import messages
 
 
 
@@ -14,7 +14,7 @@ def home(request):
 
 
 def shop(request):
-    product = Product.objects.all().order_by('id')
+    product = Product.objects.filter(is_available=True).order_by('id')
     cate=Category.objects.all()
     context={
         'products':product,
@@ -41,8 +41,9 @@ def cat_detail(request, id):
 
 def product_details(request,id):
     product=Product.objects.get(id=id)
-    product_id = product.id
-    return render(request,'productdetails.html',{'prod':product}) 
+    print(product,"fdssssssssssssssssssss")
+    product_id = product
+    return render(request,'productdetails.html',{'prod':product_id}) 
 
 def search_product(request):
     if 'keyword' in request.GET:
@@ -58,19 +59,20 @@ def search_product(request):
             else:
                 context = {
                     'cate': Category.objects.all(),
-                    'message': 'Product not found!',  # Add the error message to the context
+
                 }
+                messages.error(request, 'search not found! ') 
                 return render(request, 'shop.html', context)
         else:
-            message = 'Please enter a valid search keyword'
-            return render(request, 'shop.html', {'message': message})
+            messages.error(request, 'Please enter a valid search keyword') 
+            return render(request, 'shop.html')
     else:
         return render(request, '404.html')
 
 
 
 def product_list(request):
-    products = Product.objects.all()
+    products = Product.objects.filter(is_available=True)
 
     sort_option = request.GET.get('sort', '')
     size_filter = request.GET.get('size_filter', '')

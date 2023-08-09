@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404
 def product (request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
-    product=Product.objects.all().order_by('id')
+    product=Product.objects.filter(is_available=True).order_by('id')
     contex={
         'product':product,
         'Category': Category.objects.all()
@@ -51,6 +51,15 @@ def addproduct(request):
         if not image1:
             messages.error(request,'image not found')
             return redirect('product')
+        
+        if not image2:
+            messages.error(request,'image not found')
+            return redirect('product')
+        
+        if not image3:
+            messages.error(request,'image not found')
+            return redirect('product')
+        
         if category_id:
             category=Category.objects.get(id=category_id)
         else:
@@ -87,7 +96,7 @@ def deleteproduct(request,deleteproduct_slug):
         return redirect('product')
 
 
-@login_required(login_url='admin_login')
+@login_required(login_url='admin_login1')
 def editproduct(request,editproduct_id):
     product = get_object_or_404(Product, slug=editproduct_id)
 

@@ -272,20 +272,20 @@
                 console.log(response);
 
                 if (response.status === 'product already in wishlist') {
-                    swal("Error!", response.status, "error");
+                    Swal.fire("Error!", response.status, "error");
                 } else if (response.status === 'product added to wishlist') {
-                    swal("", response.status, "success");
+                    Swal.fire("", response.status, "success");
                 } else if (response.status === 'login and continue') {
-                    swal("", response.status, "warning");
+                    Swal.fire("", response.status, "warning");
                 } else if (response.status === 'something went wrong ,reload page') {
-                    swal("", response.status, "warning");
+                    Swal.fire("", response.status, "warning");
                 } else {
-                    swal("Error!", response.status, "error");
+                    Swal.fire("Error!", response.status, "error");
                 }
             },
             error: function (xhr, status, error) {
                 console.log(xhr.responseText); // Log the detailed error response
-                swal("Error!", "An error occurred. Please try again later.", "error");
+                Swal.fire("Error!", "An error occurred. Please try again later.", "error");
             }
         });
     });
@@ -323,21 +323,21 @@
 
 
               if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'product already in cart' ) {
-                  swal("Error!", response.status, "error");
+                  Swal.fire("Error!", response.status, "error");
                   $('.cartdata').load(location.href + " .cartdata");
               } else if (response.status === 'Product added successfully') { 
-                  swal("", response.status, "success");
+                  Swal.fire("", response.status, "success");
                   $('.cartdata').load(location.href + " .cartdata");
               } else if (response.status === 'you are not login please Login to continue') {
-                  swal("", response.status, "warning");
+                  Swal.fire("", response.status, "warning");
                   $('.cartdata').load(location.href + " .cartdata");
               } 
               else if (response.status === 'Sorry! this variant not available') {
-                  swal("", response.status, "warning");
+                  Swal.fire("", response.status, "warning");
                   $('.cartdata').load(location.href + " .cartdata");
               } 
               else {
-                  swal("Error!", response.status, "error");
+                  Swal.fire("Error!", response.status, "error");
                   $('.cartdata').load(location.href + " .cartdata");
               }
           }

@@ -1,183 +1,199 @@
 {% extends 'base.html' %}
-{% block title %}product details{% endblock %}
+{% block title %}
+  product details
+{% endblock %}
 {% load static %}
 {% block body %}
+  <!-- ================Single Product Area ================= -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+  <!-- ================End Home Banner Area ================= -->
 
-
- <!--================Single Product Area =================-->
- 
-
-   <!--================End Home Banner Area =================-->
- 
-   <!--================Single Product Area =================-->
-   <div class="product_image_area section_padding  product_data" >
+  <!-- ================Single Product Area ================= -->
+  <div class="product_image_area section_padding product_data ">
     <div class="container">
       <div class="row s_product_inner justify-content-between">
         <div class="col-lg-7 col-xl-7">
           <div class="product_slider_img">
-            <div class="lSSlideOuter  vertical" style="padding-right: 105px;"><div class="lSSlideWrapper usingCss" style="height: 450px; transition-duration: 600ms; transition-timing-function: ease;"><div id="vertical" class="lightSlider lsGrab lSSlide" style="height: 1800px; transform: translate3d(0px, -450px, 0px);">
-              <div data-thumb="{{prod.product_image1.url}}" class="lslide" style="height: 450px; margin-bottom: 0px;">
+            <div class="owl-carousel owl-theme" id="vertical-carousel">
+              <div data-thumb="{{prod.product_image1.url}}" class="item" style="height: 350px margin-bottom: 0px;">
                 <img src="{{prod.product_image1.url}}">
               </div>
-              <div data-thumb="{{prod.product_image2.url}}" class="lslide active" style="height: 450px; margin-bottom: 0px;">
+              <div data-thumb="{{prod.product_image2.url}}" class="item" style="height: 350px margin-bottom: 0px;">
                 <img src="{{prod.product_image2.url}}">
               </div>
-              <div data-thumb="{{prod.product_imageurl}}" class="lslide" style="height: 450px; margin-bottom: 0px;">
+              <div data-thumb="{{prod.product_image1.url}}" class="item"  style="height: 350px margin-bottom: 0px;">
                 <img src="{{prod.product_image1.url}}">
               </div>
-              <div data-thumb="{{prod.product_image1.url}}" class="lslide" style="height: 450px; margin-bottom: 0px;">
-                <img src="{{prod.product_image1.url}}">
+              <div data-thumb="{{prod.product_image1.url}}" class="item" style="height: 350px margin-bottom: 0px;">
+                <img src="{{prod.product_image2.url}}">
               </div>
-             </div><div class="lSAction"><a class="lSPrev"></a><a class="lSNext"></a></div></div><ul class="lSPager lSGallery" style="margin-left: 5px; width: 100px; transition-duration: 600ms; height: 607.167px; transform: translate3d(0px, 0px, 0px);"><li style="width:100%;height:146.66666666666666px;margin-bottom:5px" class=""><a href="#"><img src="{{prod.product_image1.url}}"></a></li><li style="width:100%;height:146.66666666666666px;margin-bottom:5px" class="active"><a href="#"><img src="{{prod.product_image1.url}}"></a></li><li style="width:100%;height:146.66666666666666px;margin-bottom:5px"><a href="#"><img src="{{prod.product_image1.url}}"></a></li><li style="width:100%;height:146.66666666666666px;margin-bottom:5px"><a href="#"><img src="{{prod.product_image1.url}}"></a></li></ul></div> 
+            </div>
           </div>
         </div>
-         <div class="col-lg-5 col-xl-4"> 
-           <div class="s_product_text">
-             {% comment %} <h5>previous <span>|</span> next</h5> {% endcomment %}
-             <h3>{{prod.product_name}}</h3>
-             <h2>${{prod.product_price}}</h2>
-             <ul class="list">
-               <li>
-                 <a class="active" href="#">
-                   <span>Category</span>{{prod.category}}</a>
-               </li>
-               <li>
-                 <a href="#"> <span>Availibility</span>{{prod.product_quantity}}</a>
-               </li>
-             </ul>
-             <p>{{prod.product_description}}</p>
-              
+        <div class="col-lg-5 col-xl-4">
+          <div class="s_product_text">
+            {% comment %} <h5>previous <span>|</span> next</h5> {% endcomment %}
+            <h3>{{ prod.product_name }}</h3>
+            <h2>${{ prod.product_price }}</h2>
+            <ul class="list">
+              <li>
+                <a class="active" href="#"><span>Category</span>{{ prod.category }}</a>
+              </li>
+              <li>
+                <span>Brand : Aranoz</span>
+              </li>
+              <li>
+                <a href="#"><span>Availibility</span>{{ prod.product_quantity }}</a>
+              </li>
+            </ul>
+            <p>{{ prod.product_description }}</p>
+            <p>Furniture plays an essential role in shaping our living spaces, offering both functionality and aesthetic appeal. It encompasses a wide range of objects designed to facilitate human activities and enhance the comfort, organization, and ambiance of homes, offices, and various other settings.
+
+              From ancient civilizations to modern times, furniture has evolved significantly in terms of design, materials, and styles. Initially, furniture was primarily utilitarian, serving basic needs such as seating, sleeping, and storage. Over the centuries, as cultures and technologies advanced, furniture became a means of artistic expression and social status.
+              including chairs, tables, beds, sofas, cabinets, and more, each designed to fulfill 
              
-             <div class="card_area d-flex justify-content-between align-items-center">
-               <div class="product_count">
-                 <span class="inumber-decrement"> <i class="ti-minus"></i></span>
-                 <input class="input-number" type="text" value="1" min="0" max="10">
-                 <span class="number-increment"> <i class="ti-plus"></i></span>
-               </div>
-               <input type="hidden" value="{{prod.id}}" class="prod_id" >
+            <div class="card_area d-flex justify-content-between align-items-center">
+              <div class="product_count">
+                <span class="inumber-decrement"><i class="ti-minus"></i></span>
+                <input class="input-number" type="text" value="1" min="1" max="10" />
+                <span class="number-increment"><i class="ti-plus"></i></span>
+              </div>
+              <input type="hidden" value="{{prod.id}}" class="prod_id" >
+              <button type="submit" class="btn_3 addToCartBtn  " >{% if prod.product_quantity > 0  %}Add to cart {% else %}Out of stok{% endif %}</button>        
+               
+              {% comment %} <a href="#" data-product_id="{{ prod.id }}" class="like_us"><i class="ti-heart wishlist-icon"></i></a> {% endcomment %}
+              <a href="#" type="submit" data-product_id="{{ prod.product_id }}" class="like_us wishlist-icon"><i class="ti-heart"></i></a>
 
-               <button type="submit" class="btn_3 addToCartBtn  " >{% if prod.product_quantity > 0  %}Add to cart {% else %}Out of stok{% endif %}</button>  
-               
-               
-               
-               {% comment %} <a href="#" data-product_id ="{{ prod.id }}"   class="like_us"> <i class="ti-heart wishlist-icon "></i></a> {% endcomment %}
-               <a href="#" type="submit" data-product_id="{{ prod.product_id }}" class="like_us wishlist-icon"> <i class="ti-heart "></i></a>
-
-               {% comment %} <div class="icon-overlay">
-                <a href="" data-product_id ="{{ product.id }}" class="wishlist-icon">
-                  <i class="fas fa-heart fa-2x"></i>
-                </a>
+              {% comment %} <div class="icon-overlay">
+                <a href="" data-product_id="{{ product.id }}" class="wishlist-icon"><i class="fas fa-heart fa-2x"></i></a>
               </div> {% endcomment %}
-              
-          
-             </div>
-           </div>
-         </div>
-       </div>
-     </div>
-   </div>
-   <!--================End Single Product Area =================-->
- 
-   <!--================Product Description Area =================-->
-   
-   
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ================End Single Product Area ================= -->
+
+  <!-- ================Product Description Area ================= -->
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
   <script>
     $('.addToCartBtn').click(function (e) {
-        e.preventDefault();prod_id
-
-        var prod_id = $(this).closest('.product_data').find('.prod_id').val();
-        var product_qty = $('.input-number').val();
-       
-        //var selected_size = $(this).closest('.product_data').find('#size').val(); // Get the selected size value
-        console.log(prod_id,'daxoooooo')
-        console.log(product_qty,'daxoooooo')
-      
-        $.ajax({
-            method: "POST",
-            url: "{% url 'add_cart' %}",
-            data: {
-                'product_qty': product_qty,
-                'prod_id': prod_id,
-                //'size': selected_size, // Include the selected size in the data
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            
-            success: function (response) {
-
-              console.log(response);
-
-
-
-              if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'Product already in cart' ) {
-                  swal("Error!", response.status, "error");
-                  $('.cartdata').load(location.href + " .cartdata");
-              } else if (response.status === 'Product added successfully') { 
-                  swal("", response.status, "success");
-                  $('.cartdata').load(location.href + " .cartdata");
-              } else if (response.status === 'you are not login please Login to continue') {
-                  swal("", response.status, "warning");
-                  $('.cartdata').load(location.href + " .cartdata");
-              } 
-              else if (response.status === 'Sorry! this variant not available') {
-                  swal("", response.status, "warning");
-                  $('.cartdata').load(location.href + " .cartdata");
-              } 
-              else {
-                  swal("Error!", response.status, "error");
-                  $('.cartdata').load(location.href + " .cartdata");
-              }
+      e.preventDefault()
+      prod_id
+    
+      var prod_id = $(this).closest('.product_data').find('.prod_id').val()
+      var product_qty = $('.input-number').val()
+    
+      //var selected_size = $(this).closest('.product_data').find('#size').val(); // Get the selected size value
+      console.log(prod_id, 'daxoooooo')
+      console.log(product_qty, 'daxoooooo')
+    
+      $.ajax({
+        method: 'POST',
+        url: "{% url 'add_cart' %}",
+        data: {
+          product_qty: product_qty,
+          prod_id: prod_id,
+          //'size': selected_size, // Include the selected size in the data
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+    
+        success: function (response) {
+          console.log(response)
+    
+          if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'Product already in cart') {
+            swal('Error!', response.status, 'error')
+            $('.cartdata').load(location.href + ' .cartdata')
+          } else if (response.status === 'Product added successfully') {
+            swal('', response.status, 'success')
+            $('.cartdata').load(location.href + ' .cartdata')
+          } else if (response.status === 'you are not login please Login to continue') {
+            swal('', response.status, 'warning')
+            $('.cartdata').load(location.href + ' .cartdata')
+          } else if (response.status === 'Sorry! this variant not available') {
+            swal('', response.status, 'warning')
+            $('.cartdata').load(location.href + ' .cartdata')
+          } else {
+            swal('Error!', response.status, 'error')
+            $('.cartdata').load(location.href + ' .cartdata')
           }
-        });
-    });
-</script>
-<script src="{% static 'assets/js/owl.carousel.min.js'%}"></script>
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-{% comment %} <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Make sure you have included SweetAlert 2 --> {% endcomment %}
-
-<script>
-$(document).ready(function() {
-  $('.wishlist-icon').click(function (e) {
-    e.preventDefault();
-
-    var product_id = $(this).data('product_id');
-    console.log(product_id,'reeeeeeeeeeeeeeeeee')
-
-    $.ajax({
-      method: "POST",
-      url: "{% url 'add_wishlist' %}", // Make sure this URL is correctly generated
-      data: {
-        'prod_id': product_id,
-        'csrfmiddlewaretoken': '{{ csrf_token }}' // Make sure this token is correctly rendered
-      },
-      success: function (response) {
-        console.log(response);
-
-        // Assuming the server sends JSON response with a 'status' field
-        if (response.status === 'product already in wishlist') {
-          Swal.fire("Error!", response.status, "error"); // Using SweetAlert 2
-        } else if (response.status === 'product added to wishlist') {
-          Swal.fire("", response.status, "success"); // Using SweetAlert 2
-        } else if (response.status === 'login and continue') {
-          Swal.fire("", response.status, "warning"); // Using SweetAlert 2
-        } else if (response.status === 'something went wrong ,reload page') {
-          Swal.fire("", response.status, "warning"); // Using SweetAlert 2
-        } else {
-          Swal.fire("Error!", response.status, "error"); // Using SweetAlert 2
         }
-      },
-      error: function (xhr, status, error) {
-        console.log(xhr.responseText); // Log the detailed error response
-        Swal.fire("Error!", "An error occurred. Please try again later.", "error"); // Using SweetAlert 2
-      }
-    });
-  });
-});
-</script>
+      })
+    })
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
+  <script>
+    $(document).ready(function () {
+      $('#vertical-carousel').owlCarousel({
+        items: 1,
+        loop: true,
+        autoplay: true,
+        autoplayTimeout: 3000,
+        autoplayHoverPause: true,
+        thumbs: true,
+        thumbContainerClass: 'lSGallery',
+        thumbItemClass: 'lSPager',
+        thumbMargin: 5,
+        thumbItemSize: '100%',
+        responsive: {
+          0: {
+            items: 1
+          },
+          600: {
+            items: 1
+          },
+          1000: {
+            items: 1
+          }
+        }
+      })
+    })
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      $('.wishlist-icon').click(function (e) {
+        e.preventDefault()
+    
+        var product_id = $(this).data('product_id')
+        console.log(product_id, 'reeeeeeeeeeeeeeeeee')
+    
+        $.ajax({
+          method: 'POST',
+          url: "{% url 'add_wishlist' %}", // Make sure this URL is correctly generated
+          data: {
+            prod_id: product_id,
+            csrfmiddlewaretoken: '{{ csrf_token }}' // Make sure this token is correctly rendered
+          },
+          success: function (response) {
+            console.log(response)
+    
+            // Assuming the server sends JSON response with a 'status' field
+            if (response.status === 'product already in wishlist') {
+              Swal.fire('Error!', response.status, 'error') // Using SweetAlert 2
+            } else if (response.status === 'product added to wishlist') {
+              Swal.fire('', response.status, 'success') // Using SweetAlert 2
+            } else if (response.status === 'login and continue') {
+              Swal.fire('', response.status, 'warning') // Using SweetAlert 2
+            } else if (response.status === 'something went wrong ,reload page') {
+              Swal.fire('', response.status, 'warning') // Using SweetAlert 2
+            } else {
+              Swal.fire('Error!', response.status, 'error') // Using SweetAlert 2
+            }
+          },
+          error: function (xhr, status, error) {
+            console.log(xhr.responseText) // Log the detailed error response
+            Swal.fire('Error!', 'An error occurred. Please try again later.', 'error') // Using SweetAlert 2
+          }
+        })
+      })
+    })
+  </script>
 {% endblock %}

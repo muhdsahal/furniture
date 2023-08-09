@@ -4,7 +4,7 @@ from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import update_session_auth_hash
-from .models import Address
+from .models import Address,Wallet
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
@@ -16,7 +16,8 @@ from django.core.exceptions import ObjectDoesNotExist
 def profile(request):
     dict_user={
         'address':Address.objects.filter(user=request.user),
-        'user':User.objects.filter(username= request.user)
+        'user':User.objects.filter(username= request.user),
+        'wallets':Wallet.objects.filter(user=request.user)
     }
     return render(request,'userprofile/userprofile.html',dict_user)
 
@@ -99,6 +100,7 @@ def editprofile(request):
             user.username=username
             user.first_name=first_name
             user.last_name=last_name
+            user.email=email
             user.save()
 
         except ObjectDoesNotExist:

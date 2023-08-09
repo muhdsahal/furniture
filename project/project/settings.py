@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'userprofile',
     'mathfilters',
     'wishlist',
+    'checkout',
     
     ]
 

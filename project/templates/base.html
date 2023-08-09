@@ -3,6 +3,28 @@
 <html lang="zxx">
 
 <head>
+    <style>
+        .message {
+            padding: 2px;
+            margin-bottom: 2px;
+        }
+    
+        .message.success {
+            color: rgb(54, 169, 68);
+            background-color: rgb(255, 255, 255);
+        }
+    
+        .message.warning {
+            color: rgb(252, 248, 6);
+            background-color: rgb(255, 255, 255);
+        }
+    
+        .message.error {
+            color: rgb(255, 0, 0);
+            background-color: rgb(255, 255, 255);
+        }
+
+    </style>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -54,15 +76,13 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'home' %}">Home</a>
                                 </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownShop" role="button" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        Shop
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownShop">
-                                        <a class="dropdown-item" href="{% url 'shop' %}">Shop</a>
-                                       <a class="dropdown-item" href="{% url 'items' %}">Category</a> 
-                                    </div>
+                                
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'shop' %}">shop</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'items' %}">Category</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">Contact</a>
@@ -105,15 +125,7 @@
                 </div>
             </div>
         </div>
-        <div class="search_input" id="search_input_box">
-            <div class="container ">
-                <form class="d-flex justify-content-between search-inner">
-                    <input type="text" class="form-control" id="search_input" placeholder="Search Here">
-                    <button type="submit" class="btn"></button>
-                    <span class="ti-close" id="close_search" title="Close Search"></span>
-                </form>
-            </div>
-        </div>
+        
     </header>
     <!-- Header part end-->
 
@@ -133,7 +145,7 @@
                             <li><a href="#">Brand Assets</a></li>
                             <li><a href="#">Investor Relations</a></li>
                             <li><a href="#">Terms of Service</a></li>
-                        </ul>#
+                        </ul>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-2">
@@ -205,7 +217,19 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         </div>
     </footer>
     <!--::footer_part end::-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
 
+  
+    {% for message in messages %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    text: "{{ message }}",
+                    timer: 5000, // Adjust the timer to control how long each alert stays visible (in milliseconds)
+                });
+            });
+        </script>
+{% endfor %}
     <!-- jquery plugins here-->
     <script src="{% static 'assets/js/jquery-1.12.1.min.js'%}"></script>
     <!-- popper js -->

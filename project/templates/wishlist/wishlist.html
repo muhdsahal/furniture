@@ -3,23 +3,23 @@
 {% block body %}
 {% load static %}
 <!-- ajax end-->
-    <!-- Breadcrumb Section Begin -->
+    {% comment %} <!-- Breadcrumb Section Begin -->
     <section class="breadcrumb-option">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumb__text">
-                        <h4>Wishlist</h4>
+                       
                         <div class="breadcrumb__links">
-                            <a href="{%url 'home'%}">Home</a>
+                            
                             {% comment %} <a href="{%url 'shop'%}">Shop</a> {% endcomment %}
-                            <span>Wishlist</span>
-                        </div>
+                            
+                        {% comment %} </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </section> {% endcomment %} 
     <!-- Breadcrumb Section End -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs/build/css/alertify.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs/build/css/themes/default.min.css"/>
@@ -44,7 +44,8 @@
                                     <th>Product</th>
                                     <th>Product name</th>
                                     <th>Rate</th>
-                                    <th></th>
+                                    <th>Add To Cart</th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -69,7 +70,7 @@
                                     </td>
                                     <td>
                                         <div class="continue__btn">
-                                            <a href="" class="addToCartBtn"  data-variantid="{{item.product.id}}" data-productid="{{item.product.id}}">Add to Cart</a>
+                                            <a href="" class="btn_1 addToCartBtn"  data-variantid="{{item.product.id}}" data-productid="{{item.product.id}}">Add to Cart</a>
                                         </div>
                                     </td>                                 
                                     {% comment %} <td class="cart__close">
@@ -80,7 +81,7 @@
                                         <form method="post" action="{% url 'deletewishlist' %}">
                                             {% csrf_token %}
                                             <input type="hidden" name="product_id" value="{{ item.product.id }}">
-                                            <button type="submit" style="background-color: black; color: white; border: none; padding: 5px 10px; cursor: pointer;">Delete</button>
+                                            <button type="submit"  class="btn_1">Delete</button>
 
                                         </form>
                                     </td>
@@ -94,12 +95,12 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn">
+                            <div class="btn_3">
                                 <a href="{%url 'shop'%}">Continue Shopping</a>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn update__btn">
+                            <div class="btn_3">
                                 <a href="{%url 'wishlist'%}"><i class="fa fa-spinner"></i> Update Wishlist</a>
                             </div>
                         </div>

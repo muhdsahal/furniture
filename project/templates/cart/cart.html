@@ -108,7 +108,7 @@
                                             <form method="post" action="{% url 'deletecartitem' %}">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="product_id" value="{{ item.product.id }}">
-                                                <button type="submit" style="background-color: black; color: white; border: none; padding: 5px 10px; cursor: pointer;">Delete</button>
+                                                <button type="submit" class="btn_1">Delete</button>
 
                                             </form>
                                         </td>
@@ -139,7 +139,7 @@
                         <h6>Discount codes</h6>
                         <form action="#">
                             <input type="text" placeholder="Coupon code">
-                            <button type="submit">Apply</button>
+                            <button  type="submit" class="btn_3" >Apply</button>
                         </form>
                     </div>
                     <div class="cart__total">
@@ -150,7 +150,7 @@
                             <li>Grand Total ₹<span id="grand_total">{{grand_total |floatformat:2}}</span></li>
                         </ul >
                         {%if cart%}
-                        <a href="" class="primary-btn">Proceed to checkout</a>
+                        <a href="" class="btn_3">Proceed to checkout</a>
                         {% else %}
                         <a href="" class="primary-btn">Cart is Empty</a>
                         {% endif %}
