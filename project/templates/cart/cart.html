@@ -12,25 +12,7 @@
 <script src="https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js"></script>
 
 
-<!-- ajax end-->
-    {% comment %} <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-option">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb__text">
-                        <h4>Shopping Cart</h4>
-                        <div class="breadcrumb__links">
-                            <a href="{%url 'home'%}">Home</a>
-                            <a href="{%url 'shop'%}">Shop</a>
-                            <span>Shopping Cart</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> {% endcomment %}
-    <!-- Breadcrumb Section End -->
+
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
@@ -79,7 +61,7 @@
     
                                         <td>
     
-                                            <div class="input-group quantity mx-auto " style="width: 100px;">
+                                            <div class="input-group quantity"  style="width: 100px;">
                                                 <div class="input-group-btn">
                                                     <button data-price="{{item.product.product_name}}" data-productid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-minus changeQuantity" >
                                                         <i class="fa fa-minus"></i>
@@ -150,7 +132,7 @@
                             <li>Grand Total ₹<span id="grand_total">{{grand_total |floatformat:2}}</span></li>
                         </ul >
                         {%if cart%}
-                        <a href="" class="btn_3">Proceed to checkout</a>
+                        <a href="{% url 'checkout' %}" class="btn_3">Proceed to checkout</a>
                         {% else %}
                         <a href="" class="primary-btn">Cart is Empty</a>
                         {% endif %}

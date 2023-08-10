@@ -23,8 +23,8 @@ def add_cart(request):
                 return JsonResponse({'status':'No such prodcut found '})
             
             if Cart.objects.filter(user=request.user,product_id=prod_id).exists():
-                print(prod_id,'vgggggggggggggggggggggh')
-                print('product alreayd in cart')
+                print(prod_id,'0111111111111111000000000001')
+                
                 return JsonResponse({'status':'Product already in cart'})
                 
             else:
@@ -112,6 +112,6 @@ def deletecartitem(request):
             cart_items = Cart.objects.filter(user=request.user, product__id=product_id)
             cart_items.delete()
         except ValueError:
-            return HttpResponseBadRequest("Invalid product ID")  # Return a 400 Bad Request response for invalid input
+            return HttpResponseBadRequest("Invalid product ID")  
         
     return redirect('cart')

@@ -3,6 +3,9 @@ from products.models import *
 from categories.models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+
 
 
 
@@ -41,9 +44,9 @@ def cat_detail(request, id):
 
 def product_details(request,id):
     product=Product.objects.get(id=id)
-    print(product,"fdssssssssssssssssssss")
+    desdcrip = Product.objects.get(id=id)
     product_id = product
-    return render(request,'productdetails.html',{'prod':product_id}) 
+    return render(request,'productdetails.html',{'prod':product_id,'desdcrip':desdcrip}) 
 
 def search_product(request):
     if 'keyword' in request.GET:
@@ -71,7 +74,37 @@ def search_product(request):
 
 
 
+# def product_list(request):
+#     products = Product.objects.filter(is_available=True)
+
+#     sort_option = request.GET.get('sort', '')
+#     size_filter = request.GET.get('size_filter', '')
+
+#     if sort_option == 'atoz':
+#         products = products.order_by('product_name')
+#     elif sort_option == 'ztoa':
+#         products = products.order_by('-product_name')
+
+#     if size_filter == 'small':
+#         products = products.filter(size='Small')
+#     elif size_filter == 'medium':
+#         products = products.filter(size='Medium')
+#     elif size_filter == 'large':
+#         products = products.filter(size='Large')
+
+#     paginator = Paginator(products, per_page=9)  # Number of products per page
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+
+#     context = {
+#         'page_obj': page_obj
+#     }
+#     return render(request, 'shop.html', context)
+
+
+
 def product_list(request):
+    # Your existing code for filtering and sorting
     products = Product.objects.filter(is_available=True)
 
     sort_option = request.GET.get('sort', '')
@@ -82,16 +115,15 @@ def product_list(request):
     elif sort_option == 'ztoa':
         products = products.order_by('-product_name')
 
-    if size_filter == 'small':
-        products = products.filter(size='Small')
-    elif size_filter == 'medium':
-        products = products.filter(size='Medium')
-    elif size_filter == 'large':
-        products = products.filter(size='Large')
 
-    paginator = Paginator(products, per_page=10)  # Number of products per page
+    paginator = Paginator(products, per_page=9)  # Number of products per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
+    if request.is_ajax():
+        # If it's an AJAX request, return a JSON response with the paginated content
+        products_html = render_to_string('product_list_partial.html', {'page_obj': page_obj})
+        return JsonResponse({'products_html': products_html})
 
     context = {
         'page_obj': page_obj

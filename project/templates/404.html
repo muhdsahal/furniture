@@ -1,14 +1,36 @@
-{% extends 'base.html' %}
-{% block title %}aranoz{% endblock %}
-{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
 
+        .error-code {
+            font-size: 72px;
+            color: #333;
+            margin-bottom: 20px;
+        }
 
-
-<div class="container">
-    <h1>404</h1>
-    <p>Page Not Found</p>
-    <p>Oops! The page you are looking for does not exist.</p>
-    <p>Go back to the <a href="/">homepage</a> or <a href="javascript:history.back()">go back</a> to the previous page.</p>
-  </div>
-
-{% endblock %}
+        .error-message {
+            font-size: 24px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-code">404</div>
+    <div class="error-message">Oops! The page you're looking for doesn't exist.</div>
+</body>
+</html>

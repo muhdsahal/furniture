@@ -31,6 +31,7 @@ urlpatterns = [
     path('userprofile/',include('userprofile.urls')),
     path('cart/',include('cart.urls')),
     path('wishlist/',include('wishlist.urls')),
+    path('checkout/',include('checkout.urls')),
     
 
 

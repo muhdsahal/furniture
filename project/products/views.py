@@ -35,8 +35,8 @@ def addproduct(request):
         image3=request.FILES.get('product_image3',None)
         quantity=request.POST.get('quantity')
         category_id=request.POST.get('category')
-        description=request.POST.get('product_description','')
-        print(description,'jhbbbbbbbbbbbbbbbbbbbbbbbb')
+        description=request.POST.get('product_description')
+        
     
     
     #validation
@@ -101,7 +101,7 @@ def editproduct(request,editproduct_id):
     product = get_object_or_404(Product, slug=editproduct_id)
 
     if not request.user.is_superuser:
-        return redirect('admin_login')
+        return redirect('admin_login1')
 
     try:
         product = Product.objects.get(slug=editproduct_id)
@@ -123,17 +123,22 @@ def editproduct(request,editproduct_id):
             return redirect('product')
 
 
-        try:
-            is_availables = request.POST.get('checkbox', False)
-            if is_availables == 'on':
-                is_availables = True
-            else:
-                is_availables = False
-        except:
-            is_availables = False
+        # try:
+        #     is_available = request.POST.get('checkbox', False)
+        #     if is_available == 'on':
+        #         is_available = True
+        #     else:
+        #         is_available = False
+        # except:
+        #     is_available = False
 
         if pname == '' or pprice == '':
             messages.error(request, 'Name or Price field is empty')
+            return redirect('product')
+        
+        pprice=int(pprice)
+        if not pprice >=0:
+            messages.error(request, 'positive numbers only!')
             return redirect('product')
 
         if Product.objects.filter(product_name=pname).exists():
@@ -148,7 +153,7 @@ def editproduct(request,editproduct_id):
         cat.product_name = pname
         cat.quantity = quantit
         cat.product_price = pprice
-        cat.is_available = is_availables
+        # cat.is_available = is_available
         cat.category = cates
         cat.product_description = pdescription
         cat.save()

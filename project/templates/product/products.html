@@ -115,9 +115,18 @@
                                     <small id="image-error" class="text-danger text-center"></small>
                                 </div>
 
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example3cg">Image</label>
+                                    <input name="product_image2" type="file"
+                                        accept="image/png, image/jpeg, image/svg, image/avif" class="form-control"
+                                        id="image-input" />
+                                    <small id="image-error" class="text-danger text-center"></small>
+                                </div>
+
                               <div class="form-outline mb-4">
-                                <input name='product_description' value="{{c.product_description}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
                                 <label class="form-label" for="form3Example3cg">Discription</label>
+                                <input name='product_description' value="{{c.product_description}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
+                                
                               </div>
 
                               <div class="form-outline mb-4">
@@ -233,6 +242,7 @@
                                         {% for c in Category %}
                                         <option value="{{ c.id }}">{{ c.categories }}</option>
                                         {% endfor %}
+                                    </select>
                                         <div class="form-outline mb-4 mt-4">
                                             <label class="form-label" for="form3Example3cg">Quantity</label>
                                             <input name="quantity" type="number" id="form3Example3cg"
@@ -241,7 +251,7 @@
 
                                         <div class="form-outline mb-4">
                                             <label class="form-label" for="form3Example3cg">Desciption</label>
-                                            <input name='product_desciption' type="text" id="form3Example3cg"
+                                            <input name='product_description' type="text" id="form3Example3cg"
                                                 class="form-control form-control-lg" />
                                         </div>
 
