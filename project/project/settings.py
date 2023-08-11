@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'mathfilters',
     'wishlist',
     'checkout',
+    'variant',
     
     ]
 

@@ -129,6 +129,8 @@ def admin_login1(request):
     return render(request,'adminside/admin_login1.html')
 
 def dashboard(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
     return render(request,'adminside/dashboard.html')
 
 

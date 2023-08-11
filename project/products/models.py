@@ -4,6 +4,14 @@ from categories.models import Category
 # Create your models here.
 
 
+class Color(models.Model):
+    color_name = models.CharField(max_length=50)
+    color_code =models.CharField(max_length=15)
+    is_available=models.BooleanField(default=True)
+
+    def __str__(self) :
+        return self.color_name
+
 class Product(models.Model):
     product_name = models.CharField(unique=True, max_length=50,null=True, blank=True)
     product_price = models.IntegerField(null=True, blank=True)

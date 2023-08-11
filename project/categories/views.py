@@ -50,6 +50,20 @@ def deletecategory(request,deletecategory_id):
     cate.delete()
     return redirect('categories')
 
+# def blockcategory(request,cate_id):
+#     if not request.user.is_superuser:
+#         return redirect('admin_login1')
+#     cate=Category.objects.filter(id=cate_id)
+    
+#     if cate.is_active:
+#         cate.is_active=True
+#         cate.save()
+#     else:
+#         cate.is_active =False
+#         cate.save()
+#         return redirect('categories')
+
+
 @login_required(login_url='admin_login1')
 def editcategory(request,editcategory_id):
     if not request.user.is_superuser:
