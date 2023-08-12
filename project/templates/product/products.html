@@ -78,7 +78,7 @@
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                              <form  method="POST" action="{% url 'editproduct' c.slug %}"  enctype="multipart/form-data">
+                              <form  method="POST" action="{% url 'product_edit' c.id %}"  enctype="multipart/form-data">
                                 {% csrf_token %}
                                 
                                 <div class="form-outline mb-4">
@@ -99,7 +99,7 @@
                                   <label class="form-label" for="form3Example3cg">Category</label>
                                 </div>
 
-                                <div class="form-outline mb-4">
+                                {% comment %} <div class="form-outline mb-4">
                                     <label class="form-label" for="form3Example3cg">Image</label>
                                     <input name="product_image1" type="file"
                                         accept="image/png, image/jpeg, image/svg, image/avif" class="form-control"
@@ -121,7 +121,7 @@
                                         accept="image/png, image/jpeg, image/svg, image/avif" class="form-control"
                                         id="image-input" />
                                     <small id="image-error" class="text-danger text-center"></small>
-                                </div>
+                                </div> {% endcomment %}
 
                               <div class="form-outline mb-4">
                                 <label class="form-label" for="form3Example3cg">Discription</label>
@@ -146,13 +146,13 @@
                        </div>
 
             <!--softdelete product-->
-            {% if c.slug %}
+            {% if c.id %}
             <td>
-                <a type="submit" data-bs-toggle="modal" data-bs-target="#deleteModal{{ c.slug }}"
+                <a type="submit" data-bs-toggle="modal" data-bs-target="#deleteModal{{ c.id }}"
                     class="btn btn-danger">delete</a>
 
                 <!--delete product-->
-                <div class="modal fade" id="deleteModal{{ c.slug }}" tabindex="-1" role="dialog"
+                <div class="modal fade" id="deleteModal{{ c.id }}" tabindex="-1" role="dialog"
                     aria-labelledby="deleteModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -167,7 +167,7 @@
                             </div>
                             <div class="modal-footer">
                                 <a href="{% url 'product'  %}" class="btn btn-secondary" data-dismiss="modal">Cancel</a>
-                                <a href="{% url 'deleteproduct' c.slug %}" class="btn btn-danger">Delete</a>
+                                <a href="{% url 'product_delete' c.id %}" class="btn btn-danger">Delete</a>
                             </div>
                         </div>
                     </div>
@@ -215,7 +215,7 @@
                                     <input name="product_price" type="number" id="form3Example3cg"
                                         class="form-control form-control-lg" />
                                 </div>
-                                <div class="form-outline mb-4">
+                                {% comment %} <div class="form-outline mb-4">
                                     <label class="form-label" for="form3Example3cg">Image</label>
                                     <input name="product_image1" type="file"
                                         accept="image/png, image/jpeg, image/svg, image/avif" class="form-control"
@@ -235,7 +235,7 @@
                                         accept="image/png, image/jpeg, image/svg, image/avif" class="form-control"
                                         id="image-input" />
                                     <small id="image-error" class="text-danger text-center"></small>
-                                </div>
+                                </div> {% endcomment %}
                                 <div class="form-outline mb-4">
                                     <label class="form-label" for="form3Example3cg">Category</label>
                                     <select class="form-select" name="category">

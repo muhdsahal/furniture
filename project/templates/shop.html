@@ -167,7 +167,8 @@
               <section style="background-color: white;">
                 <div class="container py-5 custom-card-container">
                   <div class="row">
-                    {% for product in products %}
+                    {% if variant_images %}
+                    {% for c in variant_images %}
                     {% if forloop.counter0|divisibleby:3 %}
                     </div>
                     <div class="row">
@@ -175,20 +176,20 @@
                     <div class="col-md-4 mb-4">
                       <div class="card">
                         <div class="position-relative">
-                          <a href="{% url 'product_details' product.id %}">
-                            <img src="{{ product.product_image1.url }}" class="card-img-top" alt="Laptop" />
+                          <a href="{% url 'product_details' c.variant.product.id c.variant.id %}">
+                            <img src="{{ c.image.url }}" class="card-img-top" alt="img" />
                           </a>
                           
                         </div>
                         <div class="card-body">
-                          <h5 class="card-title">{{ product.product_name }}</h5>
-                          <h6 class="card-price"> ${{ product.product_price }}</h6>
+                          <h5 class="card-title">{{ c.variant.product.product_name }}</h5>
+                          <h6 class="card-price"> ₹{{ c.variant.product.product_price }}</h6>
                           <div class="d-flex justify-content-between mt-3">
                             
                             
-                            <button  class="btn_3 addToCartBtn" data-product_id ="{{ product.id }}">{% if product.product_quantity > 0  %}Add to cart {% else %}Out of stock{% endif %}</button> 
+                            <button  class="btn_3 addToCartBtn" data-product_id ="{{ c.variant.id }}">{% if product.product_quantity > 0  %}Add to cart {% else %}Out of stock{% endif %}</button> 
                             <div class="icon-overlay">
-                                <a href="" data-product_id ="{{ product.id }}" class="wishlist-icon">
+                                <a href="" data-product_id ="{{ c.variant.id }}" class="wishlist-icon">
                                    <img src="{% static 'img/heart.png'%}" alt="img"> </i>
                                 </a>
                               </div>
@@ -197,6 +198,7 @@
                       </div>
                     </div>
                     {% endfor %}
+                    {% endif %}
                   </div>
                 </div>
               </section>

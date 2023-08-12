@@ -1,7 +1,9 @@
 {% extends 'adminside/adminloginbase.html' %}
-{% block title %}variant{% endblock %}
+{% block title %}product view{% endblock %}
 {% load static %}
 {% block adminbody %}
+
+
 
 <section class="content-main">
     <div class="content-header">
@@ -20,15 +22,9 @@
 
                     </a>
                 </div>
-                <div class="col-lg-4 col-md-6 me-auto">
-                    <form action="#" method="POST">
-                        {% comment %} {% csrf_token %} {% endcomment %}
-                        <div class="input-group">
-                            <input type="text" placeholder="Search..." name="search" class="form-control" />
-                            <button type="submit" class="btn btn-primary"><i class="ti ti-search"></i></button>
-                        </div>
-                    </form>
-                </div>
+                <!-- <div class="col-lg-4 col-md-6 me-auto">
+                    <input type="text" placeholder="Search..." class="form-control" />
+                </div> -->
 
                 <!-- <div class="col-lg-2 col-6 col-md-3">
                     <select class="form-select">
@@ -63,7 +59,6 @@
                             <td><b>{{ c.product.product_name }}</b></td>
                             <td><b>{{ c.color.color_name }}</b></td>
                             <td><b>{{ c.quantity }}</b></td>
-                            <!-- <td><b>View</b></td> -->
                             <td><b>{{ Action }}</b></td>
                             <td>
                                 <!-- Button trigger modal -->
@@ -108,7 +103,7 @@
                                                             {% endfor %}
                                                         </select>
                                                     </div>
-                                                   
+                                                    
                                                     <div class="form-outline mb-4">
                                                         <label class="form-label" for="form3Example3cg">Color</label>
                                                         <select class="form-select" name="variant_color">
@@ -224,14 +219,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                    {% comment %} <div class="form-outline mb-4">
-                        <label class="form-label" for="form3Example3cg">Size</label>
-                        <select class="form-select" name="variant_size">
-                            {% for c in variant_list.size_range %}
-                            <option value="{{ c.id }}">{{ c.size_range }}</option>
-                            {% endfor %}
-                        </select>
-                    </div> {% endcomment %}
+                    
                     <div class="form-outline mb-4">
                         <label class="form-label" for="form3Example3cg">Color</label>
                         <select class="form-select" name="variant_color">
