@@ -15,9 +15,15 @@ from django.template.loader import render_to_string
 def home(request):
     return render (request,'home.html')
 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 
 def shop(request):
+    if request.user.is_superuser:
+        return  redirect('dashboard')
+    
+
     product = Product.objects.filter(is_available=True).order_by('id')
     cate=Category.objects.all()
     variant_images = VariantImage.objects.filter(variant__product__is_available=True).order_by('variant__product').distinct('variant__product')
@@ -64,6 +70,8 @@ def product_details(request,prod_id,img_id):
     variant = VariantImage.objects.filter(variant=img_id,is_available=True)
     variant_images = VariantImage.objects.filter(variant__product__id=prod_id,is_available=True).distinct('variant__product')
     color=VariantImage.objects.filter(variant__product__id=prod_id,is_available=True).distinct('variant__color')
+    for i in color:
+        print(i.variant.color.color_name,'fggggggggggggggggggggggd')
     context={
         'prod':product_id,
         'variant_images':variant_images,
@@ -128,28 +136,40 @@ def search_product(request):
 
 
 def product_list(request):
-    # Your existing code for filtering and sorting
-    products = Product.objects.filter(is_available=True)
+    if request.user.is_superuser:
+        return redirect('dashboard')
 
-    sort_option = request.GET.get('sort', '')
-    size_filter = request.GET.get('size_filter', '')
+    page_number = request.GET.get('page')
+    sort_option = request.GET.get('sort')
+    search_query = request.GET.get('search')
+    
+    products = Product.objects.filter(is_available=True)
+    cat = Category.objects.all()
 
     if sort_option == 'atoz':
-        products = products.order_by('product_name')
+        sorted_products = products.order_by('product_name')
     elif sort_option == 'ztoa':
-        products = products.order_by('-product_name')
+        sorted_products = products.order_by('-product_name')
+    elif sort_option == 'lowtohigh':
+        sorted_products = products.order_by('product_price')
+    elif sort_option == 'hightolow':
+        sorted_products = products.order_by('-product_price')
+    else:
+        sorted_products = products
 
+    if search_query:
+        sorted_products = sorted_products.filter(product_name__icontains=search_query)
+    
 
-    paginator = Paginator(products, per_page=9)  # Number of products per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    if request.is_ajax():
-        # If it's an AJAX request, return a JSON response with the paginated content
-        products_html = render_to_string('product_list_partial.html', {'page_obj': page_obj})
-        return JsonResponse({'products_html': products_html})
-
-    context = {
-        'page_obj': page_obj
-    }
-    return render(request, 'shop.html', context)
+    items_per_page = 4
+    paginator = Paginator(sorted_products, items_per_page)
+    
+    
+    try:
+        products_page = paginator.page(page_number)
+    except PageNotAnInteger:
+        products_page = paginator.page(1)
+    except EmptyPage:
+        products_page = paginator.page(paginator.num_pages)
+    
+    return render(request, 'shop.html', {'sorted_products': sorted_products, 'cat': cat, 'products_page': products_page})

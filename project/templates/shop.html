@@ -1,13 +1,77 @@
+
 {% extends 'base.html' %}
 {% block title %}aranoz{% endblock %}
 {% load static %}
 {% block body %}
+<!-- Include the nouislider CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css" />
+
+
+<!-- Include the nouislider JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.js"></script>
 
 <style>
   /* Custom CSS to add distance between the navbar and cards */
   .custom-card-container {
     margin-top: 50px;
   }
+</style>
+<style>
+    /* Style for the Price Filter widget section */
+.left_widgets {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.l_w_title h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.widgets_inner {
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.range_item {
+    margin-top: 20px;
+}
+
+.js-range-slider {
+    width: 100%;
+}
+
+.d-flex {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.price_text p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.price_value {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.js-input-from,
+.js-input-to {
+    width: 80px;
+    padding: 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    text-align: center;
+    margin: 0 5px;
+}
+
 </style>
 <!--================Category Product Area =================-->
 <section class="cat_product_area section_padding">
@@ -30,95 +94,48 @@
                           </ul>
                       </div>
                   </aside>
-                  
-                   {% comment %} <aside class="left_widgets p_filter_widgets">
-                      <div class="l_w_title">
-                          <h3>Product filters</h3>
-                      </div>
-                      <div class="widgets_inner">
-                          <ul class="list">
-                              <li>
-                                  <a href="#"  id="sort-atoz">A to Z </a>
-                              </li>
-                              <li>
-                                  <a href="#">Asus</a>
-                              </li>
-                              <li class="active">
-                                  <a href="#">Gionee</a>
-                              </li>
-                              <li>
-                                  <a href="#">Micromax</a>
-                              </li>
-                              <li>
-                                  <a href="#">Samsung</a>
-                              </li>
-                          </ul>
-                          <ul class="list">
-                              <li>
-                                  <a href="#">Apple</a>
-                              </li>
-                              <li>
-                                  <a href="#">Asus</a>
-                              </li>
-                              <li class="active">
-                                  <a href="#">Gionee</a>
-                              </li>
-                              <li>
-                                  <a href="#">Micromax</a>
-                              </li>
-                              <li>
-                                  <a href="#">Samsung</a>
-                              </li>
-                          </ul>
-                      </div>
-                  </aside>  {% endcomment %}
-{% comment %} 
-                  <aside class="left_widgets p_filter_widgets">
-                      <div class="l_w_title">
-                          <h3>Color Filter</h3>
-                      </div>
-                      <div class="widgets_inner">
-                          <ul class="list">
-                              <li>
-                                  <a href="#">Black</a>
-                              </li>
-                              <li>
-                                  <a href="#">Black Leather</a>
-                              </li>
-                              <li class="active">
-                                  <a href="#">Black with red</a>
-                              </li>
-                              <li>
-                                  <a href="#">Gold</a>
-                              </li>
-                              <li>
-                                  <a href="#">Spacegrey</a>
-                              </li>
-                          </ul>
-                      </div>
-                  </aside> {% endcomment %}
+                  <aside>
+                    <div class="filter-col5 m-l-90 p-r-10 p-b-27" >
+                        <div class="mtext-102 cl2 p-b-15">
+                            Sort By
+                        </div>
 
-                  {% comment %} <aside class="left_widgets p_filter_widgets price_rangs_aside">
-                      <div class="l_w_title">
-                          <h3>Price Filter</h3>
-                      </div>
-                      <div class="widgets_inner">
-                          <div class="range_item">
-                              <!-- <div id="slider-range"></div> -->
-                              <input type="text" class="js-range-slider" value="" />
-                              <div class="d-flex">
-                                  <div class="price_text">
-                                      <p>Price :</p>
-                                  </div>
-                                  <div class="price_value d-flex justify-content-center">
-                                      <input type="text" class="js-input-from" id="amount" readonly />
-                                      <span>to</span>
-                                      <input type="text" class="js-input-to" id="amount" readonly />
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </aside>  {% endcomment %}
+                        <ul>
+                            <li class="p-b-6">
+                                <a href="#" class="filter-link stext-106 trans-04" id="sort-all">
+                                    All
+                                </a>
+                            </li>
+
+                            <li class="p-b-6">
+                                <a href="#" class="filter-link stext-106 trans-04" id="sort-atoz">
+                                    A to Z
+                                </a>
+                            </li>
+
+                            <li class="p-b-6">
+                                <a href="#" class="filter-link stext-106 trans-04" id="sort-ztoa">
+                                    Z to A
+                                </a>
+                            </li>
+
+                            
+
+                            <li class="p-b-6">
+                                <a href="#" class="filter-link stext-106 trans-04" id="sort-lowtohigh">
+                                    Price: Low to High
+                                </a>
+                            </li>
+
+                            <li class="p-b-6">
+                                <a href="#" class="filter-link stext-106 trans-04" id="sort-hightolow">
+                                    Price: High to Low
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                  </aside> 
+                  
               </div>
           </div>
           <div class="col-lg-9">
@@ -128,24 +145,6 @@
                           <div class="single_product_menu">
                               <p><span>10000 </span> Prodict Found</p>
                           </div>
-                         {% comment %} <div class="single_product_menu d-flex">
-                              <h5>short by : </h5>
-                              <select>
-                                  <option data-display="Select">name</option>
-                                  <option value="1">price</option>
-                                  <option value="2">product</option>
-                              </select>
-                          </div> 
-                          <div class="single_product_menu d-flex">
-                              <h5>show :</h5>
-                              <div class="top_pageniation">
-                                  <ul>
-                                      <li>1</li>
-                                      <li>2</li>
-                                      <li>3</li>
-                                  </ul>
-                              </div>
-                          </div>  {% endcomment %}
                           <div class="single_product_menu d-flex">
                             <div class="input-group">
                                 <form action="{% url 'search_product' %}">
@@ -159,8 +158,6 @@
                                 </form>
                             </div>
                         </div>
-                          
-
                       </div>
                   </div>
               </div>
@@ -203,32 +200,31 @@
                 </div>
               </section>
              <!-- ... -->
-            <ul>
-                {% for product in page_obj %}
-                <li>{{ product.name }} - Price: {{ product.price }} - Size: {{ product.size }}</li>
-                {% endfor %}
-            </ul>
+            
 
-            <div class="pagination">
+             <div class="pagination">
                 <span class="step-links">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% if products_page.has_previous %}
+                    <a href="?sort=atoz{% if search_query %}&search={{ search_query }}{% endif %}">Sort A to Z</a>
+
+                    <a href="?page={{ products_page.previous_page_number }}{% if sort_option %}&sort={{ sort_option }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                        previous</a>
+                     
                     {% endif %}
 
                     <span class="current">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                        Page {{ page_obj.number }} of {{ products_page.paginator.num_pages }}
                     </span>
 
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">next</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% if products_page.has_next %}
+                        <a href="?page={{ products_page.next_page_number }}{% if sort_option %}&sort={{ sort_option }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                            next</a>
+                        <a href="?page={{ products_page.paginator.num_pages }}{% if sort_option %}&sort={{ sort_option }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                            last &raquo;</a>
                     {% endif %}
                 </span>
             </div>
             <!-- ... -->
-                
-              
                   <div class="col-lg-12">
                       <div class="pageination">
                           <nav aria-label="Page navigation example">
@@ -346,4 +342,80 @@
         });
     });
 </script>
+
+<script>
+$(document).ready(function() {
+    // Attach click event handlers to each sorting option link
+    $('#sort-all').click(function(e) {
+        e.preventDefault();
+        sortProducts('all');
+    });
+
+    $('#sort-atoz').click(function(e) {
+        e.preventDefault();
+        sortProducts('atoz');
+    });
+
+    $('#sort-ztoa').click(function(e) {
+        e.preventDefault();
+        sortProducts('ztoa');
+    });
+
+    $('#sort-lowtohigh').click(function(e) {
+        e.preventDefault();
+        sortProducts('lowtohigh');
+    });
+
+    $('#sort-hightolow').click(function(e) {
+        e.preventDefault();
+        sortProducts('hightolow');
+    });
+	// Add click event handler to the search button
+	$('#search-button').click(function(e) {
+		e.preventDefault();
+		var searchQuery = $('#search-input').val();
+		sortProducts('search', searchQuery);
+	});
+    // Function to make AJAX request and update product list
+	function sortProducts(sortOption, searchQuery) {
+		$.ajax({
+			url: "{% url 'product_list' %}",  // Replace with the actual URL for sorting and searching
+			type: 'GET',
+			data: { sort: sortOption, search: searchQuery },
+			success: function(response) {
+				// Update the product list with the sorted/searched data
+				//$('.isotope-grid').replaceWith(response.html);
+				//$('#sorting-part').html(response.html);
+				//$('#sorting-part').html(response);
+				$('.cat_product_').replaceWith(response.html);
+			},
+			error: function(xhr, status, error) {
+				// Handle error if necessary
+				console.log(error);
+			}
+		});
+	}
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#slider-range").ionRangeSlider({
+      type: "double",
+      min: 0,
+      max: 1000,
+      from: 0,
+      to: 283,
+      postfix: "tk.",
+      onFinish: function (data) {
+        $(".js-input-from").val(data.from);
+        $(".js-input-to").val(data.to);
+      },
+    });
+  });
+</script>
+
+
 {% endblock %}
+

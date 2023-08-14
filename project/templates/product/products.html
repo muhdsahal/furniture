@@ -2,7 +2,13 @@
 {% block title %}Products{% endblock %}
 {% load static %}
 {% block dashbody %}
-
+<style>
+    .alert-View {
+        background-color: black;
+        color: white;
+        /* Add any additional styling you need */
+    }
+</style>
 <section class="content-main">
     <div class="content-header">
 
@@ -37,11 +43,11 @@
                     <thead>
                         <tr>
                             <th scope="col">Id</th>
-                            <th scope="col">Image</th>
                             <th scope="col">Name</th>
                             <th scope="col">Category</th>
                             <th scope="col">Quantity</th>
                             <th scope="col">Price</th>
+                            <th scope="col">Variants</th>
                             <th scope="col" class="text-end">Action</th>
                             <th scope="col"></th>
                         </tr>
@@ -50,17 +56,20 @@
                         {% for c in product %}
                         <tr>
                             <td style="text-align: center;"><b>{{c.id}}</td>
-                            <td>
+                            {% comment %} <td>
+                               
                                 <div style="width: 60px;" class="overflow-hidden">
-                                    <img class="w-100" src=" {{ c.product_image1.url }}" alt="img">
+                                    <img class="w-100" src=" {{ c.product__image.url }}" alt="img">
                                 </div>
-                            </td>
-
+                                
+                            </td> {% endcomment %}
+                            
                             </td>
                             <td><b>{{ c.product_name }}</td>
                             <td><b>{{ c.category }}</td>
                             <td><b>{{ c.product_quantity }}</td>
                             <td><b>{{ c.product_price }}</td>
+                                <td><a href="{% url 'product_view' c.id %}"><span class="badge rounded-pill alert-View  ">View</span> </a></td> 
                             <td>
                                 <!-- edit -->
 
@@ -215,27 +224,6 @@
                                     <input name="product_price" type="number" id="form3Example3cg"
                                         class="form-control form-control-lg" />
                                 </div>
-                                {% comment %} <div class="form-outline mb-4">
-                                    <label class="form-label" for="form3Example3cg">Image</label>
-                                    <input name="product_image1" type="file"
-                                        accept="image/png, image/jpeg, image/svg, image/avif" class="form-control"
-                                        id="image-input" />
-                                    <small id="image-error" class="text-danger text-center"></small>
-                                </div>
-                                <div class="form-outline mb-4">
-                                    <label class="form-label" for="form3Example3cg">Image</label>
-                                    <input name="product_image2" type="file"
-                                        accept="image/png, image/jpeg, image/svg, image/avif" class="form-control"
-                                        id="image-input" />
-                                    <small id="image-error" class="text-danger text-center"></small>
-                                </div>
-                                <div class="form-outline mb-4">
-                                    <label class="form-label" for="form3Example3cg">Image</label>
-                                    <input name="product_image3" type="file"
-                                        accept="image/png, image/jpeg, image/svg, image/avif" class="form-control"
-                                        id="image-input" />
-                                    <small id="image-error" class="text-danger text-center"></small>
-                                </div> {% endcomment %}
                                 <div class="form-outline mb-4">
                                     <label class="form-label" for="form3Example3cg">Category</label>
                                     <select class="form-select" name="category">

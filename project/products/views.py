@@ -30,9 +30,6 @@ def addproduct(request):
     if request.method == 'POST':
         name=request.POST.get('product_name')
         price=request.POST.get('product_price')
-        # image1=request.FILES.get('product_image1',None)
-        # image2=request.FILES.get('product_image2',None)
-        # image3=request.FILES.get('product_image3',None)
         quantity=request.POST.get('quantity')
         category_id=request.POST.get('category')
         description=request.POST.get('product_description')
@@ -48,17 +45,10 @@ def addproduct(request):
             messages.error(request,'name or price is empty ')
             return redirect('product')
         
-        # if not image1:
-        #     messages.error(request,'image not found')
-        #     return redirect('product')
-        
-        # if not image2:
-        #     messages.error(request,'image not found')
-        #     return redirect('product')
-        
-        # if not image3:
-        #     messages.error(request,'image not found')
-        #     return redirect('product')
+        price=int(price)
+        if not price >= 0:
+            messages.error(request,'positive numbers only!..')
+            return redirect('product')
         
         if category_id:
             category=Category.objects.get(id=category_id)
@@ -67,9 +57,6 @@ def addproduct(request):
 
         # save
         product=Product(
-            # product_image1=image1,
-            # product_image2=image2,
-            # product_image3=image3,
             product_name=name,
             category=category,
             product_price=price,
@@ -83,15 +70,11 @@ def addproduct(request):
         return redirect('product')
     
     return render(request,'product/products.html')
+
 @login_required(login_url='admin_login1')
 def product_delete(request,product_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
-    # try :
-    #     product=Product.objects.get(slug=deleteproduct_slug)
-        
-    # except Product.DoesNotExist:
-    #     return redirect('product')
     delete_product=Product.objects.get(id=product_id)
     variants=Variant.objects.filter(product=delete_product)
     for variant in variants:
@@ -183,7 +166,7 @@ def product_edit(request,product_id):
         return redirect('admin_login1')
     
     if request.method == 'POST':
-        name = request.POST,get('product_name')
+        name = request.POST.get('product_name')
         price = request.POST.get('product_price')
         category_id = request.POST.get('category')
         product_description = request.POST.get('product_description')
@@ -201,7 +184,7 @@ def product_edit(request,product_id):
 
         
         if Product.objects.filter(product_name=name).exists():
-            
+             
             check = Product.objects.get(id=product_id)
             
             if name == check.product_name:
@@ -229,7 +212,7 @@ def product_view(request,product_id):
     product=Product.objects.all().order_by('id')
     variant_list={
         'variant':variant,
-        'product':color_name,
+        'product':product,
         'color_name':color_name
     }
     return render(request,'view/product_view.html',{'variant_list':variant_list})

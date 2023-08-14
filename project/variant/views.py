@@ -36,6 +36,14 @@ def add_Product_Variant(request):
         messages.error(request,'Quantity field is empty !')
         return redirect('product_variant')
     
+    variant_quantity=int(variant_quantity)
+    if not variant_quantity >=0:
+        messages.error(request,'positive numbers only !.')
+        return redirect('product_variant')
+    
+
+        
+    
     try:
         product_obj = Product.objects.get(id=variant_name)
         color_obj = Color.objects.get(id=variant_color)
@@ -73,6 +81,12 @@ def edit_prodectvariant(request,variant_id):
             messages.error(request,'quantity filed is empty !')
             return redirect('product_variant')
         
+        variant_quantity=int(variant_quantity)
+        if not variant_quantity >= 0:
+            messages.error(request,'positve numbers only!')
+            return redirect('product_variant')
+    
+
         product_obj = Product.objects.get(id=variant_name)
         color_obj = Color.objects.get(id=variant_color)
 
@@ -94,13 +108,15 @@ def edit_prodectvariant(request,variant_id):
         return redirect('product_variant')
     
 def prodectvariant_delete(request, variant_id):
-    if not request.user.is_superuser:
+    if not request.user.is_superuser:   
         return redirect('admin_login1')
     delete_productvariant = Variant.objects.get(id=variant_id)
+    print(delete_productvariant,id,'oooooooooooooooooooo')
     delete_productvariant.is_available=False
     delete_productvariant.quantity=0
-    delete_productvariant.filter(is_available=True)
-    messages.error(request,'product variant deleted successfully!')
+    delete_productvariant.save()
+    # delete_productvariant(is_available=True)
+    messages.success(request,'product variant deleted successfully!')
     return redirect('product_variant')
 
 def product_color(request):

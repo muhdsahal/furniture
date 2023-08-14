@@ -9,6 +9,7 @@ from django.contrib import messages
 from products.models import *
 from checkout.models import Order, OrderItem
 from django.shortcuts import render, redirect
+from variant.models import Variant,VariantImage
 import random
 import string
 import re
@@ -83,13 +84,13 @@ def placeorder(request):
         for item in neworderitems:
             OrderItem.objects.Create(
                 order=neworder,
-                product=item.product,
-                price=item.product.product_price,
+                variant=item.variant,
+                price=item.variant.product.product_price,
                 quantity=item.product_qty
             )
 
-            prod=Product.objects.filter(id=item.product.id).first()
-            prod.stock =prod.stock -item.product_qty
+            prod=Variant.objects.filter(id=item.variant.id).first()
+            prod.quantity -= item.product_qty
             prod.save()
 
         payment_mode = request.POST.get('payment_method')
@@ -105,6 +106,16 @@ def generate_random_payment_id(length):
         characters = string.ascii_letters + string.digits
         return ''.join(random.choices(characters, k=length))
 
+
+def razarpaycheck(request):
+    cart = Cart.objects.filter(user=request.user)
+    total_price = 0
+    total_offer =0
+    for item in cart:
+        total_price = total_price + item.variant.product.product_price * item.product_qty
+    total_price = total_price- total_offer
+
+    return JsonResponse({'total_price':total_price})
 
 
 

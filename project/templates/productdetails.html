@@ -8,8 +8,34 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
   <!-- ================End Home Banner Area ================= -->
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- ================Single Product Area ================= -->
+  <style>
+    /* Style for the product navigation dots */
+.product-nav-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.product-nav-dots a {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin: 0 5px;
+  text-indent: -9999px; /* Hide text content */
+  overflow: hidden; /* Hide any overflow from color code background */
+}
+
+/* Optional hover effect */
+.product-nav-dots a:hover {
+  transform: scale(1.2);
+}
+
+
+  </style>
   <div class="product_image_area section_padding product_data ">
     <div class="container">
       <div class="row s_product_inner justify-content-between">
@@ -59,7 +85,7 @@
 
               <div class="details-filter-row details-row-size">
                 <label>Color:</label>
-                {{color}}
+                
                 {% for i in color %}
                 <div class="product-nav product-nav-dots">
   
