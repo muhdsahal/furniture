@@ -4,7 +4,7 @@ from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import update_session_auth_hash
-from .models import Address,Wallet
+from .models import Address,Wallet,Userdp
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
@@ -17,10 +17,28 @@ def profile(request):
     dict_user={
         'address':Address.objects.filter(user=request.user),
         'user':User.objects.filter(username= request.user),
-        'wallets':Wallet.objects.filter(user=request.user)
+        'wallets':Wallet.objects.filter(user=request.user),
     }
     return render(request,'userprofile/userprofile.html',dict_user)
 
+def addprofilephoto(request,dp_id):
+    if request.method == 'POST':
+        profilephoto=request.FILES.get('profilephoto')
+        print(profilephoto)
+
+        # if profilephoto is None:
+        #     messages.info(request,'profile photo is empty!')
+        prophoto=Userdp.objects.filter(id=dp_id)
+        dp=Userdp()
+        dp.user=request.user
+        dp.profilephoto=profilephoto
+        dp.save()
+        messages.success(request,'dp added successfully')
+        return redirect('profile')
+    return render(request,'userprofile/userprofile.html',prophoto)
+        
+
+    
 
 #add address
 def addaddress(request):
@@ -35,7 +53,6 @@ def addaddress(request):
         email=request.POST.get('email')
         state=request.POST.get('state')
         order_note=request.POST.get('ordernote')
-        print(first_name,last_name,country,address,city,pincode,phone,email,state,order_note)
               
         
         if request.user is None:
@@ -77,7 +94,7 @@ def addaddress(request):
         adrs.state=state
         adrs.order_note=order_note
         adrs.save()
-        
+        messages.success(request,'Address Added Successfully!')
         return redirect('profile')
     
 
@@ -94,29 +111,45 @@ def editaddress(request,edit_id):
         email=request.POST.get('email')
         state=request.POST.get('state')
         order_note=request.POST.get('ordernote')
+        
         print(first_name,last_name,country,address,city,pincode,phone,email,state,order_note)
               
         
         if request.user is None:
             return
+        
         if first_name=='' or last_name=='':
             messages.error(request,'first name or lastname  is empty ')
             return redirect('profile')
+        
         if country.strip()=='':
             messages.error(request,'Country is empty!')
             return redirect('profile')
+        
         if city.strip()=='':
             messages.error(request,'City is empty!')
             return redirect('profile')
+        
         if address.strip()=='':
             messages.error(request,'address is empty !')
             return redirect('profile')
+        
         if pincode.strip()=='':
             messages.error(request,'pincode is empty! ')
             return redirect('profile')
-        if phone.strip()=='':
-            messages.error(request,'phone number is empty!')
+        
+        if not pincode.isdigit() or len(pincode) != 6:
+            messages.error(request, 'Pincode should be exactly 6 digits and an integer.')
             return redirect('profile')
+        
+        if phone.strip()=='':
+            messages.error(request,'phone  number is empty! ')
+            return redirect('profile')
+
+        if  not phone.isdigit() or len(phone) != 10:
+            messages.error(request,'phone number  should been 10 digit!')
+            return redirect('profile')
+        
         if email.strip()=='':
             messages.error(request,'email is empty ')
             return redirect('profile')
@@ -125,12 +158,12 @@ def editaddress(request,edit_id):
             return redirect('profile')
         
         try:
-            adrs =Address.objects.get(id=edit_id)
+            adrs = Address.objects.get(id=edit_id)
         except Address.DoesNotExist:
             messages.error(request,'Address Not Found !..')
             return redirect('profile')
         
-        adrs=Address()
+        # adrs=Address()
         adrs.user=request.user
         adrs.first_name=first_name
         adrs.last_name=last_name
@@ -143,13 +176,14 @@ def editaddress(request,edit_id):
         adrs.state=state
         adrs.order_note=order_note
         adrs.save()
+        messages.success(request,'Address Edited Successfully!.')
         
         return redirect('profile')
     
 
 def editprofile(request):
     if request.method == 'POST':
-        username=request.POST.get('username')
+        username=request.POST.get('username') 
         first_name=request.POST.get('first_name')
         last_name=request.POST.get('last_name')
         email=request.POST.get('email') 
@@ -164,12 +198,12 @@ def editprofile(request):
 
         try:
             user=User.objects.get(username=request.user)
-            print(user,username,first_name,last_name,email)
             user.username=username
             user.first_name=first_name
             user.last_name=last_name
             user.email=email
             user.save()
+            messages.success(request,'Profile Edit Successfully!.')
 
         except ObjectDoesNotExist:
             messages.error(request,'user does not exist')
@@ -207,5 +241,6 @@ def changepassword(request):
 def deleteaddress(request,delete_id):
     address=Address.objects.get(id=delete_id)
     address.delete()
+    messages.success(request,'Address Deleted Successfully!')
     return redirect('profile')
 

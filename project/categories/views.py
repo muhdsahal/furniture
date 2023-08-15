@@ -1,5 +1,7 @@
 from django.shortcuts import render,redirect
 from .models import Category
+from products.models import Product
+from variant.models import Variant
 from django.contrib import messages
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
@@ -15,40 +17,56 @@ def categories (request):
 
 @login_required(login_url='admin_login1')
 def createcategory(request):
-    if not request.user.is_superuser:
-        return redirect('admin_login1')
+    try:
+        if not request.user.is_superuser:
+            return redirect('admin_login1')
     
 
-    if request.method == "POST":
-        image = request.FILES.get('image', None)
-        name = request.POST['categories']
-        description = request.POST['categories_discription']
+        if request.method == "POST":
+            image = request.FILES.get('image', None)
+            name = request.POST.get('categories')
+            description = request.POST.get('categories_discription')
 
-        # Validation
-        if name.strip() == '':
-            messages.error(request, 'Name not found')
+            # Validation
+            if name.strip() == '':
+                messages.error(request, 'Name not found')
+                return redirect('categories')
+
+            if not image:
+                messages.error(request, 'Image not uploaded')
+                return redirect('categories')
+
+            if Category.objects.filter(categories=name).exists():
+                messages.error(request, 'Category name already exists')
+                return redirect('categories')
+
+            category_instance = Category(categories=name, categories_description=description, categories_image=image)
+            category_instance.save()
+            messages.success(request,'Category added successfully !')
             return redirect('categories')
-
-        if not image:
-            messages.error(request, 'Image not uploaded')
-            return redirect('categories')
-
-        if Category.objects.filter(categories=name).exists():
-            messages.error(request, 'Category name already exists')
-            return redirect('categories')
-
-        category_instance = Category(categories=name, categories_description=description, categories_image=image)
-        category_instance.save()
-         
+    except:
         return redirect('categories')
-    
+        
 
 def deletecategory(request,deletecategory_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
     cate=Category.objects.get(id=deletecategory_id)
-    cate.delete()
-    return redirect('categories')
+    products = Product.objects.filter(category=cate)
+    for product in products:
+        product.is_available = False
+        product.save()
+
+    variants = Variant.objects.filter(product=product)
+    for variant in variants:
+        variant.is_available = False
+        variant.quantity = 0
+        variant.save()
+
+    cate.is_available = False
+    cate.save()
+    messages.success(request,'category deleted successfully !.')
+    return redirect ('categories')
 
 # def blockcategory(request,cate_id):
 #     if not request.user.is_superuser:
@@ -77,7 +95,7 @@ def editcategory(request,editcategory_id):
             cate=Category.objects.get(slug=editcategory_id)
             image=request.FILES.get('image')
             if image:
-                cate.categories_image=image
+                cate.categories_image=image             
                 cate.save()
         except Category.DoesNotExist:
             messages.error(request,'image not found')

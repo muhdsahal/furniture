@@ -12,8 +12,13 @@ from django.template.loader import render_to_string
 
 
 # Create your views here.
-def home(request):
-    return render (request,'home.html')
+def home(request):  
+    cate=Category.objects.all()
+    context={
+       'cate' :cate,
+   }
+
+    return render (request,'home.html',context)
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -51,13 +56,18 @@ def items(request):
     }
     return render(request,'categoryhome.html',context)
 
-def cat_detail(request, id):
-    product=Product.objects.select_related('category').filter(category__id=id)
-    variant_images = VariantImage.objects.filter(variant__product__is_available=True).order_by('variant__product').distinct('variant__product')
+def cat_detail(request, cate_id):
+    categories=Category.objects.get(id=cate_id)
+
+    
+    
+    variant_images = VariantImage.objects.filter(variant__product__category__id=cate_id,is_available=True).order_by('variant__product').distinct('variant__product')
     context={
-        'products':product,
-        'variant_images':variant_images
+    
+        'variant_images':variant_images,
+        'categories':categories
     }
+   
     return render(request,'shop.html',context)
 
                   
@@ -104,37 +114,6 @@ def search_product(request):
     else:
         return render(request, '404.html')
 
-
-
-# def product_list(request):
-#     products = Product.objects.filter(is_available=True)
-
-#     sort_option = request.GET.get('sort', '')
-#     size_filter = request.GET.get('size_filter', '')
-
-#     if sort_option == 'atoz':
-#         products = products.order_by('product_name')
-#     elif sort_option == 'ztoa':
-#         products = products.order_by('-product_name')
-
-#     if size_filter == 'small':
-#         products = products.filter(size='Small')
-#     elif size_filter == 'medium':
-#         products = products.filter(size='Medium')
-#     elif size_filter == 'large':
-#         products = products.filter(size='Large')
-
-#     paginator = Paginator(products, per_page=9)  # Number of products per page
-#     page_number = request.GET.get('page')
-#     page_obj = paginator.get_page(page_number)
-
-#     context = {
-#         'page_obj': page_obj
-#     }
-#     return render(request, 'shop.html', context)
-
-
-
 def product_list(request):
     if request.user.is_superuser:
         return redirect('dashboard')
@@ -156,6 +135,7 @@ def product_list(request):
         sorted_products = products.order_by('-product_price')
     else:
         sorted_products = products
+    print(sort_option,'grggggggggggggggggr')
 
     if search_query:
         sorted_products = sorted_products.filter(product_name__icontains=search_query)
@@ -173,3 +153,30 @@ def product_list(request):
         products_page = paginator.page(paginator.num_pages)
     
     return render(request, 'shop.html', {'sorted_products': sorted_products, 'cat': cat, 'products_page': products_page})
+
+
+def product_sort(request, sort_id):
+    sort_option = sort_id
+    base_query = VariantImage.objects.filter(variant__product__is_available=True)
+
+    if sort_option == 1:
+        variant_images = base_query.order_by('variant__product').distinct('variant__product')
+    elif sort_option == 2:
+        variant_images = base_query.order_by('variant__product__product_name').distinct('variant__product__product_name')
+    elif sort_option == 3:
+        variant_images = base_query.order_by('-variant__product__product_name').distinct('variant__product__product_name')
+    elif sort_option == 4:
+        variant_images = base_query.order_by('variant__product__product_price').distinct('variant__product__product_price')
+    elif sort_option == 5:
+        variant_images = base_query.order_by('-variant__product__product_price').distinct('variant__product__product_price')
+
+    products = Product.objects.filter(is_available=True).order_by('id')
+    categories = Category.objects.all()
+
+    context = {
+        'products': products,
+        'cate': categories,
+        'variant_images': variant_images
+    }
+
+    return render(request, 'shop.html', context)

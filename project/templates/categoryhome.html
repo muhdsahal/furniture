@@ -2,7 +2,13 @@
 {% block title %}aranoz{% endblock %}
 {% load static %}
 {% block body %}
-
+<style>
+    .sor{
+        display: flex;
+    justify-content: space-between;
+        flex-direction: column;
+    }
+</style>
   <!--================Category Product Area =================-->
   <section class="cat_product_area section_padding">
       <div class="container">
@@ -24,6 +30,13 @@
                               </ul>
                           </div>
                         </aside>
+                        <div class="sor">
+                            <a href="{% url 'product_sort' 1 %}"><button class="btn_1"> all</button></a> <br>
+                            <a href="{% url 'product_sort' 2 %}"><button class="btn_1">A to Z</button></a><br>
+                            <a href="{% url 'product_sort' 3 %}"><button class="btn_1">Z to A</button></a><br>
+                            <a href="{% url 'product_sort' 4 %}"><button class="btn_1">Low to High</button></a><br>
+                            <a href="{% url 'product_sort' 5 %}"><button class="btn_1">High To Low</button></a><br>
+                          </div> 
                   </div>
               </div>
               <div class="col-lg-9">

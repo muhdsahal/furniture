@@ -92,11 +92,8 @@ def update_cart(request):
                 carts = Cart.objects.filter(user = request.user).order_by('id')
                 total_price = 0
                 for item in carts:
-                    # if item.product.offer == None:
-                    #     total_price = total_price + item.product.product_price * item.product_qty
-                    # else :
+                    
                     total_price = total_price + item.product.product_price * item.product_qty
-                    # total_price = total_price-item.product.offer.discount_amount
                 return JsonResponse({'status': 'Updated successfully','sub_total':total_price,'product_price':cart.product.product_price,'quantity':prod_qty})
             else:
                 return JsonResponse({'status': 'Not allowed this Quantity'})

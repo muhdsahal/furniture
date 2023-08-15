@@ -61,26 +61,22 @@
 
     <!-- subscribe_area part start-->
     <section class="client_logo padding_top">
+                
         <div class="container">
             <div class="row align-items-center">
+              
                 <div class="col-lg-12">
                     
+                
+                    {% for i in cate %}
                     <div class="single_client_logo">
-                        <img src="{% static 'assets/img/client_logo/client_logo_5.png' %}" alt="">
+                        
+                        <a href=" {% url 'cat_detail' i.id %}"><img src="{{ i.categories_image.url }}" width="150px" height="100px" alt="hlo"></a>
                     </div>
-                    <div class="single_client_logo">
-                        <img src="{% static 'assets/img/client_logo/client_logo_1.png' %}" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="{% static 'assets/img/client_logo/client_logo_2.png' %}" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="{% static 'assets/img/client_logo/client_logo_3.png' %}" alt="">
-                    </div>
-                    <div class="single_client_logo">
-                        <img src="{% static 'assets/img/client_logo/client_logo_4.png' %}" alt="">
-                    </div>
+                    {% endfor %}
+                    
                 </div>
+               
             </div>
         </div>
     </section>

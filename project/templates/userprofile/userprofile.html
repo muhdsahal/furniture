@@ -49,13 +49,15 @@
           <div class="card border rounded mb-4">
             <div class="card-body   text-center">
              <div class="text-center mb-2 container" style="width: 100px;height: 100px; border-radius: 50%;padding: 0; overflow: hidden;">
-              {% if request.user.user_image %}
-              <img class="img-fluid" src="{{request.user.user_image.url}}" alt="avatar"
+              {% comment %} {% if prophoto %} {% endcomment %}
+              {% for i in Userdp %}
+              <img class="img-fluid" src="{{i.profilephoto.url}}" alt="img"
               class="rounded-circle img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
-                {% else %}
+              {% endfor %}
+              {% comment %} {% else %}
                 <img class="w-100 h-100" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-                class="rounded-circle img-fluid">
-                {% endif %}
+                class="rounded-circle img-fluid">  {% endcomment %}
+                {% comment %} {% endif %} {% endcomment %}
              </div>
              <a  data-bs-toggle="modal" data-bs-target="#changedp">
               <button class="btn_1" style="font-size: 10px;">Change</button>
@@ -66,7 +68,7 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="" id="exampleModalLabel">User Image</h5>
-                    <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button"  data-bs-dismiss="modal" aria-label="Close">
                       <i class="fa fa-times"></i>
                     </button>
                   </div>
@@ -172,7 +174,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="" id="exampleModalLabel">User password change</h5>
-                <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button"  data-bs-dismiss="modal" aria-label="Close">
                   <i class="fa fa-times"></i>
                 </button>
               </div>
@@ -206,36 +208,38 @@
             </div>
           </div>
         </div>
-
+        
        <!--Edit Profile Modal -->
-       <div class="modal fade" id="editprofile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="editprofile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title fs-5" id="exampleModalLabel">Edit profile</h4>
-              <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close">
+              <button type="button"  data-bs-dismiss="modal">
                 <i class="fa fa-times"></i>
               </button>
             </div>
+            {% if request.user %}
+            {% for i in user  %}
             <div class="modal-body">
               <form action="{% url 'editprofile' %}" enctype="multipart/form-data" method="POST">
                 {% csrf_token %}
                 <div class="form-outline mb-4">
-                  <input value="{{user.username}}"  name='username'  type="text" id="id_usernam" class="form-control form-control-lg" />
+                  <input value="{{i.username}}"  name='username'  type="text" id="id_usernam" class="form-control form-control-lg" />
                   <label class="form-label" for="form3Example3cg">Username</label>
                 </div>  
                 <div class="form-outline mb-4">
-                  <input value="{{user.first_name}}"  name='first_name'  type="text" id="id_firstname" class="form-control form-control-lg" />
+                  <input value="{{i.first_name}}"  name='first_name' type="text" id="id_firstname" class="form-control form-control-lg" />
                   <label class="form-label" for="form3Example3cg">First Name</label>
                 </div>  
 
                 <div class="form-outline mb-4">
-                  <input value="{{user.last_name}}"  name='last_name'  type="text" id="id_lasname" class="form-control form-control-lg" />
+                  <input value="{{i.last_name}}"  name='last_name' type="text" id="id_lasname" class="form-control form-control-lg" />
                   <label class="form-label" for="form3Example3cg">Last Name</label>
                 </div>  
 
                 <div class="form-outline mb-4">
-                  <input readonly name='email' value="{{user.email}}" type="email" id="form3Example3cg" class="form-control form-control-lg" />
+                  <input readonly name='email' value="{{i.email}}" type="email" id="form3Example3cg" class="form-control form-control-lg" />
                   <label class="form-label" for="form3Example3cg">Email</label>
                 </div>
                 <div class="d-flex justify-content-center">
@@ -243,8 +247,11 @@
                     class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light">Save Changes</button>
                 </div>
               </form>
+              {% endfor %}
+              {% endif %}
         </div>
       </div>
+      
     </div>
   </div>
   
@@ -263,7 +270,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">Billing Details</h5>
+        <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">New Address</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -442,70 +449,73 @@
                       </div>
                     </div>
                   </div>
-                <button class="btn_1" data-bs-toggle="modal" data-bs-target="#editaddress{{forloop.counter}}">
+                {% comment %} <button class="btn_1" data-bs-toggle="modal" data-bs-target="#editaddress{{forloop.counter}}">
+                  Edit
+                </button> {% endcomment %}
+                <button class="btn_1" data-bs-toggle="modal" data-bs-target="#myModal">
                   Edit
                 </button>
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">Billing Details</h5>
+                        <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">Edit Address</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        <form action="{% url 'editaddress' a.id %}" method="POST" class="justify-content-between">
+                        <form action="{% url 'editaddress' 2 %}" method="POST" class="justify-content-between">
                           {% csrf_token %}
                           <div class="row mb-1">
                             <div class="col-lg-6">
                               <div class="checkout__input">
                                 <p>First Name<span>*</span></p>
-                                <input type="text" name="firstname" class="form-control">
+                                <input type="text" name="firstname" value="{{a.first_name}}" class="form-control">
                               </div>
                             </div>
                             <div class="col-lg-6">
                               <div class="checkout__input">
                                 <p>Last Name<span>*</span></p>
-                                <input type="text" name="lastname" class="form-control">
+                                <input type="text" name="lastname" value="{{a.last_name}}" class="form-control">
                               </div>
                             </div>
                           </div>
                           <div class="checkout__input mb-1">
                             <p>Country<span>*</span></p>
-                            <input type="text" name="country" class="form-control">
+                            <input type="text" name="country" value="{{a.country}}" class="form-control">
                           </div>
                           <div class="checkout__input mb-1">
                             <p>Address<span>*</span></p>
-                            <input type="text" class="checkout__input__add form-control" name="address">
+                            <input type="text" class="checkout__input__add form-control" value="{{a.address}}" name="address">
                           </div>
                           <div class="checkout__input mb-1">
                             <p>Town/City<span>*</span></p>
-                            <input type="text" name="city" class="form-control">
+                            <input type="text" name="city" value="{{a.city}}" class="form-control">
                           </div>
                           <div class="checkout__input mb-1">
                             <p>State<span>*</span></p>
-                            <input type="text" name="state" class="form-control">
+                            <input type="text" name="state"  value="{{a.state}}" class="form-control">
                           </div>
                           <div class="checkout__input mb-1">
                             <p>Postcode / ZIP<span>*</span></p>
-                            <input type="text" name="pincode" class="form-control">
+                            <input type="text" name="pincode" value="{{a.pincode}}" class="form-control">
                           </div>
                           <div class="row mb-1">
                             <div class="col-lg-6">
                               <div class="checkout__input">
                                 <p>Phone<span>*</span></p>
-                                <input type="text" name="phone" class="form-control">
+                                <input type="text" name="phone"  value="{{a.phone}}" class="form-control">
                               </div>
                             </div>
                             <div class="col-lg-6">
                               <div class="checkout__input">
                                 <p>Email<span>*</span></p>
-                                <input type="text" name="email" class="form-control">
+                                <input type="text" name="email"  value="{{a.email}}" class="form-control">
                               </div>
                             </div>
                           </div>
                           <div class="checkout__input mb-1">
                             <p>Order notes<span>*</span></p>
-                            <input type="text" placeholder="Notes about your order, e.g. special notes for delivery." name="ordernote" class="form-control">
+                            <input type="text"  value="{{a.order_note}}" name="ordernote" class="form-control">
                           </div>
                       </div>
                       <div class="modal-footer d-flex justify-content-center">
@@ -546,8 +556,8 @@
               </div>
             </div>
           </div>
-        {% endif %}
-      {% endfor %}
+          {% endif %}
+          {% endfor %}
 
       
 
