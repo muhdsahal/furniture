@@ -4,7 +4,7 @@ from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import update_session_auth_hash
-from .models import Address,Wallet,Userdp
+from .models import Address,Wallet
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
@@ -20,25 +20,6 @@ def profile(request):
         'wallets':Wallet.objects.filter(user=request.user),
     }
     return render(request,'userprofile/userprofile.html',dict_user)
-
-def addprofilephoto(request,dp_id):
-    if request.method == 'POST':
-        profilephoto=request.FILES.get('profilephoto')
-        print(profilephoto)
-
-        # if profilephoto is None:
-        #     messages.info(request,'profile photo is empty!')
-        prophoto=Userdp.objects.filter(id=dp_id)
-        dp=Userdp()
-        dp.user=request.user
-        dp.profilephoto=profilephoto
-        dp.save()
-        messages.success(request,'dp added successfully')
-        return redirect('profile')
-    return render(request,'userprofile/userprofile.html',prophoto)
-        
-
-    
 
 #add address
 def addaddress(request):

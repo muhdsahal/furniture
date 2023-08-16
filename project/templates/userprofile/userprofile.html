@@ -49,15 +49,15 @@
           <div class="card border rounded mb-4">
             <div class="card-body   text-center">
              <div class="text-center mb-2 container" style="width: 100px;height: 100px; border-radius: 50%;padding: 0; overflow: hidden;">
-              {% comment %} {% if prophoto %} {% endcomment %}
-              {% for i in Userdp %}
+               {% if prophoto %} 
+              
               <img class="img-fluid" src="{{i.profilephoto.url}}" alt="img"
               class="rounded-circle img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
-              {% endfor %}
-              {% comment %} {% else %}
+             
+              {% else %}
                 <img class="w-100 h-100" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-                class="rounded-circle img-fluid">  {% endcomment %}
-                {% comment %} {% endif %} {% endcomment %}
+                class="rounded-circle img-fluid">  
+                 {% endif %} 
              </div>
              <a  data-bs-toggle="modal" data-bs-target="#changedp">
               <button class="btn_1" style="font-size: 10px;">Change</button>

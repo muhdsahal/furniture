@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from cart.models import Cart
 from userprofile.models import Address
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib import messages
 from products.models import *
 from checkout.models import Order, OrderItem
@@ -13,11 +13,9 @@ from variant.models import Variant,VariantImage
 import random
 import string
 import re
-from django.forms import ValidationError
-from django.contrib.auth.password_validation import validate_password
-from django.core.validators import validate_email
-
-@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+ 
+# @cache_control(no_cache=True,must_revalidate=True,no_store=True)
+# @login_required(login_url='user_login1')
 def checkout(request):
     cartitems= Cart.objects.filter(user=request.user)
     total_price = 0
@@ -51,6 +49,7 @@ def placeorder(request):
             return redirect('checkout')
         
         address=Address.objects.filter(id=address_id)
+        print(address,address_id,'helllllllllllllllo')
         neworder.address = address
         payment_method =request.POST.get('payment_method')
 
@@ -100,6 +99,36 @@ def placeorder(request):
         
         Cart.objects.filter(user=request.user).delete()
     return redirect('checkout')
+
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@login_required(login_url='signin')
+def addcheckoutaddr(request):
+    if request.method == 'POST':
+        address = Address()
+        address.user = request.user
+        address.first_name = request.POST.get('firstname')
+        address.last_name = request.POST.get('lastname')
+        address.country = request.POST.get('country')
+        address.address = request.POST.get('address')
+        address.city = request.POST.get('city')
+        address.pincode = request.POST.get('pincode')
+        address.phone = request.POST.get('phone')
+        address.email = request.POST.get('email')
+        address.state = request.POST.get('state')
+        address.order_note = request.POST.get('ordernote')
+        address.payment_mode = request.POST.get('payment_method')
+        address.save()
+        messages.success(request,'Address Created Successfully!')
+
+        return redirect('checkout')
+    return redirect('checkout')
+
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@login_required(login_url='signin')
+def deleteaddresscheckout(request,delete_id):
+    address = Address.objects.filter(id=delete_id)
+    address.delete()
+    return redirect('placeorder')
 
 
 def generate_random_payment_id(length):

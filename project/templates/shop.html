@@ -120,19 +120,17 @@ justify-content: space-between;
                           <div class="single_product_menu">
                               <p><span>10000 </span> Prodict Found</p>
                           </div>
-                          <div class="single_product_menu d-flex">
-                            <div class="input-group">
-                                <form action="{% url 'search_product' %}">
-                                    <input type="text" class="form-control" name="keyword" placeholder="Search"
-                                        aria-describedby="inputGroupPrepend">
-                                    <div class="input-group-append"> <!-- Changed from input-group-prepend -->
-                                        <button type='submit' class="btn btn-outline-secondary" id="inputGroupPrepend">
-                                            <i class="ti-search"></i> <!-- Use an appropriate icon class -->
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
+                        <div class="single_product_menu d-flex">
+                            <form action="{% url 'search_product' %}" method="GET" class="input-group">
+                                <input type="text" class="form-control" name="keyword" placeholder="Search" aria-label="Search">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-outline-secondary" id="searchButton">
+                                        <i class="ti-search"></i>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
+                        
                       </div>
                   </div>
               </div>
@@ -180,9 +178,7 @@ justify-content: space-between;
              <div class="pagination">
                 <span class="step-links">
                     {% if products_page.has_previous %}
-                    <a href="?sort=atoz{% if search_query %}&search={{ search_query }}{% endif %}">Sort A to Z</a>
-
-                    <a href="?page={{ products_page.previous_page_number }}{% if sort_option %}&sort={{ sort_option }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    <a href="?page={{ products_page.previous_page_number }}{% if sort_option %}&sort={{ sort_option }}{% endif %}">
                         previous</a>
                      
                     {% endif %}
@@ -192,9 +188,9 @@ justify-content: space-between;
                     </span>
 
                     {% if products_page.has_next %}
-                        <a href="?page={{ products_page.next_page_number }}{% if sort_option %}&sort={{ sort_option }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                        <a href="?page={{ products_page.next_page_number }}{% if sort_option %}&sort={{ sort_option }}{% endif %}">
                             next</a>
-                        <a href="?page={{ products_page.paginator.num_pages }}{% if sort_option %}&sort={{ sort_option }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                        <a href="?page={{ products_page.paginator.num_pages }}{% if sort_option %}&sort={{ sort_option }}{% endif %}">
                             last &raquo;</a>
                     {% endif %}
                 </span>

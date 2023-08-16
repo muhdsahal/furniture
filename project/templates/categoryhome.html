@@ -40,47 +40,64 @@
                   </div>
               </div>
               <div class="col-lg-9">
-                  <div class="row">
-                      <div class="col-lg-12">
-                          <div class="product_top_bar d-flex justify-content-between align-items-center">
-                              <div class="single_product_menu">
-                          
-                                <section style="background-color: white;">
-                                  <div class="container py-5 custom-card-container">
-                                    <div class="row">
-                                        {% if variant_images %}
-                                        {% for c in variant_images %}
-                                        {% if forloop.counter0|divisibleby:3 %}
-                                      </div>
-                                      <div class="row">
-                                      {% endif %}
-                                      <div class="col-md-4 mb-4">
-                                        <div class="card">
-                                          <div class="position-relative">
-                                            <a href="{% url 'product_details' c.variant.product.id c.variant.id %}">
-                                              <img src="{{ c.image.url }}" class="card-img-top" alt="Laptop" />
-                                            </a>
-                                            
-                                          </div>
-                                          <div class="card-body">
-                                            <h5 class="card-title">{{ c.variant.product.product_name }}</h5>
-                                            <h6 class="card-price"> ₹{{  c.variant.product.product_price }}</h6>
-                                            <div class="d-flex justify-content-between mt-3">
-                                              <button  class="btn_3 addToCartBtn" data-product_id ="{{ product.id }}">{% if product.product_quantity > 0  %}Add to cart {% else %}Out of stock{% endif %}</button> 
-                                              <div class="icon-overlay">
-                                                <a href="" data-product_id ="{{ product.id }}" class="wishlist-icon">
-                                                    <img src="{% static 'img/heart.png'%}" alt="img"></i>
-                                                </a>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      {% endfor %}
-                                    {% endif %}
-                                    </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="product_top_bar d-flex justify-content-between align-items-center">
+                            <div class="single_product_menu">
+                                <p><span>10000 </span> Prodict Found</p>
+                            </div>
+                          <div class="single_product_menu d-flex">
+                              <form action="{% url 'search_product' %}" method="GET" class="input-group">
+                                  <input type="text" class="form-control" name="keyword" placeholder="Search" aria-label="Search">
+                                  <div class="input-group-append">
+                                      <button type="submit" class="btn btn-outline-secondary" id="searchButton">
+                                          <i class="ti-search"></i>
+                                      </button>
                                   </div>
-                                </section>
+                              </form>
+                          </div>
+                          
+                        </div>
+                    </div>
+                </div>
+            
+                          
+                    <section style="background-color: white;">
+                        <div class="container py-5 custom-card-container">
+                        <div class="row">
+                            {% if variant_images %}
+                            {% for c in variant_images %}
+                            {% if forloop.counter0|divisibleby:3 %}
+                            </div>
+                            <div class="row">
+                            {% endif %}
+                            <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="position-relative">
+                                <a href="{% url 'product_details' c.variant.product.id c.variant.id %}">
+                                    <img src="{{ c.image.url }}" class="card-img-top" alt="Laptop" />
+                                </a>
+                                
+                                </div>
+                                <div class="card-body">
+                                <h5 class="card-title">{{ c.variant.product.product_name }}</h5>
+                                <h6 class="card-price"> ₹{{  c.variant.product.product_price }}</h6>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <button  class="btn_3 addToCartBtn" data-product_id ="{{ product.id }}">{% if product.product_quantity > 0  %}Add to cart {% else %}Out of stock{% endif %}</button> 
+                                    <div class="icon-overlay">
+                                    <a href="" data-product_id ="{{ product.id }}" class="wishlist-icon">
+                                        <img src="{% static 'img/heart.png'%}" alt="img"></i>
+                                    </a>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                        </div>
+                        </div>
+                    </section>
                           </div>
                       </div>
                   </div>

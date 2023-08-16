@@ -1,11 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class Userdp(models.Model):
-    profilephoto=models.ImageField(upload_to='photos/variant',default='No Image Avilable')
-    
-
-
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     first_name =models.CharField(max_length=50)

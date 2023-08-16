@@ -5,198 +5,314 @@
 
 
 <section class="checkout_area padding_top">
-    <div class="container">
-      <div class="returning_customer">
-        <div class="check_title">
-          <h2>
-            Returning Customer?
-            <a href="#">Click here to login</a>
-          </h2>
-        </div>
-        <p>
-          If you have shopped with us before, please enter your details in the
-          boxes below. If you are a new customer, please proceed to the
-          Billing & Shipping section.
-        </p>
-        <form class="row contact_form" action="#" method="post" novalidate="novalidate">
-          <div class="col-md-6 form-group p_star">
-            <input type="text" class="form-control" id="name" name="name" value=" " />
-            <span class="placeholder" data-placeholder="Username or Email"></span>
-          </div>
-          <div class="col-md-6 form-group p_star">
-            <input type="password" class="form-control" id="password" name="password" value="" />
-            <span class="placeholder" data-placeholder="Password"></span>
-          </div>
-          <div class="col-md-12 form-group">
-            <button type="submit" value="submit" class="btn_3">
-              log in
-            </button>
-            <div class="creat_account">
-              <input type="checkbox" id="f-option" name="selector" />
-              <label for="f-option">Remember me</label>
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-6">
+              <div class="returning_customer">
+                  <button type="button" class="btn_3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                      New Address
+                  </button>
+      
+      <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">Billing Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="{% url 'addcheckoutaddr' %}" method="POST">
+                              {% csrf_token %}
+                              <div class="row">
+                                <div class="col-lg-6">
+                                  <div class="checkout__input">
+                                    <p>First Name<span>*</span></p>
+                                    <input type="text" name="firstname" style="border-radius: 20px;">
+                                  </div>
+                                </div>
+                                <div class="col-lg-6">
+                                  <div class="checkout__input">
+                                    <p>Last Name<span>*</span></p>
+                                    <input type="text" name="lastname" style="border-radius: 20px;">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="checkout__input">
+                                <p>Country<span>*</span></p>
+                                <input type="text" name="country" style="border-radius: 20px;">
+                              </div>
+                              <div class="checkout__input">
+                                <p>Address<span>*</span></p>
+                                <input type="text" class="checkout__input__add" name="address" style="border-radius: 20px;">
+                              </div>
+                              <div class="checkout__input">
+                                <p>Town/City<span>*</span></p>
+                                <input type="text" name="city" style="border-radius: 20px;">
+                              </div>
+                              <div class="checkout__input">
+                                <p>State<span>*</span></p>
+                                <input type="text" name="state" style="border-radius: 20px;">
+                              </div>
+                              <div class="checkout__input">
+                                <p>Postcode / ZIP<span>*</span></p>
+                                <input type="text" name="pincode" style="border-radius: 20px;">
+                              </div>
+                              <div class="row">
+                                <div class="col-lg-6">
+                                  <div class="checkout__input">
+                                    <p>Phone<span>*</span></p>
+                                    <input type="text" name="phone" style="border-radius: 20px;">
+                                  </div>
+                                </div>
+                                <div class="col-lg-6">
+                                  <div class="checkout__input">
+                                    <p>Email<span>*</span></p>
+                                    <input type="text" name="email" style="border-radius: 20px;">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="checkout__input">
+                                <p>Order notes<span>*</span></p>
+                                <input type="text" placeholder="Notes about your order, e.g. special notes for delivery." name="ordernote" style="border-radius: 20px;">
+                              </div>
+                          </div>
+                          <div class="modal-footer d-flex justify-content-center">
+                            <button type="submit" class="btn btn-danger" style="border-radius: 20px;">Create New Account</button>
+                        
+                            </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <form method="POST" action="{% url 'placeorder' %}" id="orderForm">
+                      {% csrf_token %}
+                        <div class="mb-4">
+                            <h4 class="font-weight-semi-bold mb-4">Select Address</h4>
+                      
+                              {% for a in address %}
+                              <div class="card mb-3">
+                              
+                                <div class="custom-control custom-radio h-100 m-2 d-flex align-items-center">
+                                  <input type="radio" class="custom-control-input " id="{{a.id}}" name="address" value="{{a.id}}" {% if index == 0 %}checked{% endif %} checked>
+                                  <label class="custom-control-label" for="{{a.id}}">{{a.first_name}} {{a.last_name}}</label>
+                              </div>
+                              
+                                    
+                                <div class="card-body">
+                                  <h5 class="card-title">Mob : {{a.phone}}</h5>
+                                  <h5 class="card-title">{{a.address}}, {{a.pincode}}</h5>
+                                  <p class="card-text">{{a.city}}-{{a.state}}-{{a.country}}</p>
+                                <div>
+  
+                                <!-- Button trigger vie address -->
+                                  <button type="button" class="btn_3" data-bs-toggle="modal" data-bs-target="#viewaddress{{forloop.counter}}">
+                                    View
+                                  </button>
+                                
+                                  <!-- Modal -->
+                                  <div class="modal fade" id="viewaddress{{forloop.counter}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h4 class="modal-title fs-6" id="staticBackdropLabel">View address</h4>
+                                          <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                            <i class="fa fa-times"></i>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+  
+                                          <div class="row">
+                                            <div class="col-sm-5">
+                                              <p class="mb-0">Name</p>
+                                            </div>
+                                            <div class="col-sm-7">
+                                                <input type="hidden" value="{{ a.first_name}} {{ a.last_name}} " name="first_name">
+                                                {{ a.first_name}} {{ a.last_name}} 
+                                            </div>
+                                          </div>
+                                          <hr>
+
+                                          <div class="row">
+                                              <div class="col-sm-5">
+                                                <p class="mb-0">Phone</p>
+                                              </div>
+                                              <div class="col-sm-7">
+                                                  {{ a.phone}}
+                                                  <input type="hidden" value="{{ a.phone}}" name="phone">
+                                              </div>
+                                            </div>
+                                            <hr>
+
+                                            <div class="row">
+                                              <div class="col-sm-5">
+                                                <p class="mb-0">Email</p>
+                                              </div>
+                                              <div class="col-sm-7">
+                                                  {{ a.email}}
+                                                  <input type="hidden" value="{{ a.email}}" name="email">
+
+                                              </div>
+                                            </div>
+                                            <hr>
+
+                                          <div class="row">
+                                              <div class="col-sm-5">
+                                                <p class="mb-0">Address</p>
+                                              </div>
+                                              <div class="col-sm-7">
+                                                  {{ a.address}}
+                                              </div>
+                                            </div>
+                                            <hr>
+
+                                            <div class="row">
+                                              <div class="col-sm-5">
+                                                <p class="mb-0">Town/City</p>
+                                              </div>
+                                              <div class="col-sm-7">
+                                                  {{ a.city}}
+                                              </div>
+                                            </div>
+                                            <hr>
+
+                                            <div class="row">
+                                              <div class="col-sm-5">
+                                                <p class="mb-0">Postcode / ZIPy</p>
+                                              </div>
+                                              <div class="col-sm-7">
+                                                  {{ a.pincode}}
+                                              </div>
+                                            </div>
+                                            <hr>
+
+                                            <div class="row">
+                                              <div class="col-sm-5">
+                                                <p class="mb-0">State</p>
+                                              </div>
+                                              <div class="col-sm-7">
+                                                  {{ a.state}}
+                                              </div>
+                                            </div>
+                                            <hr>
+
+                                            <div class="row">
+                                              <div class="col-sm-5">
+                                                <p class="mb-0">Country</p>
+                                              </div>
+                                              <div class="col-sm-7">
+                                                  {{ a.country}}
+                                              </div>
+                                            </div>
+                                            <hr>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                          <a  class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#deletaddress{{forloop.counter}}">
+                                            delete
+                                          </a>
+                              
+                                            <!--Delete Modal -->
+                                            <div class="modal fade" id="deletaddress{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                              <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                  <div class="modal-header">
+                                                    <h5 class="" id="exampleModalLabel">Delete</h5>
+                                                    <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"> <i class="fa fa-times" ></i></button>
+                                                  </div>
+                                                  <div class="modal-body">
+                                                    <p>Are you sure to delete Address <span class="text-primary">" {{a.first_name}} {{a.last_name}} ..."</span></p>
+                                                    
+                                                      <div class="d-flex justify-content-center">
+                                                        <a type="button" href="{% url 'deleteaddresscheckout' a.id %}"
+                                                          class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light">Confirm</a>
+                                                      </div>
+                                  
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                
+                              </div>
+                              
+                          </div>
+                        
+                          </div>
+                                {% endfor %}
+                            <div class="card-body">
+                              {% if not address %}<h5 class="card-title">No address saved</h5>{% endif %} 
+                              <p class="card-text"> </p>
+                              <div>
+                              </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="order_box text-left">
+                      <h2>Your Order</h2>
+                      <ul class="list">
+                          <div class="checkout__order__products">Product <span>Total</span></div>
+                          <ul class="checkout__total__products">
+                              {% for item in cartitems %}
+                            <li><img src="{{item.variation.image.url}}" height="40px" alt="">  {{item.product.product_name}}<span>{% if item.product.offer %}<del style="color: red;">₹ {{item.product.product_price}}</del> ₹{{item.product.get_offer}}{% else %} ₹ {{item.product.product_price}} {% endif %}</span>
+                              </span></li>
+                              {% endfor %}
+                              <li>
+                                Subtotal <span>₹{{total_price}}</span>
+                              </li>
+                            
+                          
+                              <li>
+                                Total <span id="grand_total">₹{{grand_total}}</span>
+                              </li>
+                            
+                          </ul>
+                          
+                          <div class="payment_item">
+                            <div class="radion_btn">
+                              <input type="radio" id="f-option5" name="placeorder" />
+                              <label for="f-option5">COD</label>
+                              <div class="check"></div>
+                            </div>
+                            <p>
+                              Please send a check to Store Name, Store Street, Store Town,
+                              Store State / County, Store Postcode.
+                            </p>
+                          </div>
+                          <div class="payment_item active">
+                            <div class="radion_btn">
+                              <input type="radio" id="f-option6" name="selector" />
+                              <label for="f-option6">Paypal </label>
+                              <img src="img/product/single-product/card.jpg" alt="" />
+                              <div class="check"></div>
+                            </div>
+                            <p>
+                              Please send a check to Store Name, Store Street, Store Town,
+                              Store State / County, Store Postcode.
+                            </p>
+                          </div>
+                          <div class="creat_account">
+                            <input type="checkbox" id="f-option4" name="selector" />
+                            <label for="f-option4">I’ve read and accept the </label>
+                            <a href="#">terms & conditions*</a>
+                          </div>
+                          <a class="btn_3" href="#">Proceed to Paypal</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <a class="lost_pass" href="#">Lost your password?</a>
           </div>
         </form>
-      </div>
-      <div class="cupon_area">
-        <div class="check_title">
-          <h2>
-            Have a coupon?
-            <a href="#">Click here to enter your code</a>
-          </h2>
-        </div>
-        <input type="text" placeholder="Enter coupon code" />
-        <a class="tp_btn" href="#">Apply Coupon</a>
-      </div>
-      <div class="billing_details">
-        <div class="row">
-          <div class="col-lg-8">
-            <h3>Billing Details</h3>
-            <form class="row contact_form" action="#" method="post" novalidate="novalidate">
-              <div class="col-md-6 form-group p_star">
-                <input type="text" class="form-control" id="first" name="name" />
-                <span class="placeholder" data-placeholder="First name"></span>
-              </div>
-              <div class="col-md-6 form-group p_star">
-                <input type="text" class="form-control" id="last" name="name" />
-                <span class="placeholder" data-placeholder="Last name"></span>
-              </div>
-              <div class="col-md-12 form-group">
-                <input type="text" class="form-control" id="company" name="company" placeholder="Company name" />
-              </div>
-              <div class="col-md-6 form-group p_star">
-                <input type="text" class="form-control" id="number" name="number" />
-                <span class="placeholder" data-placeholder="Phone number"></span>
-              </div>
-              <div class="col-md-6 form-group p_star">
-                <input type="text" class="form-control" id="email" name="compemailany" />
-                <span class="placeholder" data-placeholder="Email Address"></span>
-              </div>
-              <div class="col-md-12 form-group p_star">
-                <select class="country_select">
-                  <option value="1">Country</option>
-                  <option value="2">Country</option>
-                  <option value="4">Country</option>
-                </select>
-              </div>
-              <div class="col-md-12 form-group p_star">
-                <input type="text" class="form-control" id="add1" name="add1" />
-                <span class="placeholder" data-placeholder="Address line 01"></span>
-              </div>
-              <div class="col-md-12 form-group p_star">
-                <input type="text" class="form-control" id="add2" name="add2" />
-                <span class="placeholder" data-placeholder="Address line 02"></span>
-              </div>
-              <div class="col-md-12 form-group p_star">
-                <input type="text" class="form-control" id="city" name="city" />
-                <span class="placeholder" data-placeholder="Town/City"></span>
-              </div>
-              <div class="col-md-12 form-group p_star">
-                <select class="country_select">
-                  <option value="1">District</option>
-                  <option value="2">District</option>
-                  <option value="4">District</option>
-                </select>
-              </div>
-              <div class="col-md-12 form-group">
-                <input type="text" class="form-control" id="zip" name="zip" placeholder="Postcode/ZIP" />
-              </div>
-              <div class="col-md-12 form-group">
-                <div class="creat_account">
-                  <input type="checkbox" id="f-option2" name="selector" />
-                  <label for="f-option2">Create an account?</label>
-                </div>
-              </div>
-              <div class="col-md-12 form-group">
-                <div class="creat_account">
-                  <h3>Shipping Details</h3>
-                  <input type="checkbox" id="f-option3" name="selector" />
-                  <label for="f-option3">Ship to a different address?</label>
-                </div>
-                <textarea class="form-control" name="message" id="message" rows="1"
-                  placeholder="Order Notes"></textarea>
-              </div>
-            </form>
-          </div>
-          <div class="col-lg-4">
-            <div class="order_box">
-              <h2>Your Order</h2>
-              <ul class="list">
-                <li>
-                  <a href="#">Product
-                    <span>Total</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">Fresh Blackberry
-                    <span class="middle">x 02</span>
-                    <span class="last">$720.00</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">Fresh Tomatoes
-                    <span class="middle">x 02</span>
-                    <span class="last">$720.00</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">Fresh Brocoli
-                    <span class="middle">x 02</span>
-                    <span class="last">$720.00</span>
-                  </a>
-                </li>
-              </ul>
-              <ul class="list list_2">
-                <li>
-                  <a href="#">Subtotal
-                    <span>$2160.00</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">Shipping
-                    <span>Flat rate: $50.00</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">Total
-                    <span>$2210.00</span>
-                  </a>
-                </li>
-              </ul>
-              <div class="payment_item">
-                <div class="radion_btn">
-                  <input type="radio" id="f-option5" name="placeorder" />
-                  <label for="f-option5">COD</label>
-                  <div class="check"></div>
-                </div>
-                <p>
-                  Please send a check to Store Name, Store Street, Store Town,
-                  Store State / County, Store Postcode.
-                </p>
-              </div>
-              <div class="payment_item active">
-                <div class="radion_btn">
-                  <input type="radio" id="f-option6" name="selector" />
-                  <label for="f-option6">Paypal </label>
-                  <img src="img/product/single-product/card.jpg" alt="" />
-                  <div class="check"></div>
-                </div>
-                <p>
-                  Please send a check to Store Name, Store Street, Store Town,
-                  Store State / County, Store Postcode.
-                </p>
-              </div>
-              <div class="creat_account">
-                <input type="checkbox" id="f-option4" name="selector" />
-                <label for="f-option4">I’ve read and accept the </label>
-                <a href="#">terms & conditions*</a>
-              </div>
-              <a class="btn_3" href="#">Proceed to Paypal</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+      <div>       
+</section>
 {% endblock %}

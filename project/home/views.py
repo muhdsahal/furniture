@@ -94,11 +94,11 @@ def search_product(request):
     if 'keyword' in request.GET:
         keyword = request.GET.get('keyword')
         if keyword:
-            products = Product.objects.order_by('id').filter(product_name__icontains=keyword)
-            if products.exists():
+            variant_images = VariantImage.objects.filter(variant__product__product_name__icontains=keyword,is_available=True).order_by('variant__product').distinct('variant__product')
+            if variant_images.exists():
                 context = {
                     'cate': Category.objects.all(),
-                    'products': products,
+                    'variant_images': variant_images,
                 }
                 return render(request, 'shop.html', context)
             else:
@@ -120,7 +120,7 @@ def product_list(request):
 
     page_number = request.GET.get('page')
     sort_option = request.GET.get('sort')
-    search_query = request.GET.get('search')
+    
     
     products = Product.objects.filter(is_available=True)
     cat = Category.objects.all()
@@ -135,11 +135,6 @@ def product_list(request):
         sorted_products = products.order_by('-product_price')
     else:
         sorted_products = products
-    print(sort_option,'grggggggggggggggggr')
-
-    if search_query:
-        sorted_products = sorted_products.filter(product_name__icontains=search_query)
-    
 
     items_per_page = 4
     paginator = Paginator(sorted_products, items_per_page)
