@@ -1,4 +1,5 @@
 from django.db import models
+from variant.models import Variant
 from userprofile.models import Address
 from products.models import Product
 from django.contrib.auth.models  import User
@@ -24,7 +25,7 @@ class Order(models.Model):
 class OrderItem(models.Model):
         
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    variant = models.ForeignKey(Variant,on_delete=models.CASCADE,null=True)
     price=models.FloatField(null=True)
     quantity=models.IntegerField(null=False)
     orderstatuses = {

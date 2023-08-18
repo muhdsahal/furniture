@@ -15,7 +15,6 @@ class Color(models.Model):
 class Product(models.Model):
     product_name = models.CharField(unique=True, max_length=50,null=True, blank=True)
     product_price = models.IntegerField(null=True, blank=True)
-    product_quantity=models.IntegerField(null=True, blank=True)
     category = models.ForeignKey(Category,on_delete=models.CASCADE,null=True, blank=True)
     product_description = models.TextField()
     slug = models.SlugField(max_length=250, unique=True)

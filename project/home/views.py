@@ -28,14 +28,19 @@ def shop(request):
     if request.user.is_superuser:
         return  redirect('dashboard')
     
-
+    
     product = Product.objects.filter(is_available=True).order_by('id')
-    cate=Category.objects.all()
+    cate=Category.objects.filter(is_available=True)
     variant_images = VariantImage.objects.filter(variant__product__is_available=True).order_by('variant__product').distinct('variant__product')
+    paginator =Paginator(product,3)
+    page =request.GET.get('page')
+    paged_products= paginator.get_page(page)
+    product_count =product.count()
     context={
-        'products':product,
+        'product':paged_products,
         'cate':cate,
-        'variant_images':variant_images
+        'variant_images':variant_images,
+        'product_count':product_count
         
     }
 
@@ -114,14 +119,51 @@ def search_product(request):
     else:
         return render(request, '404.html')
 
+# def product_list(request):
+#     if request.user.is_superuser:
+#         return redirect('dashboard')
+
+#     page_number = request.GET.get('page')
+#     sort_option = request.GET.get('sort')
+    
+    
+#     products = Product.objects.filter(is_available=True)
+#     cat = Category.objects.all()
+
+#     if sort_option == 'atoz':
+#         sorted_products = products.order_by('product_name')
+#     elif sort_option == 'ztoa':
+#         sorted_products = products.order_by('-product_name')
+#     elif sort_option == 'lowtohigh':
+#         sorted_products = products.order_by('product_price')
+#     elif sort_option == 'hightolow':
+#         sorted_products = products.order_by('-product_price')
+#     else:
+#         sorted_products = products
+
+#     items_per_page = 4
+#     paginator = Paginator(sorted_products, items_per_page)
+#     page = request.GET.get('page')
+#     paged_variation = paginator.get_page(page)
+    
+    
+#     try:
+#         products_page = paginator.page(page_number)
+#     except PageNotAnInteger:
+#         products_page = paginator.page(1)
+#     except EmptyPage:
+#         products_page = paginator.page(paginator.num_pages)
+    
+#     return render(request, 'shop.html', {'sorted_products': sorted_products, 'cat': cat, 'products_page': products_page,'paged_variation':paged_variation})
+
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 def product_list(request):
     if request.user.is_superuser:
         return redirect('dashboard')
 
-    page_number = request.GET.get('page')
     sort_option = request.GET.get('sort')
-    
-    
     products = Product.objects.filter(is_available=True)
     cat = Category.objects.all()
 
@@ -138,16 +180,18 @@ def product_list(request):
 
     items_per_page = 4
     paginator = Paginator(sorted_products, items_per_page)
-    
-    
+    page_number = request.GET.get('page')
+
     try:
         products_page = paginator.page(page_number)
     except PageNotAnInteger:
         products_page = paginator.page(1)
     except EmptyPage:
         products_page = paginator.page(paginator.num_pages)
-    
+
     return render(request, 'shop.html', {'sorted_products': sorted_products, 'cat': cat, 'products_page': products_page})
+
+
 
 
 def product_sort(request, sort_id):

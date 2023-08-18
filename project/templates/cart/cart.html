@@ -34,6 +34,7 @@
 
                                     <th>image</th>
                                     <th>Product</th>
+                                    <th>Price</th>
                                     <th>Quantity</th>
                                     <th>Total</th>
                                     <th>Delete</th>
@@ -47,40 +48,51 @@
                                 <br>
                                 {% else %}
                                 {% for item in cart %}
-                                <tr id="product-div{{item.variation.id}}" >
+                                <tr id="product-div{{item.variant.id}}" >
+                                    {% for i in img %}
+                                    {% if i.variant.id == item.variant.id %}
                                         <td class="product_cart_item">
                                             <div class="product_cart_item_pic ">
-                                                <img src="{{ item.product.product_image1.url }}" height="90px" alt="IMG"  >
+                                                <img src="{{ i.image.url }}" height="90px" alt="IMG"  >
                                             </div>
                                         </td>
+                                        {% endif %}
+                                        {% endfor %}
                                         <td class="product_cart_item_text">
-                                            <h5 style="font-weight: bold;">{{ item.product.product_name }}</h5>
-                                            <h5>{% if item.product.offer %}₹ <del class="text-danger"> {{item.product.product_price}}</del> {% else %} ₹ {{item.product.product_price}} {% endif %}</h5>
-                                        </td>                
-                                        
-    
+                                            <h5 style="font-weight: bold;">{{ item.variant.product.product_name }}</h5>
+                                           
+                                        </td>  
                                         <td>
+                                            <h5>{% if item.variant.product.offer %}₹ <del class="text-danger"> {{item.variant.product.product_price}}</del> {% else %} ₹ {{item.variant.product.product_price }} {% endif %}</h5>
+                                        </td>
+
+                                        
+                                        <td>  
+                            
     
-                                            <div class="input-group quantity"  style="width: 100px;">
+                                            
+                                            <div class="input-group quantity changeQuantity" data-productid="{{item.variant.id}}" style="width: 100px;">
                                                 <div class="input-group-btn">
-                                                    <button data-price="{{item.product.product_name}}" data-productid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-minus changeQuantity" >
+                                                    <button data-price="{{item.variant.product.product_name }}"  class="btn btn-sm border border-secondary btn-minus " >
                                                         <i class="fa fa-minus"></i>
                                                     </button>
                                                 </div>
-    
-                                                <input readonly id="pro_qty{{item.product.id}}" type="text" class="form-control form-control-sm  text-center" value="{{item.product_qty}}">
-    
-                                                <div class="input-group-btn sifan">
-                                                    <button data-price="{{item.product.product.price}}" data-productid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-plus changeQuantity">
+                                                
+                                                <input readonly id="pro_qty{{item.variant.id}}" type="text" class="form-control form-control-sm  text-center" value="{{item.product_qty}}">
+                                                
+                                                <div class="input-group-btn sahal">
+                                                    <button data-price="{{item.variant.product.product_price}}"  class="btn btn-sm border border-secondary btn-plus ">
                                                         <i class="fa fa-plus"></i>
                                                     </button>
                                                 </div>
                                             </div>
-
+                                            
                                         </td>                                       
                                         {% with counter=forloop.counter  %}
+                                                
+                                        
                                         <td class="cart__price total">₹
-                                            <span id="single_product_total{{item.product.product.id}}"> {{ item.product.product_price| mul:item.product_qty }} </span>
+                                            <span id="single_product_total{{item.variant.id}}"> {{ item.variant.product.product_price| mul:item.product_qty }} </span>
                                         </td>
                                         {% endwith %}
                                         {% comment %} <td class="cart__close">
@@ -89,7 +101,7 @@
                                         <td>
                                             <form method="post" action="{% url 'deletecartitem' %}">
                                                 {% csrf_token %}
-                                                <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                                                <input type="hidden" name="product_id" value="{{ item.variant.id }}">
                                                 <button type="submit" class="btn_1">Delete</button>
 
                                             </form>
@@ -105,8 +117,8 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn">
-                                <a href="{%url 'shop' %}">Continue Shopping</a>
+                            <div>
+                                <a href="{%url 'shop' %}"><button class="btn_3" >Continue Shopping</button></a>
                             </div>
                         </div>
                         {% comment %} <div class="col-lg-6 col-md-6 col-sm-6">
@@ -121,7 +133,7 @@
                         <h6>Discount codes</h6>
                         <form action="#">
                             <input type="text" placeholder="Coupon code">
-                            <button  type="submit" class="btn_3" >Apply</button>
+                            <button  type="submit" class="btn_1" >Apply</button>
                         </form>
                     </div>
                     <div class="cart__total">
@@ -134,7 +146,7 @@
                         {%if cart%}
                         <a href="{% url 'checkout' %}" class="btn_3">Proceed to checkout</a>
                         {% else %}
-                        <a href="" class="primary-btn">Cart is Empty</a>
+                        <a href="" class="btn_3">Cart is Empty</a>
                         {% endif %}
                     </div>
                 </div>
@@ -143,6 +155,8 @@
     </section>
     <!-- Shopping Cart Section End -->
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
 
 $('.quantity button').on('click', function () {
@@ -177,12 +191,7 @@ $(document).ready(function() {
             },
             success: function(response) {
                 console.log(response);
-                if (response.status === 'Not allowed this Quantity') {
-                    swal("Error!", response.status, "error");
-                } else {
-                    var checkoutLink = '<a href="#" class="primary-btn">Proceed to checkout</a>';
-                    $("a.primary-btn").replaceWith(checkoutLink);
-                }
+                
                 
                 var sub_total = parseInt(response.sub_total);
                 document.getElementById('sub_total').textContent = sub_total;
@@ -201,7 +210,6 @@ $(document).ready(function() {
 </script>
 
 <!-- Include jQuery library if not already included -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
 $(document).ready(function() {

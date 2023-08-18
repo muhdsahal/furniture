@@ -6,6 +6,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login ,logout
+from datetime import date, datetime,timedelta
+from django.db.models import DateField
 
 # verification email
 from user.models import UserOTP
@@ -171,31 +173,34 @@ def banner(request):
     return render(request,'banner/banner.html',dict_banner)
 
 
-def createbanner(request):
-    if not request.user.is_superuser:
-        return redirect('admin_login1')
-    if request.method == 'POST':
-        name=request.POST.get('banner_name')
-        discription=request.POST.get('banner_discription')
-        categories=request.POST.get('categories')
-        image=request.FILES.get('image',None)
 
-        if name.strip() == '':
-            messages.error(request,'name is empty !')
-            return render('banner')
-        if not image:
-            messages.error(request,'image not uploaded !')
-            return render('banner')
+
+
+# def createbanner(request):
+#     if not request.user.is_superuser:
+#         return redirect('admin_login1')
+#     if request.method == 'POST':
+#         name=request.POST.get('banner_name')
+#         discription=request.POST.get('banner_discription')
+#         categories=request.POST.get('categories')
+#         image=request.FILES.get('image',None)
+
+#         if name.strip() == '':
+#             messages.error(request,'name is empty !')
+#             return render('banner')
+#         if not image:
+#             messages.error(request,'image not uploaded !')
+#             return render('banner')
         
-        cat = Category.objects.get(slug=categories)
-        ban = Banner(
-        banner_image = image,
-        banner_name = name,
-        banner_discription = discription,
-        category = cat,
-        )
-        ban.save()
-    return redirect('banner')
+#         cat = Category.objects.get(slug=categories)
+#         ban = Banner(
+#         banner_image = image,
+#         banner_name = name,
+#         banner_discription = discription,
+#         category = cat,
+#         )
+#         ban.save()
+#     return redirect('banner')
 
 
 

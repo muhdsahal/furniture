@@ -22,7 +22,7 @@ def checkout(request):
     grand_total = 0
     tax = 0
     for item in cartitems:
-        total_price = total_price+item.product.product_price * item.product_qty
+        total_price = total_price+item.variant.product.product_price * item.product_qty
         tax = total_price * 0.18
         grand_total=total_price + tax
     address = Address.objects.filter(user=request.user)
@@ -43,13 +43,15 @@ def placeorder(request):
         neworder =Order()
         neworder.user=request.user
         address_id=request.POST.get('address')
+        print(address_id,'hhhhhhhhhhhhhhhhhh')
 
         if address_id is None:
             messages.error(request,'Address Field Is Mandatory!')
             return redirect('checkout')
         
-        address=Address.objects.filter(id=address_id)
-        print(address,address_id,'helllllllllllllllo')
+        address=Address.objects.get(id=address_id)
+        # print(address,address_id,'helllllllllllllllo')
+
         neworder.address = address
         payment_method =request.POST.get('payment_method')
 
@@ -63,7 +65,7 @@ def placeorder(request):
         cart_total_price = 0
         tax = 0
         for item in cart:
-            cart_total_price +=item.product.product_price * item.product_qty
+            cart_total_price +=item.variant.product.product_price * item.product_qty
             tax=cart_total_price * 0.18
             cart_total_price + tax
 
@@ -81,7 +83,7 @@ def placeorder(request):
 
         neworderitems =Cart.objects.filter(user=request.user)
         for item in neworderitems:
-            OrderItem.objects.Create(
+            OrderItem.objects.create(
                 order=neworder,
                 variant=item.variant,
                 price=item.variant.product.product_price,
@@ -89,15 +91,21 @@ def placeorder(request):
             )
 
             prod=Variant.objects.filter(id=item.variant.id).first()
-            prod.quantity -= item.product_qty
-            prod.save()
+            if  prod.quantity>0:
+                prod.quantity -= item.product_qty
+                prod.save()
+            else:
+                return JsonResponse({'status':'Out Of Stock!!'})    
 
         payment_mode = request.POST.get('payment_method')
-        if payment_mode == 'cod':
+        print(payment_mode,'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr')
+
+        if payment_mode == 'cod' or payment_mode == 'razorpay' :
             Cart.objects.filter(user=request.user).delete()
             return JsonResponse({'status':'Your Order Has Been Placed Success Fully'})
+        else:
+            return JsonResponse({'status':'Your Order Has Been Failed Try Again!!'})
         
-        Cart.objects.filter(user=request.user).delete()
     return redirect('checkout')
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -139,10 +147,14 @@ def generate_random_payment_id(length):
 def razarpaycheck(request):
     cart = Cart.objects.filter(user=request.user)
     total_price = 0
-    total_offer =0
+    tax =0
+
     for item in cart:
         total_price = total_price + item.variant.product.product_price * item.product_qty
-    total_price = total_price- total_offer
+        prod=Variant.objects.filter(id=item.variant.id).first() 
+        tax = total_price * 0.18
+    total_price = total_price + tax
+
 
     return JsonResponse({'total_price':total_price})
 

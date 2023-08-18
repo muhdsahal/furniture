@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
+
+from variant.models import VariantImage
 from .models import Wishlist
 from django.http import HttpResponse
 from products.models import Product
@@ -12,8 +14,11 @@ from django.http import JsonResponse
 @login_required(login_url='user_login1')
 def wishlist(request):
     wishlist=Wishlist.objects.filter(user=request.user)
+    variants = wishlist.values_list('product', flat=True)
+    img = VariantImage.objects.filter(variant__product__in=variants).distinct('variant')
     context={
         'wishlist':wishlist,
+        'img':img,
     }
     return render(request,'wishlist/wishlist.html',context)
 

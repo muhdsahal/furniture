@@ -46,18 +46,8 @@
               <div data-thumb="{{ i.image.url }}" class="item" style="height: 350px margin-bottom: 0px;">
                 <img src="{{ i.image.url  }}">
               </div>
-              {% comment %} <div data-thumb="{{i.image.url}}" class="item" style="height: 350px margin-bottom: 0px;">
-                <img src="{{i.image.url}}">
-              </div>
-              <div data-thumb="{{i.image.url}}" class="item"  style="height: 350px margin-bottom: 0px;">
-                <img src="{{i.image.url}}">
-              </div> {% endcomment %}
+              
               {% endfor %}
-              {% comment %} <div data-thumb="{{prod.product_image1.url}}" class="item" style="height: 350px margin-bottom: 0px;">
-                <img src="{{prod.product_image2.url}}">
-              </div> {% endcomment %}
-             
-
             </div>
           </div>
           <div class="col-lg-12 col-xl-12 text-center mt-3">
@@ -69,24 +59,20 @@
         </div>
         <div class="col-lg-5 col-xl-4">
           <div class="s_product_text">
-            {% comment %} <h5>previous <span>|</span> next</h5> {% endcomment %}
-            <h3>{{  variant.0.variant.product.product_name }}</h3>
+            <h2>{{  variant.0.variant.product.product_name }}</h2>
             <h2>₹{{  variant.0.variant.product.product_price }}</h2>
-            <ul class="list">
-              <li>
-                <a class="active" href="#"><span>Category</span>{{  variant.0.variant.product.category }}</a>
-              </li>
-              <li>
-                <span>Brand : Aranoz</span>
-              </li>
-              <li>
-                <a href="#"><span>Availibility</span>{{ variant.0.variant.product.product_quantity }}</a>
-              </li>
+            <h3><span>Category   : </span>{{  variant.0.variant.product.category }}</h3>
+            <h3><span>Brand : Aranoz</span></h3>
+            <h3><span>Availibility      :  </span>{{ variant.0.variant.quantity }}</h3>
+            
+              
 
-              <div class="details-filter-row details-row-size">
-                <label>Color:</label>
-                
+              
+              <div style="display: flex; flex-direction: column;">
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                  <h3>Color:</h3>
                 {% for i in color %}
+                
                 <div class="product-nav product-nav-dots">
   
                     <a href="{% url 'product_details' i.variant.product.id i.variant.id %}"
@@ -100,7 +86,7 @@
                 </div><!-- End .product-nav -->
                 {% endfor %}
             </div>
-            </ul>
+            
             
             <p>{{ variant.0.variant.product.product_description  }}</p>
 
@@ -109,11 +95,11 @@
             <div class="card_area d-flex justify-content-between align-items-center">
               <div class="product_count">
                 <span class="inumber-decrement"><i class="ti-minus"></i></span>
-                <input class="input-number" type="text" value="1" min="1" max="{{prod.product_quantity}}" />
+                <input class="input-number" type="text" value="1" min="1" max="{{variant.0.variant.quantity }}" />
                 <span class="number-increment"><i class="ti-plus"></i></span>
               </div>
               <input type="hidden" value="{{prod.id}}" class="prod_id" >
-              <button class="btn_3 addToCartBtn add_cart "data-product_id="{{ prod.id }}" >{% if prod.product_quantity > 0  %}Add to cart {% else %}Out of stok{% endif %}</button>        
+              <button class="btn_3 addToCartBtn add_cart "data-product_id="{{ prod.id }}" >{% if variant.0.variant.quantity > 0  %}Add to cart {% else %}Out of stok{% endif %}</button>        
                
               <a href="#" type="submit" data-product_id="{{ prod.id }}" class="like_us wishlist-icon"><i class="ti-heart"></i></a>
 
