@@ -20,7 +20,7 @@ def  product_variant(request):
         'color_name':color_name,
         'product':product,
     }
-    return render(request,'variant/variant.html',{'variant_list':variant_list})  
+    return render(request,'adminside/variant.html',{'variant_list':variant_list})  
 
 
 def add_Product_Variant(request):
@@ -66,7 +66,7 @@ def add_Product_Variant(request):
         return redirect('product_variant')
     
     
-    return render(request,'variant/variant.html')
+    return render(request,'adminside/variant.html')
 
 def edit_prodectvariant(request,variant_id):
     if not request.user.is_superuser:
@@ -123,7 +123,7 @@ def product_color(request):
     if not request.user.is_superuser:
             return redirect('admin_login1')
     product_color= Color.objects.filter(is_available=True).order_by('id')
-    return render(request,'color_management/color_management.html',{'products_color':product_color})
+    return render(request,'adminside/color_management.html',{'products_color':product_color})
 
 def add_color(request):
     if not request.user.is_superuser:
@@ -152,7 +152,7 @@ def add_color(request):
         messages.success(request, 'Color added successfully!')
         return redirect('product_color')
 
-    return render(request, 'color_management/color_management.html')
+    return render(request, 'adminside/color_management.html')
 
 def color_delete(request,color_name_id):
      if not request.user.is_superuser:
@@ -177,7 +177,7 @@ def image_list(request,variant_id):
     
     image=VariantImage.objects.filter(variant=variant_id,is_available =True)
     add_image = variant_id
-    return render(request,'variant/image_management.html',{'image':image,'add_image':add_image})
+    return render(request,'adminside/image_management.html',{'image':image,'add_image':add_image})
 
 def image_view(request,img_id):
     if request.method == 'POST':
@@ -196,7 +196,7 @@ def image_view(request,img_id):
     else:
         form =ImageForm()
     context ={'form':form,'img_id':img_id}
-    return render(request, 'variant/image_add.html', context)
+    return render(request, 'adminside/image_add.html', context)
 
 def image_delete(request,image_id):
     if not request.user.is_superuser:
@@ -209,7 +209,7 @@ def image_delete(request,image_id):
         messages.success(request,'image deleted successfully')
         image = VariantImage.objects.filter(variant=var_id)
         add_image = var_id
-        return render(request,'variant/image_management.html',{'image':image,'add_image':add_image})
+        return render(request,'adminside/image_management.html',{'image':image,'add_image':add_image})
     except:
         return redirect ('product_variant')
     
@@ -226,25 +226,8 @@ def product_view(request,product_id):
          'product'   :product,
     }
     # variant_id
-    return render(request,'view/variant_view.html',{'variant_list':variant_list}) 
+    return render(request,'adminside/variant_view.html',{'variant_list':variant_list}) 
 
-def product_search(request):
-    search = request.POST.get('search')
-    if search is None or search.strip() == '':
-        messages.error(request,'Filed cannot empty!')
-        return redirect('product')
-    product = Product.objects.filter(Q(product_name__icontains=search) | Q(product_price__icontains=search) |Q(category__categories__icontains=search),is_available =True)
-    product_list={
-        'product' : product,
-        'categories' : Category.objects.filter(is_available =True).order_by('id')   
-    }
-    if product :
-        pass
-        return render(request,'product/products.html',product_list)
-    else:
-        product:False
-        messages.error(request,'Search not found!')
-        return redirect('product')
   
     
 

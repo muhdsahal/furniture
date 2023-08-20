@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 def categories (request):
     if not request.user.is_superuser:
         return redirect ('admin_login1')
-    Category_data=Category.objects.all().order_by('id')
+    Category_data=Category.objects.filter(is_available=True).order_by('id')
     return render(request,'category/category.html',{'Category': Category_data})
 
 
@@ -36,7 +36,7 @@ def createcategory(request):
                 messages.error(request, 'Image not uploaded')
                 return redirect('categories')
 
-            if Category.objects.filter(categories=name).exists():
+            if Category.objects.filter(categories=name).exists():   
                 messages.error(request, 'Category name already exists')
                 return redirect('categories')
 
@@ -48,39 +48,28 @@ def createcategory(request):
         return redirect('categories')
         
 
-def deletecategory(request,deletecategory_id):
+def deletecategory(request, deletecategory_id):
     if not request.user.is_superuser:
         return redirect('admin_login1')
-    cate=Category.objects.get(id=deletecategory_id)
+
+    cate = Category.objects.get(id=deletecategory_id)
     products = Product.objects.filter(category=cate)
+
     for product in products:
         product.is_available = False
         product.save()
 
-    variants = Variant.objects.filter(product=product)
-    for variant in variants:
-        variant.is_available = False
-        variant.quantity = 0
-        variant.save()
+        variants = Variant.objects.filter(product=product)
+        for variant in variants:
+            variant.is_available = False
+            variant.quantity = 0
+            variant.save()
 
     cate.is_available = False
     cate.save()
-    messages.success(request,'category deleted successfully !.')
-    return redirect ('categories')
-
-# def blockcategory(request,cate_id):
-#     if not request.user.is_superuser:
-#         return redirect('admin_login1')
-#     cate=Category.objects.filter(id=cate_id)
-    
-#     if cate.is_active:
-#         cate.is_active=True
-#         cate.save()
-#     else:
-#         cate.is_active =False
-#         cate.save()
-#         return redirect('categories')
-
+    print(cate,'32455555555')
+    messages.success(request, 'Category deleted successfully!')
+    return redirect('categories')
 
 @login_required(login_url='admin_login1')
 def editcategory(request,editcategory_id):

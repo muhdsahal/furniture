@@ -6,10 +6,9 @@
 <!-- Include the nouislider CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css" />
-
-
 <!-- Include the nouislider JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.js"></script>
+
 
 <style>
   /* Custom CSS to add distance between the navbar and cards */
@@ -173,30 +172,6 @@ justify-content: space-between;
                 </div>
               </section>
              <!-- ... -->
-            
-{% comment %} 
-             <div class="pagination">
-                <span class="step-links">
-                    {% if products_page.has_previous %}
-                    <a href="?page={{ products_page.previous_page_number }}{% if sort_option %}&sort={{ sort_option }}{% endif %}">
-                        bprevious</b></a>
-                     
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ page_obj.number }} of {{ products_page.paginator.num_pages }}
-                    </span>
-
-                    {% if products_page.has_next %}
-                        <a href="?page={{ products_page.next_page_number }}{% if sort_option %}&sort={{ sort_option }}{% endif %}">
-                            next</a>
-                        <a href="?page={{ products_page.paginator.num_pages }}{% if sort_option %}&sort={{ sort_option }}{% endif %}">
-                            last &raquo;</a>
-                    {% endif %}
-                </span>
-            </div> {% endcomment %}
-
-
             <div class="pagination">
                 <span class="step-links">
                     {% if products_page.has_previous %}
@@ -217,29 +192,6 @@ justify-content: space-between;
         
                 </span>
             </div>
-            
-            
-            <!-- ... -->
-                  {% comment %} <div class="col-lg-12">
-                      <div class="pageination">
-                          <nav aria-label="Page navigation example">
-                              <ul class="pagination justify-content-center">
-                                  <li class="page-item">
-                                      <a class="page-link" href="#" aria-label="Previous">
-                                          <i class="ti-angle-double-left"></i>
-                                      </a>
-                                  </li>
-                                 
-                                  <li class="page-item">
-                                      <a class="page-link" href="#" aria-label="Next">
-                                          <i class="ti-angle-double-right"></i>
-                                      </a>
-                                  </li>
-                              </ul>
-                          </nav>
-                      </div> {% endcomment %}
-                      <!-- Pagination -->
-         
                   </div>
               </div>
           </div>
@@ -316,10 +268,10 @@ justify-content: space-between;
 
 
 
-              if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'product already in cart' ) {
-                  Swal.fire("Error!", response.status, "error");
-                  $('.cartdata').load(location.href + " .cartdata");
-              } else if (response.status === 'Product added successfully') { 
+              //if (response.status === 'No such prodcut found' || response.status === 'Only few quantity available' || response.status === 'product already in cart' ) {
+                 // Swal.fire("Error!", response.status, "error");
+                  //$('.cartdata').load(location.href + " .cartdata");
+                if (response.status === 'Product added successfully') { 
                   Swal.fire("", response.status, "success");
                   $('.cartdata').load(location.href + " .cartdata");
               } else if (response.status === 'you are not login please Login to continue') {

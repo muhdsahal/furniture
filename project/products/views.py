@@ -137,4 +137,4 @@ def product_view(request,product_id):
         'product':product,
         'color_name':color_name
     }
-    return render(request,'view/product_view.html',{'variant_list':variant_list})
+    return render(request,'adminside/product_view.html',{'variant_list':variant_list})
