@@ -94,17 +94,11 @@
                 <span class="hide-menu">Products</span>
               </a>
             </li>
-            {% comment %} <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'banner' %}" aria-expanded="false"> 
-                  <i class="ti ti-file-description"></i>
-                </span>
-                <span class="hide-menu">Banner</span>
-              </a>
-            </li> {% endcomment %}
+             
             <li class="sidebar-item">
               <a class="sidebar-link" href="{% url 'product_variant' %}" aria-expanded="false">
                 <span>
-                  <i class="ti ti-typography"></i>
+                  <i class="ti ti-file-description"></i>
                 </span>
                 <span class="hide-menu">variant</span>
               </a>
@@ -112,12 +106,19 @@
             <li class="sidebar-item">
               <a class="sidebar-link" href="{% url 'product_color' %}" aria-expanded="false">
                 <span>
-                  <i class="ti ti-typography"></i>
+                  <i class="ti ti-file-plus"></i>
                   
                 </span>
                 <span class="hide-menu">color</span>
               </a>
             </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{% url 'sales_report' %}" aria-expanded="false"> 
+                  <i class="ti ti-report-money"></i>
+                </span>
+                <span class="hide-menu">Sales Report</span>
+              </a>
+            </li> 
 
 
 
