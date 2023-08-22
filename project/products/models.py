@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from categories.models import Category
+from offer.models import Offer
 # Create your models here.
 
 
@@ -18,6 +19,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category,on_delete=models.CASCADE,null=True, blank=True)
     product_description = models.TextField()
     slug = models.SlugField(max_length=250, unique=True)
+    offer = models.ForeignKey(Offer, on_delete=models.SET_NULL, null=True )
     is_available=models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):

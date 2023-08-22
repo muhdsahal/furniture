@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from .models import Coupon
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django import re
+import re
 from datetime import datetime,timezone
 
 # Create your views here.
@@ -158,9 +158,10 @@ def coupon_search(request):
         Coupon.objects.filter(Q(coupon_name__icontains=search) 
                               | Q(coupon_code__icontains=search)
                               | Q(min_price_icontains=search) 
-                              |  Q(coupon_discount_amount = search)
+                              | Q(coupon_discount_amount = search)
                               | Q(start_date__icontains=search) 
-                              | Q(end_date__icontains=search),is_available =True)
+                              | Q(end_date__icontains=search)
+                              ,is_available =True)
     
     )
     context={
@@ -170,7 +171,7 @@ def coupon_search(request):
         pass
     else:
         coupon:False
-        messages.error(request,'Search Not Found!')
+        messages.error(request,'Search Not Found!',context)
         return redirect ('coupon')
 
 

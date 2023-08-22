@@ -26,7 +26,7 @@ class Order(models.Model):
     tracking_no =models.CharField(max_length=150,null=True)
     created_at=models.DateTimeField(auto_now_add=True)
     update_at =models.DateTimeField(auto_now=True)
-    order_status =models.ForeignKey(Orderstatus,on_delete=models.CASCADE ,null=True,default=1)
+    order_status =models.ForeignKey(Orderstatus,on_delete=models.CASCADE ,null=True)
     return_total_price =models.IntegerField(null=True)
 
     @property

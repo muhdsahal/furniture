@@ -3,36 +3,151 @@ from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from cart.models import Cart
+from coupon.models import Coupon
+from wishlist.models import Wishlist
 from userprofile.models import Address
 # from django.contrib.auth.models import User
 from django.contrib import messages
 from products.models import *
-from checkout.models import Order, OrderItem
+from checkout.models import Order, OrderItem,Itemstatus,Orderstatus
 from django.shortcuts import render, redirect
 from variant.models import Variant,VariantImage
 import random
 import string
 import re
- 
-# @cache_control(no_cache=True,must_revalidate=True,no_store=True)
-# @login_required(login_url='user_login1')
+
 def checkout(request):
-    cartitems= Cart.objects.filter(user=request.user)
+    request.session['coupon_session'] = 0
+    request.session['coupon_id']= None
+    
+    if request.method == 'POST':
+        coupon = request.POST.get('coupon')
+        if coupon is None:
+            messages.error(request, 'coupon field is cannot empty!')
+            return redirect('checkout')
+        try:
+            check_coupons =Coupon.objects.filter(coupon_code=coupon).first()
+            cartitems= Cart.objects.filter(user=request.user)
+            total_price = 0
+            grand_total = 0
+            offer_price = 0
+            tax = 0
+            offer_price_total= 0
+            all_offer = 0
+            for item in cartitems:
+                if item.variant.product.offer:
+                    product_price = item.variant.product.product_price
+                    total_price += product_price * item.product_qty
+                    offer_price = item.variant.product.offer.discount_amount
+                    offer_price_total = offer_price * item.product_qty
+                    total_price = total_price - offer_price_total
+                    all_offer = all_offer + offer_price_total
+                    tax = total_price * 0.18
+                    
+                else:
+                    product_price = item.variant.product.product_price
+                    total_price += product_price * item.product_qty
+                    tax = total_price * 0.18
+
+            grand_total=total_price + tax
+            if grand_total >= check_coupons.min_price:
+                
+                coupon = check_coupons.coupon_discount_amount
+                coupon_id = check_coupons.id
+
+                request.session['coupon_session']= coupon
+                request.session['coupon_id']= coupon_id
+
+                messages.success(request, 'This coupon added successfully!')
+            else:
+                coupon = False
+                messages.error(request, ' purchase minimum price!')
+
+            address = Address.objects.filter(user=request.user)
+            cart_count = Cart.objects.filter(user =request.user).count()
+            wishlist_count = Wishlist.objects.filter(user=request.user).count()
+            coupon_checkout =Coupon.objects.filter(is_available=True)
+            if offer_price_total == 0:
+                offer_price_total = False
+            else:
+                offer_price_total
+
+
+
+            context = {
+                'all_offer':all_offer,
+                'offer' :offer_price_total,
+                'coupon_checkout':coupon_checkout,
+                'cartitems': cartitems,
+                'total-price': total_price,
+                'grand_total': grand_total,
+                'address' : address,
+                'cart_count':cart_count,
+                'coupon' :cart_count,
+                'wishlist_count':wishlist_count,
+            }
+            
+            if total_price == 0 :
+                return redirect ('home')
+            else:
+                return render(request,'checkout/checkout.html',context)
+            
+        except:
+            messages.error(request, 'This coupon not valid!')
+            return redirect('checkout')
+        
+    cartitems = Cart.objects.filter(user=request.user)
     total_price = 0
     grand_total = 0
+    offer_price = 0
     tax = 0
+    offer_price_total= 0
+    all_offer = 0
     for item in cartitems:
-        total_price = total_price+item.variant.product.product_price * item.product_qty
-        tax = total_price * 0.18
-        grand_total=total_price + tax
-    address = Address.objects.filter(user=request.user)
+        if item.variant.product.offer:
+            product_price = item.variant.product.product_price
+            total_price += product_price * item.product_qty
+            offer_price = item.variant.product.offer.discount_amount
+            offer_price_total = offer_price * item.product_qty
+            total_price = total_price - offer_price_total
+            all_offer = all_offer + offer_price_total
+            tax = total_price * 0.18
+            
+        else:
+            product_price = item.variant.product.product_price
+            total_price += product_price * item.product_qty
+            tax = total_price * 0.18
+
+    grand_total=total_price + tax
+
+    address = Address.objects.filter(user= request.user)
+    cart_count =Cart.objects.filter(user =request.user).count()
+    wishlist_count =Wishlist.objects.filter(user=request.user).count()
+    coupon_checkout =Coupon.objects.filter(is_available=True)
+    coupon = False
+    if offer_price_total ==0:
+        offer_price_total =False
+    else:
+        offer_price_total
+
     context = {
+        'all_offer':all_offer,
+        'offer' :offer_price_total,
+        'coupon_checkout':coupon_checkout,
         'cartitems': cartitems,
-        'total-price': total_price,
+        'total_price': total_price,
         'grand_total': grand_total,
-        'address' : address,
+        'address': address,
+        'wishlist_count':wishlist_count,
+        'cart_count' :cart_count,  
+        'coupon':coupon
     }
-    return render(request,'checkout/checkout.html',context)
+    if total_price==0:
+       return redirect('home')
+    else:
+           
+        return render(request,'checkout/checkout.html',context)
+        
 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -40,36 +155,47 @@ def checkout(request):
 def placeorder(request):
 
     if request.method == 'POST':
-        neworder =Order()
-        neworder.user=request.user
+        user=request.user
+        coupon = request.POST.get('couponOrder')
         address_id=request.POST.get('address')
-        print(address_id,'hhhhhhhhhhhhhhhhhh')
-
         if address_id is None:
             messages.error(request,'Address Field Is Mandatory!')
             return redirect('checkout')
         
         address=Address.objects.get(id=address_id)
-        # print(address,address_id,'helllllllllllllllo')
 
+        neworder =Order()
+        neworder.user=user
         neworder.address = address
-        payment_method =request.POST.get('payment_method')
+        neworder.payment_method =request.POST.get('payment_method')
+        neworder.message = request.POST.get('order_note')
+        session_coupon_id=request.session.get('coupon_id')
 
-        if payment_method is None:
-            messages.error(request,'Please Select Any Payment Option ! ')
-            return redirect('checkout')
-        
-        neworder.payment_mode = payment_method
-        neworder.payment_id = request.POST.get('payment_id')
-        cart =Cart.objects.filter(user=request.user)
+        if session_coupon_id!=None:
+            session_coupons =Coupon.objects.get(id=session_coupon_id)
+        else:
+            session_coupons = None
+               
+        neworder.coupon = session_coupons
+        cart_items =Cart.objects.filter(user=request.user)
         cart_total_price = 0
+        offer_total_price = 0
         tax = 0
-        for item in cart:
-            cart_total_price +=item.variant.product.product_price * item.product_qty
-            tax=cart_total_price * 0.18
-            cart_total_price + tax
-
-        neworder.total_price =cart_total_price
+        for item in cart_items:
+            if item.variant.product.offer:
+                product_price = item.variant.product.product_price
+                cart_total_price += product_price * item.product_qty 
+                offer_total_price =item.variant.product.offer.discount_amount
+                offer_total_price = offer_total_price*item.product_qty
+                cart_total_price = cart_total_price - offer_total_price
+            else:
+                product_price = item.variant.product.product_price
+                cart_total_price += product_price * item.product_qty
+        
+        session_coupon=request.session.get('coupon_session')
+        cart_total_price = cart_total_price - session_coupon
+        neworder.total_price = cart_total_price
+    
         trackno = random.randint(1111111, 9999999)
         while Order.objects.filter(tracking_no=trackno).exists():
             trackno = random.randint(1111111, 9999999)
@@ -81,8 +207,8 @@ def placeorder(request):
 
         neworder.save()
 
-        neworderitems =Cart.objects.filter(user=request.user)
-        for item in neworderitems:
+        
+        for item in cart_items:
             OrderItem.objects.create(
                 order=neworder,
                 variant=item.variant,
@@ -90,22 +216,23 @@ def placeorder(request):
                 quantity=item.product_qty
             )
 
-            prod=Variant.objects.filter(id=item.variant.id).first()
-            if  prod.quantity>0:
-                prod.quantity -= item.product_qty
-                prod.save()
-            else:
-                return JsonResponse({'status':'Out Of Stock!!'})    
+            product=Variant.objects.filter(id=item.variant.id).first()
+            product.quantity -= item.product_qty
+            product.save()
+
+            # Delete the cart items after the order is placed 
+            cart_items.delete()
+
+
+               
 
         payment_mode = request.POST.get('payment_method')
-        print(payment_mode,'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr')
-
         if payment_mode == 'cod' or payment_mode == 'razorpay' :
-            Cart.objects.filter(user=request.user).delete()
-            return JsonResponse({'status':'Your Order Has Been Placed Success Fully'})
-        else:
-            return JsonResponse({'status':'Your Order Has Been Failed Try Again!!'})
-        
+            del request.session['coupon_session']
+            del request.session['coupon_id']
+
+            return JsonResponse({'status': "Your order has been placed successfully"})
+           
     return redirect('checkout')
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -140,8 +267,8 @@ def deleteaddresscheckout(request,delete_id):
 
 
 def generate_random_payment_id(length):
-        characters = string.ascii_letters + string.digits
-        return ''.join(random.choices(characters, k=length))
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choices(characters, k=length))
 
 
 def razarpaycheck(request):
@@ -150,10 +277,14 @@ def razarpaycheck(request):
     tax =0
 
     for item in cart:
-        total_price = total_price + item.variant.product.product_price * item.product_qty
-        prod=Variant.objects.filter(id=item.variant.id).first() 
-        tax = total_price * 0.18
-    total_price = total_price + tax
+        if item.variant.product.offer:
+            total_price = total_price + item.variant.product.product_price * item.product_qty
+            total_offer = item.variant.product.offer.discount_amount*item.product_qty
+            total_price = total_price-total_offer
+        else:
+            total_price = total_price + item.variant.product.product_price * item.product_qty
+        session_coupon=request.session.get('coupon_session')
+        total_price = total_price - session_coupon 
 
 
     return JsonResponse({'total_price':total_price})

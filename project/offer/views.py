@@ -2,13 +2,14 @@ from django.shortcuts import render,redirect
 from .models import Offer
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from datetime import datetime,timezone
+from datetime import datetime
+from django.utils import timezone
 from django.db.models import Q
 # Create your views here.
 
 
 @login_required(login_url='admin_login1')
-def offer(request):
+def offer (request):
     context={
         'offer' : Offer.objects.filter(is_available=True).order_by('id')
     }
@@ -40,7 +41,7 @@ def add_offer(request):
             messages.error(request,'Start date must be before end date! ')
             messages.error('offer')
 
-        if start_date < timezone.now :
+        if start_date < timezone.now().date():
             messages.error(request,'start date cannot be past !')
             return redirect ('offer')
         offer = Offer.objects.create(
@@ -99,7 +100,7 @@ def edit_offer(request,offer_id):
     return render(request,'adminside/offer.html',context)
 
 @login_required(login_url='admin_login1')
-def delete_offer(request,delete_id);
+def delete_offer(request,delete_id):
     try:
         offer = Offer.objects.get(id=delete_id)
         offer.is_available = False

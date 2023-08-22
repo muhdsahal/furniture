@@ -33,6 +33,11 @@ urlpatterns = [
     path('wishlist/',include('wishlist.urls')),
     path('checkout/',include('checkout.urls')),
     path('variant/',include('variant.urls')),
+    path('offer/',include('offer.urls')),
+    path('coupon/',include('coupon.urls')),
+    path('order/',include('order.urls')),
+
+
     
 
 

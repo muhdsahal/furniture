@@ -5,6 +5,7 @@ from variant.models import Variant,Color
 from categories.models import Category
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from offer.models import  Offer
 
 # Create your views here.
 @login_required(login_url='admin_login1')
@@ -14,7 +15,8 @@ def product (request):
     product=Product.objects.filter(is_available=True).order_by('id')
     contex={
         'product':product,
-        'Category': Category.objects.filter(is_available=True).order_by('id')
+        'Category': Category.objects.filter(is_available=True).order_by('id'),
+        'offer' : Offer.objects.filter(is_available =True).order_by('id')
     }
     return render (request,'product/products.html',contex)
 
@@ -29,6 +31,7 @@ def addproduct(request):
         name=request.POST.get('product_name')
         price=request.POST.get('product_price')
         category_id=request.POST.get('category')
+        offer_id = request.POST.get('offer')
         description=request.POST.get('product_description')
         
     
@@ -52,10 +55,16 @@ def addproduct(request):
         else:
             category = None
 
+        if offer_id == '':
+            offer_obj=None
+        else:    
+            offer_obj = Offer.objects.get(id=offer_id)
+
         # save
         product=Product(
             product_name=name,
             category=category,
+            offer=offer_obj,
             product_price=price,
             product_description=description,
         
@@ -93,6 +102,7 @@ def product_edit(request,product_id):
         price = request.POST.get('product_price')
         category_id = request.POST.get('category')
         product_description = request.POST.get('product_description')
+        offer_id = request.POST.get('offer')
          
         if name.strip() == '' or price.strip() == '':
                 messages.error(request, "Name or Price field are empty!")
@@ -105,6 +115,10 @@ def product_edit(request,product_id):
         
         category_obj = Category.objects.get(id=category_id)
 
+        if offer_id =='':
+            offer_obj =None
+        else:
+            offer_obj = Offer.objects.get(id=offer_id)
         
         if Product.objects.filter(product_name=name).exists():
              
@@ -120,6 +134,7 @@ def product_edit(request,product_id):
         editproduct.product_name= name
         editproduct.product_price=price
         editproduct.category=category_obj
+        editproduct.offer=offer_obj
         editproduct.product_description=product_description
         editproduct.save()
         messages.success(request,'product edited successfully!')
@@ -138,3 +153,23 @@ def product_view(request,product_id):
         'color_name':color_name
     }
     return render(request,'adminside/product_view.html',{'variant_list':variant_list})
+
+
+@login_required(login_url='admin_login1')
+def product_search(request):
+    search = request.POST.get('search')
+    if search is None or search.strip() == '':
+        messages.error(request,'Filed cannot empty!')
+        return redirect('product')
+    product = Product.objects.filter(Q(product_name__icontains=search) | Q(product_price__icontains=search) |Q(category__categories__icontains=search),is_available =True)
+    product_list={
+        'product' : product,
+        'categories' : category.objects.filter(is_available =True).order_by('id')   
+    }
+    if product :
+        pass
+        return render(request,'product/products.html',product_list)
+    else:
+        product:False
+        messages.error(request,'Search not found!')
+        return redirect('product')
