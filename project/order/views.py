@@ -8,7 +8,21 @@ from cart.models import Cart
 from django.contrib import messages
 from django.db.models import Q
 # Create your views here.
+
+def orders(request):
+    user = request.user
+    orders = Order.objects.filter(user=user).order_by('-created_at')
+    orderitems = OrderItem.objects.filter(order__in=orders).order_by('-order__created_at')
+
+    context = {
+        'orders': orders,
+        'orderitems': orderitems,
+    }
+    return render(request, 'orders/orders.html', context)
+
 def order_list(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
 
     order  = Order.objects.all().order_by('id')
 
@@ -26,18 +40,19 @@ def order_view(request,view_id):
         image = VariantImage.objects.filter(variant__id__in=variant_ids).distinct('variant__color')
         item_status_o = Itemstatus.objects.all()
         context = {
-            'orderview' :order_view,
+            'orderview' :orderview,
             'address':address,
             'products':products,
             'image': image,
             'item_status_o':item_status_o
         } 
-        return render(request,'view/order_view.html',context)
+        return render(request, 'orders/order_view.html', context)
     except Order.DoesNotExist:
-        print("order does not exist !")
-    except Address.DoesNotExist:
-        print("address doesnot exist !")
-    return redirect (order_list)
+        messages.error(request,'The specified OrderItem does not exist.')
+        return redirect ('orders')
+    return render(request,'orders/order_view.html',context)
+    
+    
 
 
 def change_status(request):

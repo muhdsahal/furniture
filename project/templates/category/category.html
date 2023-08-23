@@ -76,6 +76,7 @@
               <th scope="col">Category name</th>
               <th scope="col">Description</th>
               <th scope="col">Action</th>
+              <th scope="col">image add</th>
             </tr>
           </thead>
       <tbody>
@@ -174,7 +175,12 @@
               </div>
 
           </td>
-          <!--deleting ended-->
+          <td> <a href="{% url 'image_views' image_id %}"><button type="button" class="btn btn c"
+            style="background-color: rgb(86, 168, 255); color:rgb(255, 255, 255)"
+            data-bs-toggle="modal">
+            <i class="ti ti-photo"></i>
+            Images
+        </button></a></td>
 
        </tr>
       {% endfor %}

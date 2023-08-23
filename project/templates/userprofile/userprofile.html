@@ -4,6 +4,11 @@
 {% load static %}
 
 <style>
+  .navbar {
+    
+    color: #fff;
+    padding: 10px 0;
+}
   .message {
       padding: 2px;
       margin-bottom: 2px;
@@ -98,15 +103,15 @@
 
              <div class="row justify-content-between py-3">
               <div class="col-sm-3">
-                <p class="mb-0"></p>
-                
-              </div> 
+                <p class="mb-0">Wallet</p>
+                <a href="{% url 'orders'  %}" class="btn btn-outline-dark ">Orders</a>
+              </div>
               <div class="col-sm-6">
-                {% comment %} {% for wallet in wallets %}
+                {% comment %} {% for wallet in wallets %} {% endcomment %}
                   <p class="text-danger mb-0 h5 text-end" style="font-weight: bold;">
-                    ₹ {{ wallet.wallet|floatformat:0 }} 
+                    {% comment %} ₹ {{ wallet.wallet|floatformat:0 }}  {% endcomment %}
                   </p>
-                {% endfor %} {% endcomment %}
+                {% comment %} {% endfor %} {% endcomment %}
               </div>
               
             </div>

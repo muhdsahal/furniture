@@ -281,10 +281,13 @@ def razarpaycheck(request):
             total_price = total_price + item.variant.product.product_price * item.product_qty
             total_offer = item.variant.product.offer.discount_amount*item.product_qty
             total_price = total_price-total_offer
+            tax = total_price * 0.18
         else:
             total_price = total_price + item.variant.product.product_price * item.product_qty
+            tax = total_price * 0.18
         session_coupon=request.session.get('coupon_session')
         total_price = total_price - session_coupon 
+        total_price += tax
 
 
     return JsonResponse({'total_price':total_price})

@@ -27,3 +27,8 @@ class Category(models.Model):
 
     def __str__(self):
         return self.categories  
+
+class CategoryImage(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='photos/variant',default='No Image Avilable')
+    is_available = models.BooleanField(default=True)

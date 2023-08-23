@@ -1,10 +1,12 @@
 from django.shortcuts import render,redirect
-from .models import Category
+from .models import Category,CategoryImage
 from products.models import Product
 from variant.models import Variant
 from django.contrib import messages
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
+from .forms import ImageForm
+from django.http import JsonResponse
 # Create your views here.
 
 @login_required(login_url='admin_login1')
@@ -12,6 +14,7 @@ def categories (request):
     if not request.user.is_superuser:
         return redirect ('admin_login1')
     Category_data=Category.objects.filter(is_available=True).order_by('id')
+    cat_image=CategoryImage.objects.filter(is_available=True).order_by('id')
     return render(request,'category/category.html',{'Category': Category_data})
 
 
@@ -107,3 +110,23 @@ def editcategory(request,editcategory_id):
         cate.save()
         return redirect('categories')
     # return redirect('categories')
+
+
+def image_views(request,img_id):
+    if request.method == 'POST':
+        form =ImageForm(request.POST,request.FILES)
+        cat = Category.objects.get(id=img_id)
+    
+        if form.is_valid():
+            image_instance = form.save(commit=False)
+            image_instance = cat
+            image_instance.save()
+            print('image saved successfully')
+
+            return JsonResponse({'message':'works','img_id':img_id})
+        else:
+            print('Form is not valid !',form.errors)
+    else:
+        form =ImageForm()
+    context ={'form':form,'img_id':img_id}
+    return render(request, 'category/image_add.html', context)
