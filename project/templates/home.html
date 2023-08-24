@@ -60,25 +60,6 @@
     <!--::subscribe_area part end::-->
 
     <!-- subscribe_area part start-->
-    <section class="client_logo padding_top">
-                
-        <div class="container">
-            <div class="row align-items-center">
-              
-                <div class="col-lg-12">
-                    
-                
-                    {% for i in cate %}
-                    <div class="single_client_logo">
-                        
-                        <a href=" {% url 'cat_detail' i.id %}"><img src="{{ i.categories_image.url }}" width="150px" height="100px" alt="hlo"></a>
-                    </div>
-                    {% endfor %}
-                    
-                </div>
-               
-            </div>
-        </div>
-    </section>
+    
     {% endblock %}
     <!--::subscribe_area part end::-->

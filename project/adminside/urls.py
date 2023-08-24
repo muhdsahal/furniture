@@ -12,6 +12,8 @@ urlpatterns = [
     path('sales_report/',views.sales_report,name='sales_report'),
     path('export_csv/',views.export_csv,name='export_csv'),
     path('generate_pdf/',views.generate_pdf,name='generate_pdf'),
+    path('user_sort/',views.user_sort,name='user_sort'),
+    path('user_block_status/',views.user_block_status,name='user_block_status'),
     
    
 

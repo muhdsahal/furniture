@@ -42,22 +42,14 @@
                     </a>
                 </div>
                 <div class="col-lg-4 col-md-6 me-auto">
-                    <form action="#" method="POST">
-                        {% comment %} {% csrf_token %} {% endcomment %}
+                    <form action="{% url 'variant_search' %}" method="POST">
+                        {% csrf_token %}
                         <div class="input-group">
                             <input type="text" placeholder="Search..." name="search" class="form-control" />
                             <button type="submit" class="btn btn-primary"><i class="ti ti-search"></i></button>
                         </div>
                     </form>
                 </div>
-
-                <!-- <div class="col-lg-2 col-6 col-md-3">
-                    <select class="form-select">
-                        <option>sort</option>
-                        <option>Show 30</option>
-                        <option>Show 40</option>
-                    </select>
-                </div> -->
             </div>
         </header>
         <!-- card-header end// -->

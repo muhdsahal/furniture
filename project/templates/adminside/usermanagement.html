@@ -11,25 +11,40 @@
     <div class="card mb-4">
       <header class="card-header">
         <div class="row gx-3">
-          <div class="col-lg-4 col-md-6 me-auto">
-            <input type="text" placeholder="Search..." class="form-control" />
+          <!-- Search Bar (Left Side) -->
+          <div class="col-lg-4 col-md-6">
+            <div class="input-group">
+              <div class="form-outline">
+                <form action="{% url 'user_sort' %}" method="POST">
+                  {% csrf_token %}
+                  <div class="input-group">
+                    <input type="text" placeholder="Search..." name="search" class="form-control" />
+                    <button type="submit" class="btn btn-primary"><i class="ti ti-search"></i></button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
-          <div class="col-lg-2 col-6 col-md-3">
-            <select class="form-select">
-              <option>status</option>
-              <option>Blocked</option>
-              <option>Verified</option>
-            </select>
-          </div>
-          <div class="col-lg-2 col-6 col-md-3">
-            <select class="form-select">
-              <option>Show 20</option>
-              <option>Show 30</option>
-              <option>Show 40</option>
-            </select>
+          
+          <!-- Sort Options (Right Side) -->
+          <div class="col-lg-8 col-md-6 d-flex justify-content-end">
+            <form id="user-status-form" method="post" action="{% url 'user_block_status' %}">
+              {% csrf_token %}
+              <div class="col-lg-2 col-6 col-md-3">
+                <select class="form-select" name="name" id="status-select" style="width: 130px;">
+                  <option value="">Status</option>
+                  <option value="Blocked">Blocked</option>
+                  <option value="Active">Active</option>
+                  <option value="All">All</option>
+                </select>
+              </div>
+              <input type="hidden" name="auto_submit" value="true">
+            </form>
           </div>
         </div>
       </header>
+    </div>
+    
       <!-- card-header end// -->
       <div class="card-body">
         <div class="table-responsive">

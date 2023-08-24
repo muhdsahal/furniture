@@ -4,40 +4,33 @@
 {% block dashbody %}
 
 <div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+  <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Category</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Add Category</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-    
-          <form action="{% url 'createcategory' %}"  enctype="multipart/form-data" method="POST">
-            {% csrf_token %}
-            <div style="width: 100px;" class="card-header category-img position-relative overflow-hidden bg-transparent border p-0">
-            </div> 
-            <div class="form-outline mb-4">
-              <input name="image" type="file" accept="image/png, image/jpeg, image/svg" class="form-control" id="image-input"/>
-              <small id="image-error" class="text-danger text-center"></small>
-            </div>
-            <div class="form-outline mb-4">
-              <input name='categories' type="text" id="form3Example3cg" class="form-control form-control-lg" />
-              <label class="form-label" for="form3Example3cg">Category name</label>
-            </div>
-          <div class="form-outline mb-4">
-            <input name='categories_discription'   type="text" id="form3Example3cg" class="form-control form-control-lg" />
-            <label class="form-label" for="form3Example3cg">Description</label>
+              <form action="{% url 'createcategory' %}" enctype="multipart/form-data" method="POST">
+                  {% csrf_token %}
+                
+                  <div class="form-outline mb-4">
+                      <input name="categories" type="text" id="form3Example3cg" class="form-control form-control-lg" />
+                      <label class="form-label" for="form3Example3cg">Category name</label>
+                  </div>
+                  <div class="form-outline mb-4">
+                      <input name="categories_discription" type="text" id="form3Example3cg" class="form-control form-control-lg" />
+                      <label class="form-label" for="form3Example3cg">Description</label>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                      <button type="submit" class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light">Save Changes</button>
+                  </div>
+              </form>
           </div>
-           <div class="d-flex justify-content-center">
-              <button type="submit"
-                class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light" type="submit">Save Changes</button>
-            </div>
-          </form>
-        </div>
       </div>
-    </div>
-    </div>
-    <!--end of add Category modal-->
+  </div>
+</div>
+
  
 <div class="col-lg-12 grid-margin stretch-card">
     
@@ -47,23 +40,19 @@
 <a type="button" class="btn btn-primary w-60" style="margin-top: 20px;margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#addCategory">
     <i class="fa fa-plus">Add Category</i>
   </a>
-        <div class="search-field d-none d-xl-block" style="float: right;">
-            <form class="d-flex align-items-center" action="#">
-              <div class="input-group form-control">
-                <div class=" bg-transparent border-0" style="font-size: 25px;">
-                    <a href="{% url 'categories' %}"> <i class="mdi mdi-refresh"></i></a>
-                    </div>
-                
-              <input type="text" class="form-control bg-transparent border-0 h-100" name="keyword" placeholder="Search category"> 
-              <div class=" bg-transparent border-0">
-                <button type="submit"> <i class=" mdi mdi-magnify"></i></button>
-               </div>
-              </div>
-              
-            </form>
-          </div>
-          <br>
-          <br>
+
+  <br>
+  <br>
+  <div class="col-lg-4 col-md-6 me-auto">
+    <form action="{% url 'category_search' %}" method="POST">
+        {% csrf_token %}
+        <div class="input-group">
+            <input type="text" placeholder="Search..." name="search" class="form-control" />
+            <button type="submit" class="btn btn-primary"><i class="ti ti-search"></i></button>
+        </div>
+    </form>
+</div>
+          
 
     
       <h4 class="card-title">Categories</h4>
@@ -80,15 +69,24 @@
             </tr>
           </thead>
       <tbody>
-        {% for c in Category %}
+        
+        {% for c in category %}
 
         <tr>
           <td>  {{c.id}}  </td>
-          <td>
+          {% for i in cat_image  %}
+          {% if c.id == i.category.id %}
+         <td>
+         
             <div style="width: 60px;" class="overflow-hidden">
-              <img class="w-100" src=" {{c.categories_image.url}} " alt="">
+              
+              <img class="w-100" src="{{i.image.url}}" alt="img">
             </div>
           </td>
+          {% else %}
+          {% endif %} 
+          {% endfor %}
+         
           <td>  {{c.categories}} </td>
           <td>  {{c.categories_description}} </td>
           <!-- edit -->
@@ -175,7 +173,7 @@
               </div>
 
           </td>
-          <td> <a href="{% url 'image_views' image_id %}"><button type="button" class="btn btn c"
+          <td> <a href="{% url 'image_views' c.id %}"><button type="button" class="btn btn c"
             style="background-color: rgb(86, 168, 255); color:rgb(255, 255, 255)"
             data-bs-toggle="modal">
             <i class="ti ti-photo"></i>

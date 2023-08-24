@@ -1,11 +1,13 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from .models import Product
+from django.db.models import Q
 from variant.models import Variant,Color
 from categories.models import Category
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from offer.models import  Offer
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 @login_required(login_url='admin_login1')
@@ -26,55 +28,53 @@ def addproduct(request):
     if not request.user.is_superuser:
         return redirect('admin_login1')
     
-    # product deatil
     if request.method == 'POST':
-        name=request.POST.get('product_name')
-        price=request.POST.get('product_price')
-        category_id=request.POST.get('category')
+        name = request.POST.get('product_name')
+        price = request.POST.get('product_price')
+        category_id = request.POST.get('category')
         offer_id = request.POST.get('offer')
-        description=request.POST.get('product_description')
+        description = request.POST.get('product_description')
         
-    
-    
-    #validation
         if Product.objects.filter(product_name=name).exists():
-            messages.error(request,'product name already exists')
+            messages.error(request, 'Product name already exists')
             return redirect('product')
         
-        if name == '' or price =='':
-            messages.error(request,'name or price is empty ')
+        if name == '' or price == '':
+            messages.error(request, 'Name or price is empty')
             return redirect('product')
         
-        price=int(price)
+        price = int(price)
         if not price >= 0:
-            messages.error(request,'positive numbers only!..')
+            messages.error(request, 'Positive numbers only')
             return redirect('product')
         
         if category_id:
-            category=Category.objects.get(id=category_id)
+            category = Category.objects.get(id=category_id)
         else:
             category = None
 
-        if offer_id == '':
-            offer_obj=None
-        else:    
-            offer_obj = Offer.objects.get(id=offer_id)
+        try:
+            if offer_id:
+                offer_obj = Offer.objects.get(id=offer_id)
+            else:
+                offer_obj = None
+        except Offer.DoesNotExist:
+            messages.error(request, 'Selected offer does not exist')
+            return redirect('product')
 
-        # save
-        product=Product(
+        product = Product(
             product_name=name,
             category=category,
             offer=offer_obj,
             product_price=price,
             product_description=description,
-        
         )
         product.save()
-        messages.success(request,'Product Added Successfully')
-
+        messages.success(request, 'Product Added Successfully')
         return redirect('product')
     
-    return render(request,'product/products.html')
+    return render(request, 'product/products.html')
+
 
 @login_required(login_url='admin_login1')
 def product_delete(request,product_id):
@@ -164,7 +164,7 @@ def product_search(request):
     product = Product.objects.filter(Q(product_name__icontains=search) | Q(product_price__icontains=search) |Q(category__categories__icontains=search),is_available =True)
     product_list={
         'product' : product,
-        'categories' : category.objects.filter(is_available =True).order_by('id')   
+        'categories' : Category.objects.filter(is_available =True).order_by('id')   
     }
     if product :
         pass

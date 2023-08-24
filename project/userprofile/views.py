@@ -13,6 +13,7 @@ from checkout.models import Itemstatus
 from cart.models import Cart
 from wishlist.models import Wishlist
 from datetime import  timedelta
+from django.utils import timezone
 # Create your views here.
 
 
@@ -230,7 +231,7 @@ def deleteaddress(request,delete_id):
     address.delete()
     messages.success(request,'Address Deleted Successfully!')
     return redirect('profile')
-from django.utils import timezone
+
 def order_view_user(request,view_id):
     try:
         orderview = Order.objects.get(id=view_id)

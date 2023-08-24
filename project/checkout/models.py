@@ -11,11 +11,13 @@ class Orderstatus(models.Model):
 
     def __str__(self):
         return self.order_status
+    
 class Itemstatus(models.Model):
     item_status = models.CharField(max_length=100)
 
     def __str__(self):
         return self.item_status
+    
 class Order(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     address=models.ForeignKey(Address,on_delete=models.CASCADE)
@@ -34,7 +36,7 @@ class Order(models.Model):
         return self.created_at + timedelta(days=4)
 
     def __str__(self):
-        return f"{self.id,self.tracking_no}"
+        return f"Order ID: {self.id}, Tracking No: {self.tracking_no}"
     
 
  
@@ -45,18 +47,18 @@ class OrderItem(models.Model):
     price=models.FloatField(null=True)
     quantity=models.IntegerField(null=False)
     orderitem_status =models.ForeignKey(Itemstatus, on_delete=models.CASCADE ,null=True,default=1)
-    orderstatuses = {
+    ORDER_STATUSES  = [
         ('pending','pending'),
         ('Processing','Processing'),
         ('Shipped','Shipped'),
         ('Delivered','Delivered'),
         ('Cancelled','Cancelled'),
         ('Return', 'Return')
-    }
-    status=models.CharField(max_length=150,choices=orderstatuses,default='pending')
+    ]
+    status=models.CharField(max_length=150,choices=ORDER_STATUSES,default='pending')
 
     def __str__(self):
-        return f"{self.order.id,self.order.tracking_no}"
+        return f"Order ID: {self.order.id}, Tracking No: {self.order.tracking_no}"
 
 
     

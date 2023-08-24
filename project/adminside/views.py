@@ -1,7 +1,5 @@
 from django.http import HttpResponse
 from django.shortcuts import render ,redirect
-from .models import Banner
-from categories.models import Category
 from order.models import Order
 from checkout.models import OrderItem
 from django.contrib import messages
@@ -10,11 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login ,logout
 from datetime import date, datetime,timedelta
 from itertools import groupby
+from django.db.models import Q
 import csv
 import io
-from django.db.models.functions import TruncMonth
-from django.http import FileResponse
-from django.views import View
+
 from fpdf import FPDF
 from django.db.models import Prefetch
 # verification email
@@ -170,16 +167,6 @@ def blockuser(request,user_id):
         user.save()
     return redirect('usermanagement_1')
 
-#banner area
-# def banner(request):
-#     if not request.user.is_superuser:
-#         return redirect('admin_login1')
-#     dict_banner = {
-#         'banner':Banner.objects.all(),
-#         # 'category':Category.objects.all()
-#     }
-#     return render(request,'banner/banner.html',dict_banner)
-
 @login_required(login_url='admin_login1')
 def sales_report(request):
     if not request.user.is_superuser:
@@ -311,7 +298,50 @@ def generate_pdf(request):
     response.write(pdf.output(dest='S').encode('latin1'))  
     return response
 
+@login_required(login_url='admin_login1')
+def user_sort(request):
+    search = request.POST.get('search')
+    if search is None or search.strip() == '':
+        messages.error(request,'Filed cannot empty!')
+        return redirect('usermanagement_1')
+    users = User.objects.filter(Q(first_name__icontains=search) 
+                             | Q(email__icontains=search) )
+    if users :
+        pass
+    else:
+        users:False
+        messages.error(request,'Search not found!')
+        return redirect('usermanagement_1')
+    return render(request, 'adminside/usermanagement.html', {'users': users})
 
+def blockuser(request,user_id):
+    if not request.user.is_superuser:
+        return redirect('admin_login1')
+    user= User.objects.get(id=user_id)
+    if user.is_active:
+        user.is_active=False
+        user.save()
+    else:
+        user.is_active=True
+        user.save()
+    return redirect('usermanagement_1')
+
+
+@login_required(login_url='admin_login1')  
+def user_block_status(request):
+    name = request.POST.get('name')
+    if name == 'Active':
+        user = User.objects.filter(is_active=True)
+        return render(request, 'adminside/usermanagement.html', {'user': user})
+    if name ==  'Blocked':
+        user = User.objects.filter(is_active=False)
+        print(user,'444444444444444444444444')
+        return render(request, 'adminside/usermanagement.html', {'user': user}) 
+    if name ==  'All':
+        user = User.objects.all()
+        return render(request, 'adminside/usermanagement.html', {'user': user}) 
+    else:
+        return redirect('usermanagement_1')
 
 
 

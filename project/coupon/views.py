@@ -3,7 +3,9 @@ from .models import Coupon
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import re
-from datetime import datetime,timezone
+from datetime import datetime
+from django.utils import timezone
+from django.db.models import Q
 
 # Create your views here.
 @login_required(login_url='admin_login1')
@@ -138,41 +140,48 @@ def edit_coupon(request, coupon_id):
     return render(request, 'adminside/coupon.html', context)
 
 @login_required(login_url='admin_login1')
-def delete_coupon(request,coupon_id):
+def delete_coupon(request, coupon_id):
     try:
-        coupon_delete =Coupon.objects.get(id=coupon_id)
+        coupon_delete = Coupon.objects.get(id=coupon_id)  
         coupon_delete.is_available = False
         coupon_delete.save()
-        messages.success(request,'coupon delete successfully!..')
-        return redirect ('coupon')
+        messages.success(request, "coupon deleted successfully!")
+        return redirect('coupon')
     except:
-        messages.error(request,'The specified coupon doesnot exist!..')
-    return redirect ('coupon')
-from django.db.models import Q
+        messages.error(request, "The specified coupon does not exist!")
+    return redirect('coupon')
+
+@login_required(login_url='admin_login1')
 def coupon_search(request):
-    search = request.POST.get('search')
-    if search is None or search.strip()=='':
-        messages.error(request,'Field cannot empty!')
-        return  redirect('coupon')
-    coupon=(
-        Coupon.objects.filter(Q(coupon_name__icontains=search) 
-                              | Q(coupon_code__icontains=search)
-                              | Q(min_price_icontains=search) 
-                              | Q(coupon_discount_amount = search)
-                              | Q(start_date__icontains=search) 
-                              | Q(end_date__icontains=search)
-                              ,is_available =True)
-    
-    )
-    context={
-        'coupon':coupon
-    }
-    if coupon:
-        pass
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        if search is None or search.strip() == '':
+            messages.error(request, 'Field cannot be empty!')
+            return redirect('coupon')
+
+        try:
+            coupon_discount_amount = float(search)
+            coupons = Coupon.objects.filter(
+                Q(coupon_name__icontains=search)
+                | Q(coupon_code__icontains=search)
+                | Q(min_price__icontains=search)
+                | Q(coupon_discount_amount=coupon_discount_amount),
+                is_available=True
+            )
+        except ValueError:
+            messages.error(request, 'Invalid search input for coupon_discount_amount')
+            return redirect('coupon')
+        
+        if coupons:
+            # Pass the 'coupons' queryset to the template
+            context = {'coupon': coupons}
+            return render(request, 'adminside/coupon.html', context)
+        else:
+            messages.error(request, 'Search Not Found!')
+            return redirect('coupon')
     else:
-        coupon:False
-        messages.error(request,'Search Not Found!',context)
-        return redirect ('coupon')
+        return redirect('coupon')  # Redirect if the request method is not POST
+
 
 
 
