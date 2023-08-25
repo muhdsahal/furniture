@@ -405,8 +405,8 @@
                     if (response.status === 'Your Order Has Been Failed Try Again!!') {
                         Swal.fire("Error!", response.status, "error");
                         $('.placeorder').load(location.href + " .placeorder");
-                    } else if (response.status === 'Your Order Has Been Placed Success Fully') {
-                        Swal.fire("Congratulations!", response.status, "success");
+                    } else if (response.status === 'Your order has been placed successfully') {
+                      Swal.fire("Congratulations!", response.status, "success");
                         $('.placeorder').load(location.href + " .placeorder");
                     } else {
                         Swal.fire("Error!", response.status, "error");

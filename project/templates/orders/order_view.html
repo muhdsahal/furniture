@@ -178,21 +178,26 @@
                 <h5 style="font-weight: bold;">{{ i.variant.product.product_name }}</h5>
                 <h5 style="font-weight: bold;">{% if products.product.offer %} <del class="text-danger"> ₹{{orderview.total_price}}</del> {{order_item.product.get_offer}}{% else %} ₹ {{variation.product.product_price}} {% endif %}</h5>
 
-              </td>
-              <td>{{ orderview.variant.color }}</td>
-              <td>{{ order_item.quantity }}</td>
-              <td class="cart__price total">{{ order_item.order.total_price |floatformat:2}}</td>
+              </td> 
+              <td>{{ i.variant.color }}</td>
+              <td>{{ i.quantity }}</td>
+              <td class="cart__price total">{{ i.variant.product.product_price}}</td>
               <td>
-                {% if image.status == 'Pending' %}
-                <span class="badge p-2 my-2 text-warning" style="font-size: medium;">{{ order_item.status }}</span>
-                {% elif order_item.status == 'Processing' %}
-                <span class="badge p-2 my-2 text-warning" style="font-size: medium;">{{ order_item.status }}</span>
-                {% elif order_item.status == 'Shipped' %}
-                <span class="badge p-2 my-2 text-primary" style="font-size: medium;">{{ order_item.status }}</span>
-                {% elif order_item.status == 'Delivered' %}
-                <span class="badge p-2 my-2 text-success" style="font-size: medium;">{{ order_item.status }}</span>
-                {% elif order_item.status == 'Cancelled' or 'refunded' %}
-                <span class="badge p-2 my-2 text-warning" style="font-size: medium;">{{ order_item.status }}</span>
+                {% if i.orderitem_status.item_status == 'Pending' %}
+                <span class="badge p-2 my-2 text-warning" style="font-size: medium;">
+                  {{ i.orderitem_status.item_status }}</span>
+                  {% elif i.orderitem_status.item_status == 'Processing' %}
+                <span class="badge p-2 my-2 text-warning" style="font-size: medium;">
+                  {{ i.orderitem_status.item_status }}</span>
+                  {% elif i.orderitem_status.item_status == 'Shipped' %}
+                <span class="badge p-2 my-2 text-primary" style="font-size: medium;">
+                  {{ i.orderitem_status.item_status }}</span>
+                  {% elif i.orderitem_status.item_status == 'Delivered' %}
+                <span class="badge p-2 my-2 text-success" style="font-size: medium;">
+                  {{ i.orderitem_status.item_status }}</span>
+                  {% elif i.orderitem_status.item_status == 'Cancelled' or i.orderitem_status.item_status == 'Return' %}
+                <span class="badge p-2 my-2 text-warning" style="font-size: medium;">
+                  {{i.orderitem_status.item_status }}</span>
                 {% endif %}
               </td>
               {% if order_item.status != 'Cancelled' and order_item.status != 'Delivered' and order_item.status != 'Return'%}

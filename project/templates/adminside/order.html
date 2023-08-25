@@ -78,20 +78,25 @@
                                 <td><b>{{ i.created_at}}</td>
                                 <td><b>{{ i.total_price }}</td>
                                 <td><b>{{ i.payment_mode }}</td>
-                                <td><a href="{% url 'order_view' i.id %}"><span
+                                <td><a href="{% url 'order_view_admin' i.id %}"><span
                                             class="badge rounded-pill alert-View btn btn ">View</span> </a>
                                 </td>
                                 <td> 
                                     {% if i.order_status.order_status == 'Pending' %}
-                                    <span class="badge rounded-pill alert-secondary"  >{{ i.order_status.order_status }}</span>
+                                    <span class="badge rounded-pill alert-secondary"  >
+                                        {{ i.order_status.order_status }}</span>
                                     {% elif i.order_status.order_status == 'Processing' %}
-                                    <span class="badge rounded-pill alert-warning">{{ i.order_status.order_status }}</span>
+                                    <span class="badge rounded-pill alert-warning">
+                                        {{ i.order_status.order_status }}</span>
                                     {% elif i.order_status.order_status == 'Shipped' %}
-                                    <span class="badge rounded-pill alert-primary">{{ i.order_status.order_status }}</span>
+                                    <span class="badge rounded-pill alert-primary">
+                                        {{ i.order_status.order_status }}</span>
                                     {% elif i.order_status.order_status == 'Delivered' %}
-                                    <span class="badge rounded-pill alert-success">{{ i.order_status.order_status }}</span>
+                                    <span class="badge rounded-pill alert-success">
+                                        {{ i.order_status.order_status }}</span>
                                     {% elif i.order_status.order_status == 'Cancelled' or i.order_status.order_status == 'Return' %}
-                                    <span class="badge rounded-pill alert-danger">{{ i.order_status.order_status }}</span>
+                                    <span class="badge rounded-pill alert-danger">
+                                        {{ i.order_status.order_status }}</span>
                                     {% endif %}
                                 </td>
                             </tr>

@@ -167,7 +167,8 @@ def placeorder(request):
         neworder =Order()
         neworder.user=user
         neworder.address = address
-        neworder.payment_method =request.POST.get('payment_method')
+        neworder.payment_mode =request.POST.get('payment_method')
+        print(neworder.payment_mode,'lllllllllllllllllllllllll')
         neworder.message = request.POST.get('order_note')
         session_coupon_id=request.session.get('coupon_id')
 
@@ -222,6 +223,7 @@ def placeorder(request):
 
             # Delete the cart items after the order is placed 
             cart_items.delete()
+            
 
 
                

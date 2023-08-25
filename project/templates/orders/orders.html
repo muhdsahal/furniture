@@ -89,7 +89,7 @@
                       <td style="font-size: 17px;">{{ orders.created_at }}</td>
                       <td class="cart__price total">₹{{ orders.total_price|floatformat:2 }}</td>
                       <td style="font-size: 17px;">{{ orders.tracking_no }}</td>
-                     <td><a href="{%url 'order_view' orders.id %}" class="btn_1">View order details</a></td>
+                     <td><a href="{%url 'order_view_user' orders.id %}" class="btn_1">View order details</a></td>
                   </tr>
                   {% endfor %}
                   

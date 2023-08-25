@@ -12,6 +12,7 @@ from django.db.models import Q
 def orders(request):
     user = request.user
     orders = Order.objects.filter(user=user).order_by('-created_at')
+    print(orders,'55555555555555555555555555')
     orderitems = OrderItem.objects.filter(order__in=orders).order_by('-order__created_at')
 
     context = {
@@ -31,7 +32,7 @@ def order_list(request):
     }
     return render(request,'adminside/order.html',context)
 
-def order_view(request,view_id):
+def order_view_user(request,view_id):
     try:
         orderview = Order.objects.get(id=view_id)
         address =Address.objects.get(id=orderview.address.id)
@@ -46,12 +47,33 @@ def order_view(request,view_id):
             'image': image,
             'item_status_o':item_status_o
         } 
+        
         return render(request, 'orders/order_view.html', context)
     except Order.DoesNotExist:
         messages.error(request,'The specified OrderItem does not exist.')
         return redirect ('orders')
-    return render(request,'orders/order_view.html',context)
     
+def order_view_admin(request,view_id):
+    try:
+        orderview = Order.objects.get(id=view_id)
+        print(orderview,'8888888888888888')
+        address =Address.objects.get(id=orderview.address.id)
+        products =OrderItem.objects.filter(order=view_id)
+        variant_ids =[product.variant.id for product in products]
+        image = VariantImage.objects.filter(variant__id__in=variant_ids).distinct('variant__color')
+        item_status_o = Itemstatus.objects.all()
+        context = {
+            'orderview' :orderview,
+            'address':address,
+            'products':products,
+            'image': image,
+            'item_status_o':item_status_o
+        } 
+        
+        return render(request, 'adminside/order_view_admin.html', context)
+    except Order.DoesNotExist:
+        messages.error(request,'The specified OrderItem does not exist.')
+        return redirect ('dashboard')
     
 
 
@@ -95,7 +117,7 @@ def change_status(request):
         else:
             total_value = 1
     except:
-        return redirect('order_view',view_id)
+        return redirect('order_view_admin',view_id)
     
     change_all_items_status = Order.objects.get(id=view_id)
     item_status_instance_all = Orderstatus.objects.get(id = total_value)
@@ -103,7 +125,7 @@ def change_status(request):
     change_all_items_status.save()
 
     messages.success(request,'status updated !')
-    return redirect('order_view',view_id)
+    return redirect('order_view_admin',view_id)
 
 
 def return_order(request,return_id):
@@ -166,7 +188,7 @@ def return_order(request,return_id):
         else:
             total_value = 1
     except:
-            return redirect('order_view',view_id)
+            return redirect('order_view_user',view_id)
     
     change_all_items_status = Order.objects.get(id = view_id)
     item_status_instance_all = Orderstatus.objects.get(id=total_value)
@@ -303,7 +325,7 @@ def order_cancel(request,cancel_id):
             else:
                 total_value = 1   
         except:
-            return redirect('order_view',view_id)
+            return redirect('order_view_user',view_id)
         
         change_all_items_status = Order.objects.get(id=view_id)
         item_status_instance_all = Orderstatus.objects.get(id= total_value)
@@ -311,7 +333,7 @@ def order_cancel(request,cancel_id):
         change_all_items_status.save()
 
         messages.success(request,'your Order Cancelled successfully!.')
-        return redirect('order_view',view_id)
+        return redirect('order_view_user',view_id)
     return redirect('userprofile')
 
 def order_search(request):

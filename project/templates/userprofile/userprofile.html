@@ -101,21 +101,35 @@
                 {{request.user.username}}
              </h5>
 
-             <div class="row justify-content-between py-3">
-              <div class="col-sm-3">
-                <p class="mb-0">Wallet</p>
-                <a href="{% url 'orders'  %}" class="btn btn-outline-dark ">Orders</a>
-              </div>
+              <div class="row justify-content-between py-3">
               <div class="col-sm-6">
-                {% comment %} {% for wallet in wallets %} {% endcomment %}
-                  <p class="text-danger mb-0 h5 text-end" style="font-weight: bold;">
-                    {% comment %} ₹ {{ wallet.wallet|floatformat:0 }}  {% endcomment %}
-                  </p>
-                {% comment %} {% endfor %} {% endcomment %}
-              </div>
+                <a href="{% url 'orders'  %}" class="btn btn-outline-dark ">Orders</a>
+              </div> 
               
+              <div>
+                <div class="container mt-4">
+                  <div class="card wallet-card" style="float: left; margin-top: -54px; width: 18rem;">
+                    <div class="card-header">
+                      <h3>Welcome, {{request.user.username}}</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="wallet-info">
+                        <p>Your Wallet Balance:</p>
+                        <p class="wallet-balance">₹{{ wallet.wallet }}</p>
+                        {% if wallets %}
+                        {% for wallet in wallets %}
+                        <p>Available Balance:</p>
+                        <p class="wallet-balance">₹{{ wallet.wallet }}</p>
+                        {% endfor %}
+                        {% else %}
+                        Available Balance:₹ 0.00
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            
             </div>
           </div>
         </div>
