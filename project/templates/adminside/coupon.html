@@ -59,7 +59,8 @@
                             <td> {{c.min_price}} </td>
                             <td> {{c.start_date}} </td>
                             <td> {{c.end_date}} </td>
-                            <td> {% if c.is_coupon_expired %}<span class="badge rounded-pill alert-warning">Expired</span>{% else %}<span class="badge rounded-pill alert-success">Active</span>{% endif %} </td>
+                            <td> {% if c.is_coupon_expired %}<span class="badge rounded-pill bg-danger status-badge ">Expired</span>{% else %}<span class="badge rounded-pill bg-secondary status-badge
+                                ">Active</span>{% endif %} </td>
 
                             <td>
                                 <!-- Button trigger modal -->

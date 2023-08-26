@@ -147,8 +147,6 @@ def checkout(request):
     else:
            
         return render(request,'checkout/checkout.html',context)
-        
-
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='user_login1')
@@ -168,7 +166,6 @@ def placeorder(request):
         neworder.user=user
         neworder.address = address
         neworder.payment_mode =request.POST.get('payment_method')
-        print(neworder.payment_mode,'lllllllllllllllllllllllll')
         neworder.message = request.POST.get('order_note')
         session_coupon_id=request.session.get('coupon_id')
 
@@ -208,7 +205,6 @@ def placeorder(request):
 
         neworder.save()
 
-        
         for item in cart_items:
             OrderItem.objects.create(
                 order=neworder,
@@ -220,13 +216,8 @@ def placeorder(request):
             product=Variant.objects.filter(id=item.variant.id).first()
             product.quantity -= item.product_qty
             product.save()
-
             # Delete the cart items after the order is placed 
             cart_items.delete()
-            
-
-
-               
 
         payment_mode = request.POST.get('payment_method')
         if payment_mode == 'cod' or payment_mode == 'razorpay' :

@@ -1,7 +1,8 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
+from django.db import transaction
 from django.http import JsonResponse,HttpResponse
 from checkout.models import Order,OrderItem,Orderstatus,Itemstatus
-from order.models import Order_cancelled,Orderreturn
+from .models import Order_cancelled,Orderreturn
 from userprofile.models import Address,Wallet
 from variant.models import Variant,VariantImage
 from cart.models import Cart
@@ -12,7 +13,6 @@ from django.db.models import Q
 def orders(request):
     user = request.user
     orders = Order.objects.filter(user=user).order_by('-created_at')
-    print(orders,'55555555555555555555555555')
     orderitems = OrderItem.objects.filter(order__in=orders).order_by('-order__created_at')
 
     context = {
@@ -40,12 +40,16 @@ def order_view_user(request,view_id):
         variant_ids =[product.variant.id for product in products]
         image = VariantImage.objects.filter(variant__id__in=variant_ids).distinct('variant__color')
         item_status_o = Itemstatus.objects.all()
+        cancel=Order_cancelled.objects.all()
+        
         context = {
             'orderview' :orderview,
             'address':address,
             'products':products,
             'image': image,
-            'item_status_o':item_status_o
+            'item_status_o':item_status_o,
+            'cancel':cancel
+
         } 
         
         return render(request, 'orders/order_view.html', context)
@@ -56,7 +60,6 @@ def order_view_user(request,view_id):
 def order_view_admin(request,view_id):
     try:
         orderview = Order.objects.get(id=view_id)
-        print(orderview,'8888888888888888')
         address =Address.objects.get(id=orderview.address.id)
         products =OrderItem.objects.filter(order=view_id)
         variant_ids =[product.variant.id for product in products]
@@ -233,15 +236,18 @@ def return_order(request,return_id):
     return redirect('order_view_user',view_id)
         
 def order_cancel(request,cancel_id):
+    
     try:
-        orderitem_id = OrderItem.objects.get(id= cancel_id)
-        orderitem = orderitem_id
+        orderitem_id = OrderItem.objects.get(id=cancel_id)
+        orderitem =  orderitem_id
         view_id = orderitem_id.order.id
-    except :
+    except:
         return redirect('userprofile')
-    if request.method == 'POST':
-        options=request.POST.get('options')
+    if request.method == 'POST': 
+        
+        options = request.POST.get('options')
         reason = request.POST.get('reason')
+        # validation
 
         if options.strip() == '':
             messages.error(request, "enter your Options!")
@@ -253,56 +259,62 @@ def order_cancel(request,cancel_id):
         if not  reason_checking < 30:
             messages.error(request, " reason want to minimum 30 words!")
             return redirect('order_view_user',view_id)
-        
-        order = Order.objects.filter(id=view_id)
+
+    
+        order = Order.objects.filter(id=view_id).first()
         qty = orderitem.quantity
         variant_id = orderitem.variant.id
-        variant= Variant.objects.filter(id=variant_id).first()
+        variant = Variant.objects.filter(id=variant_id).first()
+        
+        cancelled= Order_cancelled.objects.create(user = request.user, order = order, options=options, reason=reason)
+        
 
-        cancelled = Order_cancelled.objects.create(user=request.user,order= order,
-                                                   options=options,reason=reason)
-        if order.payment_mode == 'razorpay' or order.payment_mode == 'wallet':
+        if order.payment_mode == 'razorpay' or order.payment_mode == 'wallet' :
             order = Order.objects.get(id=view_id)
-
+            
+                
             if variant.product.offer:
+                total_price = variant.product.product_price *qty
+                offer_price =variant.product.offer.discount_amount *qty
+                total_price = total_price-offer_price
+            else:   
+                
                 total_price = variant.product.product_price * qty
-                offer_price = variant.product.offer.discount_amout * qty
-                total_price = total_price - offer_price
-            else:
-                total_price =variant.product.product_price * qty
             if order.return_total_price:
                 pass
-            else:
-                order.return_total_price = int(order.total_price)
-            order.return_total_price = order.return_total_price - total_price
-
+            else:    
+                order.return_total_price =int(order.total_price )
+            order.return_total_price = order.return_total_price - total_price 
+              
             if order.coupon:
-                if order.return_total_price < order.coupon.min_price:
-                    total_price = total_price - order.coupon.coupon_discount_amount
-                    order.coupon = None
+                if order.return_total_price <order.coupon.min_price:
+                    total_price =total_price - order.coupon.coupon_discount_amount
+                    order.coupon = None       
                 else:
-                    pass
+                    pass   
             else:
-                pass
-            if order.return_total_price < 0:
-                order.return_total_price = None
+                pass 
+            if order.return_total_price<0:
+                order.return_total_price =None          
             order.save()
             try:
                 wallet = Wallet.objects.get(user=request.user)
                 wallet.wallet += total_price
                 wallet.save()
-            except wallet.DoesNotExist:
-                wallet =Wallet.objects.create(user=request.user,wallet=total_price)
+            except Wallet.DoesNotExist:
+                wallet = Wallet.objects.create(user=request.user, wallet=total_price)
+        # Update the product quantity
         variant.quantity = variant.quantity + qty
         variant.save()
         order_item_id =Itemstatus.objects.get(id=5)
         orderitem.orderitem_status = order_item_id
-
+       
         orderitem.save()
         try:
             all_order_item =OrderItem.objects.filter(order=view_id)
+        
             total_count = all_order_item.count()
-
+            
             Pending = all_order_item.filter(orderitem_status__id=1).count()
             Processing = all_order_item.filter(orderitem_status__id=2).count()
             Shipped = all_order_item.filter(orderitem_status__id=3).count()
@@ -323,19 +335,62 @@ def order_cancel(request,cancel_id):
             elif total_count == Return:
                 total_value = 6
             else:
-                total_value = 1   
+                total_value = 1    
+        
         except:
             return redirect('order_view_user',view_id)
-        
-        change_all_items_status = Order.objects.get(id=view_id)
-        item_status_instance_all = Orderstatus.objects.get(id= total_value)
+            
+        change_all_items_status = Order.objects.get(id = view_id)
+        item_status_instance_all = Orderstatus.objects.get(id=total_value)
         change_all_items_status.order_status = item_status_instance_all
         change_all_items_status.save()
-
-        messages.success(request,'your Order Cancelled successfully!.')
+        
+        messages.success(request,'your order Cancelled successfully! ')
         return redirect('order_view_user',view_id)
     return redirect('userprofile')
+    
+def update_statuses(order, orderitem):
+    # Update order item status to "Cancelled"
+    cancelled_status = Itemstatus.objects.get(id=5)
+    orderitem.orderitem_status = cancelled_status
+    orderitem.save()
 
+    # Update the overall order status if needed
+    update_order_status(order)
+
+def update_order_status(order):
+    all_order_items = order.orderitem_set.all()
+
+    # Count different status types
+    pending_count = all_order_items.filter(orderitem_status__id=1).count()
+    processing_count = all_order_items.filter(orderitem_status__id=2).count()
+    shipped_count = all_order_items.filter(orderitem_status__id=3).count()
+    delivered_count = all_order_items.filter(orderitem_status__id=4).count()
+    cancelled_count = all_order_items.filter(orderitem_status__id=5).count()
+    return_count = all_order_items.filter(orderitem_status__id=6).count()
+
+    # Determine the new overall order status based on counts
+    if pending_count == all_order_items.count():
+        order_status = Orderstatus.objects.get(id=1)
+    elif cancelled_count == all_order_items.count():
+        order_status = Orderstatus.objects.get(id=5)
+    elif return_count == all_order_items.count():
+        order_status = Orderstatus.objects.get(id=6)
+    elif delivered_count == all_order_items.count():
+        order_status = Orderstatus.objects.get(id=4)
+    elif shipped_count == all_order_items.count():
+        order_status = Orderstatus.objects.get(id=3)
+    elif processing_count == all_order_items.count():
+        order_status = Orderstatus.objects.get(id=2)
+    else:
+        # Default to pending if no specific condition is met
+        order_status = Orderstatus.objects.get(id=1)
+
+    # Update the order's order_status field
+    order.order_status = order_status
+    order.save()
+
+    
 def order_search(request):
     search = request.POST.get('search')
     if search is None or search.strip() == '':

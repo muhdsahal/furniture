@@ -164,22 +164,23 @@
 
                         <td>
                             {% if i.orderitem_status.item_status == 'Pending' %}
-                            <span class="badge rounded-pill alert-secondary status-badge">
+                            <span class="badge rounded-pill bg-secondary status-badge">
                                 {{ i.orderitem_status.item_status }}</span>
                             {% elif i.orderitem_status.item_status == 'Processing' %}
-                            <span class="badge rounded-pill alert-warning status-badge">
+                            <span class="badge rounded-pill bg-warning status-badge">
                                 {{ i.orderitem_status.item_status }}</span>
                             {% elif i.orderitem_status.item_status == 'Shipped' %}
-                            <span class="badge rounded-pill alert-primary status-badge">
+                            <span class="badge rounded-pill bg-primary status-badge">
                                 {{ i.orderitem_status.item_status }}</span>
                             {% elif i.orderitem_status.item_status == 'Delivered' %}
-                            <span class="badge rounded-pill alert-success status-badge">
+                            <span class="badge rounded-pill bg-success status-badge">
                                 {{ i.orderitem_status.item_status }}</span>
                             {% elif i.orderitem_status.item_status == 'Cancelled' or i.orderitem_status.item_status == 'Return' %}
-                            <span class="badge rounded-pill alert-danger status-badge">
+                            <span class="badge rounded-pill bg-danger status-badge">
                                 {{i.orderitem_status.item_status }}</span>
                             {% endif %}
                         </td>
+                        
     <td>
         <form class="status-form" action="{% url 'change_status' %}" method="post">
             {% csrf_token %}

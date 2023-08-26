@@ -79,7 +79,7 @@
                                 <td><b>{{ i.total_price }}</td>
                                 <td><b>{{ i.payment_mode }}</td>
                                 <td><a href="{% url 'order_view_admin' i.id %}"><span
-                                            class="badge rounded-pill alert-View btn btn ">View</span> </a>
+                                            class="badge rounded-pill bg-secondary status-badge ">View</span> </a>
                                 </td>
                                 <td> 
                                     {% if i.order_status.order_status == 'Pending' %}
