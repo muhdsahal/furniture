@@ -86,6 +86,7 @@
                         </div>
                       </div>
 
+
                       <form method="POST" action="{% url 'placeorder' %}" id="orderForm">
                       {% csrf_token %}
                         <div class="mb-4">
@@ -259,20 +260,42 @@
                         </div>
                     </div>
 
-                    <section>
-                      <div class="cupon_area">
-                        <div class="check_title">
-                          <h2>
-                            Have a coupon?
-                            <a href="#">Click here to enter your code</a>
-                          </h2>
-                        </div>
-                        <input type="text" placeholder="Enter coupon code" />
-                        <a class="tp_btn" href="#">Apply Coupon</a>
-                      </div>
-                      </section>
+                    
 
                   <div class="col-lg-6">
+                    
+                    <div class="cupon_area">
+                      {% if coupon_checkout %}
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                          {% for item in coupon_checkout %}
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="flush-heading{{ forloop.counter }}">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="flush-collapse{{ forloop.counter }}">
+                                  <span class="text-dark">{{forloop.counter}}.</span> <b>-{{item.coupon_discount_amount}}% Off</b>
+                                </button>
+                              </h2>
+                              <div id="flush-collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ forloop.counter }}" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                  <p><b>*</b>Applicable only for order price more than <b>{{item.min_price}}\-</b></p>
+                              <span class="ml-3">Coupon Code: <b class="text-danger">{{item.coupon_code}}</b></span>
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="mb-2"><h3>No Coupons Available</h3></div>
+                        {% endif %}
+                     </div>
+                      <div class="check_title">
+                        <h2>
+                          Have a coupon?
+                          <a href="#">Click here to enter your code</a>
+                        </h2>
+                      </div>
+                      <input type="text" placeholder="Enter coupon code" />
+                      <button type="submit"  data-minimum-amount="{{item.product.product_price}}" class="btn_3"> Apply Coupon</button>
+                    </div>
                     <div class="order_box text-left">
                       <h2>Your Order</h2>
                       <ul class="list text-left">
