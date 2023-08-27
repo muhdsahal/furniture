@@ -22,11 +22,13 @@ def checkout(request):
     
     if request.method == 'POST':
         coupon = request.POST.get('coupon')
+        print(coupon,'444444444444444444444444')
         if coupon is None:
             messages.error(request, 'coupon field is cannot empty!')
             return redirect('checkout')
         try:
             check_coupons =Coupon.objects.filter(coupon_code=coupon).first()
+            print(check_coupons.coupon_discount_amount,'999999999999999999999')
             cartitems= Cart.objects.filter(user=request.user)
             total_price = 0
             grand_total = 0
@@ -43,6 +45,7 @@ def checkout(request):
                     total_price = total_price - offer_price_total
                     all_offer = all_offer + offer_price_total
                     tax = total_price * 0.18
+                    print(total_price,'000000000000000000000')
                     
                 else:
                     product_price = item.variant.product.product_price
