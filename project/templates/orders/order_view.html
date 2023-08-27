@@ -202,45 +202,16 @@
                     {{i.orderitem_status.item_status }}</span>
                 {% endif %}
             </td>
-            {% if order_item.status != 'Cancelled' and order_item.status != 'Delivered' and order_item.status != 'Return'%}
-                <td>
-                  <!-- Button trigger modal -->
-                  <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
-                    data-bs-target="#exampleModals{{ forloop.counter }}">Cancel</button>
-                  <!-- Modal for deleting the product -->
-                  <div class="modal fade cartdata" id="exampleModals{{ forloop.counter }}" tabindex="-1"
-                    aria-labelledby="exampleModalLabel{{ forloop.counter }}" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content modal_content1">
-                        <div class="modal-header">
-                          <h1 class="modal-title fs-5" id="exampleModalLabel{{ forloop.counter }}">Confirm Cancel</h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          Cancel Product {{ orderitem_status.product.product_name }}
-                        </div>
-                        <div class="modal-footer">
-                          {% csrf_token %}
-                          <input type="hidden" class="order_id" value="{{ order_item.order.id }}">
-                          <input type="hidden" class="orderitem_id" value="{{ order_item.id }}">
-                          <button type="submit" class="btn btn-danger order_cancel">Confirm</button>
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Deleting ended -->
-                </td>
-                {% else %}
-                
-                {% endif %}
-                {% if order_item.status != 'Cancelled' %}
-                <td>
+      
+               <td>
                   {% if order_item.status == 'Delivered' %}
+                   {% if date %}
                   <!-- Button trigger modal -->
-                  <a type="button" data-bs-toggle="modal" data-bs-target="#editprofile">
+                  {% comment %} <a type="button" data-bs-toggle="modal" data-bs-target="#editprofile">
                     <button class="btn btn-outline-dark">Return</button>
-                  </a>
+                  </a> {% endcomment %}
+                  <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                  data-bs-target="#exampleModals{{ forloop.counter }}">Return</button>
                   <!--Reason Modal -->
                   <div class="modal fade" id="editprofile" tabindex="-1" aria-labelledby="exampleModalLabel{{ forloop.counter }}"
                     aria-hidden="true">
@@ -253,7 +224,7 @@
                           </button>
                         </div>
                         <div class="modal-body">
-                          <form action="{%url 'orderreturn' order_item.id%}" enctype="multipart/form-data" method="POST">
+                          <form action="{% url 'return_order' i.id %}" enctype="multipart/form-data" method="POST">
                             {% csrf_token %}
                             <div class="form-outline mb-4">
                               <select class="form-select mb-1" aria-label="Default select example" name="options">
@@ -277,16 +248,50 @@
                     </div>
                   </div>
                   </div>
-                  {% comment %} {% elif order_item.status == 'Return' %}
-                  <a href="#" type="button" class="btn btn-outline-dark">Track Your Return</a>
                   {% else %}
-                  <a href="#" type="button" class="btn btn-outline-dark">Track Your order</a> {% endcomment %}
+                  {% endif %}
+
+                  {% elif i.orderitem_status.item_status == 'Cancelled' or i.orderitem_status.item_status == 'Return' %}
+                  {% else %}
+                  <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                  data-bs-target="#exampleModals{{ forloop.counter }}">Cancel</button>
+                  
+          
+          <!-- Modal for deleting the product -->
+          <div class="modal fade cartdata" id="exampleModals{{ forloop.counter }}" tabindex="-1"
+               aria-labelledby="exampleModalLabel{{ forloop.counter }}" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content modal_content1">
+                      <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel{{ forloop.counter }}">Confirm Cancel</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          Cancel Product {{ i.orderitem_status.variant.product.product_name }}
+                      </div>
+                      <div class="modal-footer">
+                          <form action="{% url 'order_cancel' i.id %}" method="POST">
+                              {% csrf_token %}
+                              <label for="options">write your Cancel Reason:</label>
+                              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="reason"></textarea>
+                             
+                              <input type="hidden" class="order_id" value="{{ order_item.order.id }}">
+                              <input type="hidden" class="orderitem_id" value="{{ order_item.id }}">
+                              <button type="submit" class="btn btn-danger order_cancel">Confirm</button>
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+                  <!-- Deleting ended -->
+
                   {% endif %}
                 </td>
-                {% endif %}
                  
+                {% endfor %}
             </tr>
-            {% endfor %}
           </tbody>
         </table>
       </div>
@@ -295,84 +300,10 @@
   <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-6 mt-4">
         <div class="btn_3">
-            <a href="{%url 'shop'%}">Continue Shopping</a>
+            <a href="{%url 'shop' %}">Continue Shopping</a>
         </div>
     </div>
 </div>
   </section>
   <!--================ confirmation part end =================-->
-
-<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-
-{% comment %} <script>
-  $(document).ready(function() {
-      $('.order_cancel').click(function(e) {
-        e.preventDefault();
-        var order_ids = $(this).closest('.modal-content').find('.order_id').val();
-        var orderitem_ids = $(this).closest('.modal-content').find('.orderitem_id').val();
-        var token = $("[name='csrfmiddlewaretoken']").val();
-        
-        $.ajax({
-          method: "POST",
-          url: "order_cancel",
-          data: {
-            'order_id': order_ids,
-            'orderitem_id': orderitem_ids,
-            csrfmiddlewaretoken: token
-          },
-          success: function(response) {
-            console.log(response);
-            alertify.success(response.status);
-    
-            location.reload();
-          },
-          error: function(xhr, status, error) {
-            console.log(xhr.responseText);
-            // Handle error case
-          }
-        });
-      });
-    });
-    
-</script> {% endcomment %}
-
-{% comment %} <script> 
-  $(document).ready(function() {
-      // Cancel button
-      $('.order_cancel').click(function(e) {
-          e.preventDefault();
-          
-          var orderitem_id = $(this).closest('.modal-footer').find('.orderitem_id').val();
-          var cancel_id = ...;  // Get the cancel_id from your template or data
-          
-          // Send AJAX request to your cancel view
-          $.ajax({
-              type: 'POST',
-              url: '{% url 'order_cancel' cancel_id=cancel_id %}',  // Update this URL to your cancel view
-              data: {
-                  orderitem_id: orderitem_id,
-                  cancel_id: cancel_id,  // Include the cancel_id here
-                  csrfmiddlewaretoken: '{{ csrf_token }}'
-              },
-              success: function(response) {
-                  // Handle success, update UI if needed
-                  alert('Order cancelled successfully!');
-                  location.reload();  // Reload the page or update the UI as required
-              },
-              error: function(error) {
-                  // Handle error, display error message or take action
-                  alert('Error cancelling order.');
-              }
-          });
-      });
-      
-      // Return button
-      // Similar AJAX setup as above, but send data to your return view
-  });
-  </script>
-   {% endcomment %}
-  
-
 {% endblock %}

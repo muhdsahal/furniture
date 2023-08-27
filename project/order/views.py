@@ -40,7 +40,7 @@ def order_view_user(request,view_id):
         variant_ids =[product.variant.id for product in products]
         image = VariantImage.objects.filter(variant__id__in=variant_ids).distinct('variant__color')
         item_status_o = Itemstatus.objects.all()
-        cancel=Order_cancelled.objects.all()
+
         
         context = {
             'orderview' :orderview,
@@ -48,7 +48,7 @@ def order_view_user(request,view_id):
             'products':products,
             'image': image,
             'item_status_o':item_status_o,
-            'cancel':cancel
+            
 
         } 
         
@@ -245,13 +245,13 @@ def order_cancel(request,cancel_id):
         return redirect('userprofile')
     if request.method == 'POST': 
         
-        options = request.POST.get('options')
+        
         reason = request.POST.get('reason')
         # validation
 
-        if options.strip() == '':
-            messages.error(request, "enter your Options!")
-            return redirect('order_view_user',view_id)
+        # if options.strip() == '':
+        #     messages.error(request, "enter your Options!")
+        #     return redirect('order_view_user',view_id)
         if reason.strip() == '':
             messages.error(request, "enter your Reasons!")
             return redirect('order_view_user',view_id)
@@ -266,10 +266,11 @@ def order_cancel(request,cancel_id):
         variant_id = orderitem.variant.id
         variant = Variant.objects.filter(id=variant_id).first()
         
-        cancelled= Order_cancelled.objects.create(user = request.user, order = order, options=options, reason=reason)
+        cancelled= Order_cancelled.objects.create(user = request.user, order = order, reason=reason)
+        # options=options,
         
 
-        if order.payment_mode == 'razorpay' or order.payment_mode == 'wallet' :
+        if order.payment_mode == 'razorpay' or order.payment_mode == 'wallet':
             order = Order.objects.get(id=view_id)
             
                 
@@ -286,17 +287,18 @@ def order_cancel(request,cancel_id):
                 order.return_total_price =int(order.total_price )
             order.return_total_price = order.return_total_price - total_price 
               
-            if order.coupon:
-                if order.return_total_price <order.coupon.min_price:
-                    total_price =total_price - order.coupon.coupon_discount_amount
-                    order.coupon = None       
-                else:
-                    pass   
-            else:
-                pass 
-            if order.return_total_price<0:
-                order.return_total_price =None          
-            order.save()
+            # if order.coupon:
+            #     print(order.c)
+            #     if order.return_total_price <order.coupon.min_price:
+            #         total_price =total_price - order.coupon.coupon_discount_amount
+            #         order.coupon = None       
+            #     else:
+            #         pass   
+            # else:
+            #     pass 
+            # if order.return_total_price<0:
+            #     order.return_total_price =None          
+            # order.save()
             try:
                 wallet = Wallet.objects.get(user=request.user)
                 wallet.wallet += total_price
