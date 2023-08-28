@@ -4,6 +4,7 @@
 {% endblock %}
 {% load static %}
 {% block body %}
+{% load mathfilters %}
   <!-- ================Single Product Area ================= -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
@@ -60,7 +61,15 @@
         <div class="col-lg-5 col-xl-4">
           <div class="s_product_text">
             <h2>{{  variant.0.variant.product.product_name }}</h2>
-            <h2>₹{{  variant.0.variant.product.product_price }}</h2>
+            {% comment %} <h2>₹{{  variant.0.variant.product.product_price }}</h2> {% endcomment %}
+
+            {% if variant.0.variant.product.offer %}
+            <h2><del style="color: brown;">${{ variant.0.variant.product.product_price }} </del>  <span style="color:white;">--</span> <span style="color: black;">${{ variant.0.variant.product.product_price|sub:variant.0.variant.product.offer.discount_amount}}</span>
+              </h2>
+              {% else %}
+              <h2>₹{{ variant.0.variant.product.product_price }}</h2>
+              {% endif %}
+
             <h3><span>Category   : </span>{{  variant.0.variant.product.category }}</h3>
             <h3><span>Brand : Aranoz</span></h3>
             <h3><span>Availibility      :  </span>{{ variant.0.variant.quantity }}</h3>

@@ -2,16 +2,86 @@
 {% block title %}aranoz{% endblock %}
 {% load static %}
 {% block body %}
+{% load mathfilters %}
 
+<style>
+  
+  .coupon-section {
+    width: 50%; 
+    margin: 0 auto; 
+    
+  }
 
+    /* Center the form */
+    .coupon-form {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px; /* Adjust margin as needed */
+    }
+  
+    /* Style the input field */
+    .coupon-input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-right: 10px; /* Add some space between input and button */
+      /* Add more styling as needed */
+    }
+  
+    /* Style the button */
+    .apply-button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      /* Add more styling as needed */
+    }
+</style>
 <section class="checkout_area padding_top">
   <div class="container">
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+      <div class="coupon-section">
+        {% if coupon_checkout %}
+          {% for item in coupon_checkout %}
+            <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-heading{{ forloop.counter }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="flush-collapse{{ forloop.counter }}">
+                                <span class="text-dark">{{ forloop.counter }}.</span> <b>-{{ item.coupon_discount_amount }}% Off</b>
+                            </button>
+                        </h2>
+                        <div id="flush-collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ forloop.counter }}" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                <p><b>*</b>Applicable only for order price more than <b>{{ item.min_price }}\-</b></p>
+                                <span class="ml-3">Coupon Code: <b class="text-danger">{{ item.coupon_code }}</b></span>
+                            </div>
+                        </div>
+                    </div>
+          {% endfor %}
+        {% else %}
+          <div class="mb-2"><h3>No Coupons Available</h3></div>
+        {% endif %}
+      </div>
+      
+ 
+      <form action="{% url 'checkout' %}" method="POST" class="coupon-form">
+        {% csrf_token %}
+        <input type="text" name="coupon" placeholder="Enter coupon code" class="coupon-input">
+        <button type="submit" class="btn_1">Apply Coupon</button>
+      </form>
+      </div>
+      <br>
+      <br>
+      <br>
       <div class="row">
           <div class="col-lg-6">
               <div class="returning_customer">
-                  <button type="button" class="btn_3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  <button type="button" class="btn_1" data-bs-toggle="modal" data-bs-target="#exampleModal">
                       New Address
                   </button>
+                  <br>
       
                   <!-- Modal -->
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -85,7 +155,8 @@
                           </div>
                         </div>
                       </div>
-
+                      <br>
+                      
 
                       <form method="POST" action="{% url 'placeorder' %}" id="orderForm">
                       {% csrf_token %}
@@ -97,7 +168,8 @@
                                 <div class="custom-control custom-radio">
                                   <input type="radio" value="{{a.id}}" id="free-shipping{{ forloop.counter }}"
                                          name="address" class="custom-control-input">
-                                  <label class="custom-control-label"
+                                  
+                                         <label class="custom-control-label"
                                          for="free-shipping{{ forloop.counter }}">
                                       Set Default Address
                                   </label>
@@ -106,9 +178,10 @@
                                
                                     
                                 <div class="card-body">
+                                  <h5 class="card-title">{{ a.first_name}} {{ a.last_name}} </h5>
                                   <h5 class="card-title">Mob : {{a.phone}}</h5>
                                   <h5 class="card-title">{{a.address}}, {{a.pincode}}</h5>
-                                  <p class="card-text">{{a.city}}-{{a.state}}-{{a.country}}</p>
+                                  <h5 class="card-text">{{a.city}}-{{a.state}}-{{a.country}}</h5>
                                 <div>
   
                                 <!-- Button trigger vie address -->
@@ -260,93 +333,69 @@
                         </div>
                     </div>
 
-                    
-
-                  <div class="col-lg-6">
-                    
-                    {% comment %} <div class="cupon_area">
-                      {% if coupon_checkout %}
-                        <div class="accordion accordion-flush" id="accordionFlushExample">
-                          {% for item in coupon_checkout %}
-                            <div class="accordion-item">
-                              <h2 class="accordion-header" id="flush-heading{{ forloop.counter }}">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="flush-collapse{{ forloop.counter }}">
-                                  <span class="text-dark">{{forloop.counter}}.</span> <b>-{{item.coupon_discount_amount}}% Off</b>
-                                </button>
-                              </h2>
-                              <div id="flush-collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ forloop.counter }}" data-bs-parent="#accordionFlushExample">
-                                <div class="accordion-body">
-                                  <p><b>*</b>Applicable only for order price more than <b>{{item.min_price}}\-</b></p>
-                              <span class="ml-3">Coupon Code: <b class="text-danger">{{item.coupon_code}}</b></span>
-                                </div>
-                              </div>
-                            </div>
-                          {% endfor %}
-                        </div>
-                        {% else %}
-                        <div class="mb-2"><h3>No Coupons Available</h3></div>
-                        {% endif %}
-                     </div>
-                      <div class="check_title">
-                        <h2>
-                          Have a coupon?
-                          <a href="#">Click here to enter your code</a>
-                        </h2>
-                      </div>
-                      <input type="text" placeholder="Enter coupon code" />
-                      <button type="submit"  data-minimum-amount="{{item.product.product_price}}" class="btn_3"> Apply Coupon</button>
-                    </div> {% endcomment %}
-                    <div class="order_box text-left">
-                      <h2>Your Order</h2>
-                      <ul class="list text-left">
-                        <h5>Product <span>Total</span></h5>
-                          <div class="checkout__order__products"></div>
-                          <ul class="checkout__total__products ">
-                              {% for item in cartitems %}
-                            <li><img src="{{item.variation.image.url}}" height="40px" alt="">
-                              <h3>  {{item.variant.product.product_name}}<span> ₹ 
-                                {% if i.variant.product.offer %}<del style="color: red;">{{item.variant.product.product_price}}</del>{% else %}  {{item.variant.product.product_price}} {% endif %}</span>
-                              </span></h3> </li>
-                              {% endfor %}
-                              <li>
-                                <h5><span>Subtotal ₹{{total_price}}</span></h5>
-                              </li>
-                              {% if coupon_checkout %}
-                              <li><h5> Discount <span id="discount">{{ coupon_checkout.coupon_discount_amount }}</span>%</h5></li>
-                              <li> <h5> <span id="grand_total">₹{{coupon_checkout.min_price}}</span></h5></li>
-                              {% else %}
-                              <li>
-                                <h5>Total <span id="grand_total">₹{{grand_total}}</span></h5>
-                              </li>
-                              {% endif %}
-                          </ul>
-                          <br>
-                          <div>
-                            <h5>
-                              Payment methods
-                            </h5>
-
-                            
-                           
-                            
-                            
-                            
-                            <div class="button-container">
-                              <input type="radio" id="cod" name="payment" data-payment-method="cod" role="button">
-                              <label for="cod">COD</label>
+                    <div class="col-lg-6">
+                      <div class="order_box text-left">
+                          <h2>Your Order</h2>
+                          <div class="checkout__order__products">
+                              <ul class="list text-left">
+                                  {% for item in cartitems %}
+                                  <li>
+                                      <div class="product-details">
+                                          <img src="{{ item.variation.image.url }}" height="40px" alt="">
+                                          <div class="product-info">
+                                              <h5 class="text-left">{{ item.variant.product.product_name }}</h5>
+                                              <span>
+                                                  {% if offer %}
+                                                  <h5 class="text-left">
+                                                      <del style="color: rose ;">₹{{ item.variant.product.product_price }}</del>
+                                                    </h5>
+                                                    <h5 class="text-right">
+                                                        <span  style="color: black;">₹{{ item.variant.product.product_price|sub:item.variant.product.offer.discount_amount }}</span>
+                                                  </h5>
+                                                  {% else %}
+                                                  {{ item.variant.product.product_price }}
+                                                  {% endif %}
+                                              </span>
+                                          </div>
+                                      </div>
+                                  </li>
+                                  {% endfor %}
+                                  <li>
+                                      <h5 class="text-left">Subtotal</h5>
+                                      <h5 class="text-right" ><span id="sub_total">₹ {{ total_price|floatformat:2 }}</span></h5>
+                                  </li>
+                                  {% if request.session.coupon_session %}
+                                  <li>
+                                      <h5 class="text-left">Discount</h5>
+                                      <h5 class="text-right"><span id="discount">₹ {{ request.session.coupon_session }}</span></h5>
+                                  </li>
+                                  {% else %}
+                                  <li>
+                                      <h5 class="text-left">Total</h5>
+                                      <span id="grand_total"> <h5 class="text-right">₹{{ grand_total }}</h5></span>
+                                  </li>
+                                  {% endif %}
+                              </ul>
                               <br>
-                              <input type="radio" id="razorpay" name="payment" data-payment-method="razorpay" role="button">
-                              <label for="razorpay">Razor pay</label>
-                            </div>
                             
-                            
-                         
-                            
-                        <button type="submit" style="margin-left: 320px;" class="btn_3 purchase placeorder " id="orderform"><span> Place Order
-                        </span></button>
-                         
-                        </div>
+                          </div>
+                          <div>
+                              <h5>Payment methods</h5>
+                              <div class="button-container">
+                                  <input type="radio" id="cod" name="payment" data-payment-method="cod" role="button">
+                                  <label for="cod"><h5>COD</h5></label>
+                                  <br>
+                                  <input type="radio" id="razorpay" name="payment" data-payment-method="razorpay" role="button">
+                                  <label for="razorpay"> <h5>Razor pay</h5></label>
+                              </div>
+                              <button type="submit" style="margin-left: 320px;" class="btn_3 purchase placeorder " id="orderform">
+                                  <span>Place Order</span>
+                              </button>
+                          </div>
                       </div>
+                  </div>
+                  
+                  
                     </div>
                   </div>
                 </div>
@@ -354,42 +403,6 @@
             </div>
           </div>
         </form>
-        <div class="cupon_area">
-          {% if coupon_checkout %}
-            <div class="accordion accordion-flush" id="accordionFlushExample">
-              {% for item in coupon_checkout %}
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="flush-heading{{ forloop.counter }}">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="flush-collapse{{ forloop.counter }}">
-                      <span class="text-dark">{{forloop.counter}}.</span> <b>-{{item.coupon_discount_amount}}% Off</b>
-                    </button>
-                  </h2>
-                  <div id="flush-collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ forloop.counter }}" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">
-                      <p><b>*</b>Applicable only for order price more than <b>{{item.min_price}}\-</b></p>
-                  <span class="ml-3">Coupon Code: <b class="text-danger">{{item.coupon_code}}</b></span>
-                    </div>
-                  </div>
-                </div>
-              {% endfor %}
-            </div>
-            {% else %}
-            <div class="mb-2"><h3>No Coupons Available</h3></div>
-            {% endif %}
-         </div>
-          <div class="check_title">
-            <h2>
-              Have a coupon?
-              <a href="#">Click here to enter your code</a>
-            </h2>
-          </div>
-          <form action="{% url 'checkout' %}" method="POST">
-            {% csrf_token %}
-          <input type="text" name="coupon" placeholder="Enter coupon code" >
-          <button type="submit"  class="btn_3"> Apply Coupon</button>
-          </form>
-        </div>
-      <div>       
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

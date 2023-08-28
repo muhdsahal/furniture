@@ -52,15 +52,11 @@ def addproduct(request):
             category = Category.objects.get(id=category_id)
         else:
             category = None
-
-        try:
-            if offer_id:
-                offer_obj = Offer.objects.get(id=offer_id)
-            else:
-                offer_obj = None
-        except Offer.DoesNotExist:
-            messages.error(request, 'Selected offer does not exist')
-            return redirect('product')
+            
+        if offer_id == '':
+            offer_obj=None
+        else:    
+            offer_obj = Offer.objects.get(id=offer_id)
 
         product = Product(
             product_name=name,

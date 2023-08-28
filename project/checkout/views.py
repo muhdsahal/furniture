@@ -53,23 +53,21 @@ def checkout(request):
                     tax = total_price * 0.18
 
             grand_total=total_price + tax
-            if grand_total >= check_coupons.min_price:
-                
-                coupon = check_coupons.coupon_discount_amount
-                coupon_id = check_coupons.id
-
-                request.session['coupon_session']= coupon
-                request.session['coupon_id']= coupon_id
-
-                messages.success(request, 'This coupon added successfully!')
+            if coupon:                                             
+                if grand_total >= check_coupons.min_price:
+                    request.session['coupon_session'] = check_coupons.coupon_discount_amount
+                    request.session['coupon_id'] = check_coupons.id
+                    messages.success(request, 'This coupon added successfully!')
+                else:
+                    coupon = False
+                    messages.error(request, ' purchase minimum price!')
             else:
-                coupon = False
-                messages.error(request, ' purchase minimum price!')
+                messages.error(request, 'This coupon not valid!')
 
             address = Address.objects.filter(user=request.user)
             cart_count = Cart.objects.filter(user =request.user).count()
             wishlist_count = Wishlist.objects.filter(user=request.user).count()
-            coupon_checkout =Coupon.objects.filter(is_available=True)
+            coupon_checkout = Coupon.objects.filter(is_available=True)
             if offer_price_total == 0:
                 offer_price_total = False
             else:
@@ -90,14 +88,15 @@ def checkout(request):
                 'wishlist_count':wishlist_count,
             }
             
-            if total_price == 0 :
-                return redirect ('home')
-            else:
-                return render(request,'checkout/checkout.html',context)
-            
+           
         except:
             messages.error(request, 'This coupon not valid!')
             return redirect('checkout')
+    # if total_price == 0 :
+    #      redirect ('home')
+    # else:
+    #     return render(request,'checkout/checkout.html',context)
+            
         
     cartitems = Cart.objects.filter(user=request.user)
     total_price = 0
@@ -282,6 +281,7 @@ def razarpaycheck(request):
             total_price = total_price + item.variant.product.product_price * item.product_qty
             tax = total_price * 0.18
         session_coupon=request.session.get('coupon_session')
+        print(session_coupon,'ooooooooooooorpppppppppprrrrrrrr')
         total_price = total_price - session_coupon 
         total_price += tax
 

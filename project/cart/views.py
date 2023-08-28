@@ -82,7 +82,7 @@ def cart(request):
 
             single_product_total =single_product_total-single_total_offer
             total_price=total_price-offer_total_price
-            grand_total = total_price
+            grand_total = total_price + tax
         
             
 

@@ -63,7 +63,8 @@
                                            
                                         </td>  
                                         <td>
-                                            <h5>{% if item.variant.product.offer %}₹ <del class="text-danger"> {{item.variant.product.product_price}}</del> {% else %} ₹ {{item.variant.product.product_price }} {% endif %}</h5>
+                                            <h5>{% if item.variant.product.offer %} {{item.variant.product.product_price|sub:item.variant.product.offer.discount_amount}} {% else %} ₹ {{item.variant.product.product_price }} {% endif %}</h5>
+                                            {% comment %} {{item.variant.product.product_price|sub:item.variant.product.offer.discount_amount}} {% endcomment %}
                                         </td>
 
                                         
@@ -87,14 +88,15 @@
                                                 </div>
                                             </div>
                                             
-                                        </td>                                       
+                                        </td>   
+                                                                  
                                         {% with counter=forloop.counter  %}
                                                 
                                         
                                         <td class="cart__price total">₹
                                             <span id="single_product_total{{item.variant.id}}"> {{ item.variant.product.product_price| mul:item.product_qty }} </span>
                                         </td>
-                                        {% endwith %}
+                                        {% endwith %} 
                                         {% comment %} <td class="cart__close">
                                         <a data-variantid="{{item.product.product.id}}" class="delete-cart-item" href="" ><i class="fa fa-close"></i></a> 
                                         </td> {% endcomment %}
@@ -121,21 +123,19 @@
                                 <a href="{%url 'shop' %}"><button class="btn_3" >Continue Shopping</button></a>
                             </div>
                         </div>
-                        {% comment %} <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn update__btn">
-                                <a href="{%url 'update_cart' %}"><i class="fa fa-spinner"></i> Update cart</a>
-                            </div>
-                        </div> {% endcomment %}
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="cart__discount">
+                    {% comment %} <div class="cart__discount">
                         <h6>Discount codes</h6>
                         <form action="#">
                             <input type="text" placeholder="Coupon code">
                             <button  type="submit" class="btn_1" >Apply</button>
                         </form>
-                    </div>
+                    </div> {% endcomment %}
+                    <br>
+                    <br>
+                    <br>
                     <div class="cart__total">
                         <h6>Cart total</h6>
                         <ul>
@@ -146,7 +146,7 @@
                         {%if cart%}
                         <a href="{% url 'checkout' %}" class="btn_3">Proceed to checkout</a>
                         {% else %}
-                        <a href="" class="btn_3">Cart is Empty</a>
+                        <a href="#" class="btn_3">Cart is Empty</a>
                         {% endif %}
                     </div>
                 </div>

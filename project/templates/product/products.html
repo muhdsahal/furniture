@@ -89,6 +89,26 @@
                                   <input name='product_price' value="{{c.product_price}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
                                   <label class="form-label" for="form3Example3cg">Price</label>
                                 </div>
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example3cg">offer</label>
+                                    <select class="form-select" name="offer">
+                                        {% if user.offer %}
+                                        {% for c in offer %}
+                                            {% if c.offer_name == user.offer.offer_name %}
+                                                <option value="{{ c.id }}" selected>{{ c.offer_name }}</option>    
+                                            {% else %}
+                                                <option value="{{ c.id }}">{{ c.offer_name }}</option>
+                                                <option value="">No offer</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% else %}
+                                        <option value="">No offer</option>
+                                        {% for c in offer %}
+                                        <option value="{{ c.id }}">{{ c.offer_name }}</option>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
                                 
                                 <div class="form-outline mb-4">
                                   <select class="form-select form-select-sm mt-3" aria-label=".form-select-sm example" name="category">
@@ -193,19 +213,30 @@
                                         <option value="{{ c.id }}">{{ c.categories }}</option>
                                         {% endfor %}
                                     </select>
+                                    
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example3cg">Offer</label>
+                                    <select class="form-select" name="offer">
+                                        <option value="">No offer</option>
+                                        
+                                        {% for c in offer %}
+                                        <option value="{{c.id}}">{{c.offer_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                                        
 
-                                        <div class="form-outline mb-4">
-                                            <label class="form-label" for="form3Example3cg">Desciption</label>
-                                            <input name='product_description' type="text" id="form3Example3cg"
-                                                class="form-control form-control-lg" />
-                                        </div>
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example3cg">Desciption</label>
+                                    <input name='product_description' type="text" id="form3Example3cg"
+                                        class="form-control form-control-lg" />
+                                </div>
 
-                                        <div class="d-flex justify-content-center">
-                                            <button type="submit"
-                                                class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light"
-                                                type="submit">Save </button>
-                                        </div>
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit"
+                                        class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light"
+                                        type="submit">Save </button>
+                                </div>
                             </form>
                         </div>
                     </div>

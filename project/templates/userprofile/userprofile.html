@@ -32,6 +32,7 @@
 </style>
 
 <link rel="stylesheet" href="{% static 'dashboard/css/styles.min.css'%}"/>
+<br>
 
 <!-- Breadcrumb Section Begin -->
  <section class="breadcrumb-option">
@@ -103,11 +104,15 @@
              </h5>
 
               <div class="row justify-content-between py-3">
-              <div class="col-sm-6">
-                <a href="{% url 'orders'  %}" class="btn btn-outline-dark ">Orders</a>
-              </div> 
+              
+                <a href="{% url 'orders'  %}" class="btn_3 ">Orders</a>
+               
               
               <div>
+                <br>
+                <br>
+        
+                  
                 <div class="container mt-4">
                   <div class="card wallet-card" style="float: left; margin-top: -54px; width: 18rem;">
                     <div class="card-header">
@@ -115,12 +120,11 @@
                     </div>
                     <div class="card-body">
                       <div class="wallet-info">
-                        <p>Your Wallet Balance:</p>
-                        <p class="wallet-balance">₹{{ wallet.wallet }}</p>
+                      <h3>wallet</h3>
                         {% if wallets %}
                         {% for wallet in wallets %}
-                        <p>Available Balance:</p>
-                        <p class="wallet-balance">₹{{ wallet.wallet }}</p>
+                        <h5>Available Balance:</h5>
+                        <h5 class="wallet-balance">₹{{ wallet.wallet }}</h5>
                         {% endfor %}
                         {% else %}
                         Available Balance:₹ 0.00

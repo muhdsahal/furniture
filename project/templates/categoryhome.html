@@ -2,6 +2,7 @@
 {% block title %}aranoz{% endblock %}
 {% load static %}
 {% block body %}
+;{% load mathfilters %}
 <style>
     .sor{
         display: flex;
@@ -81,7 +82,13 @@
                                 </div>
                                 <div class="card-body">
                                 <h5 class="card-title">{{ c.variant.product.product_name }}</h5>
-                                <h6 class="card-price"> ₹{{  c.variant.product.product_price }}</h6>
+
+                                {% if c.variant.product.offer %}
+                                <h6><del style="color: brown;">${{ c.variant.product.product_price }} </del>  <span style="color:white;">--</span> <span style="color: black;">${{c.variant.product.product_price|sub:c.variant.product.offer.discount_amount}}</span>
+                                </h6>
+                                {% else %}
+                                <h6>₹{{ c.variant.product.product_price }}</h6>
+                                {% endif %}
                                 <div class="d-flex justify-content-between mt-3">
                                     <button  class="btn_3 addToCartBtn" data-product_id ="{{ c.variant.id }}">{% if c.variant.quantity > 0  %}Add to cart {% else %}Out of stock{% endif %}</button> 
                                     <div class="icon-overlay">
