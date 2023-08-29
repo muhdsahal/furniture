@@ -3,119 +3,220 @@
 {% load static %}
 {% block dashbody %}
 
-<!-- Button trigger modal -->
-<a type="button" class="btn btn-secondary w-60" style="margin-top: 80px;margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#addCategory">
-  <i title="Add Category" class="fa fa-plus">Add Banner</i>
-</a>
-{% if messages %}
-
-{% for message in messages %}
-
-<div class="text-center text-danger">
-<strong>{{message}}</strong>
-</div>
-{% endfor %}
-{% endif %}
-
-<!--Add Banner  Modal -->
-<div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h1 class="modal-title fs-5" id="exampleModalLabel">Add Banner</h1>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<section class="content-main">
+  <div class="content-header">
+      <div>
+         
       </div>
-      <div class="modal-body">
 
-      <form action="{% url 'createbanner' %}"  enctype="multipart/form-data" method="POST">
-        {% csrf_token %}
-        <div style="width: 100px;" class="card-header category-img position-relative overflow-hidden bg-transparent border p-0">
-            <img class="img-fluid w-100" alt="">
-          </div> 
+  </div>
+  <div class="card mb-4">
+      <header class="card-header">
+          <div class="row gx-3">
+              <div class="col-lg-2 col-6 col-md-3">
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#addCategory">
+                      <button type="submit" class="btn btn-primary"><i class="ti ti-plus"></i> Add banner</button>
 
-          <div class="form-outline mb-4">
-            <input name="image" type="file" accept="image/png, image/jpeg, image/wep" class="form-control" id="image-input"/>
-            <small id="image-error" class="text-danger text-center"></small>
-          </div>
+                  </a>
+              </div>
+              <!-- <div class="col-lg-4 col-md-6 me-auto">
+                  <input type="text" placeholder="Search..." class="form-control" />
+              </div> -->
 
-          <div class="form-outline mb-4">
-            <input name='banner_name' value="{{c.banner_name}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
-            <label class="form-label" for="form3Example3cg">Banner name</label>
+              <!-- <div class="col-lg-2 col-6 col-md-3">
+                  <select class="form-select">
+                      <option>sort</option>
+                      <option>Show 30</option>
+                      <option>Show 40</option>
+                  </select>
+              </div> -->
           </div>
-          <div class="form-outline mb-4">
-              <select class="form-select form-select-sm mt-3" aria-label=".form-select-sm example" name="categories">
-                {% for b in category %}
-                <option value="{{b.slug}}">{{b.categories}}</option>
-                {% endfor %}
-              </select>
-              <label class="form-label" for="form3Example3cg">Category</label>
-          </div>
-        <div class="form-outline mb-4">
-          <input name='banner_discription' value="{{c.banner_discription}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
-          <label class="form-label" for="form3Example3cg">Discription</label>
-        </div>
-         <div class="d-flex justify-content-center">
-            <button type="submit"
-              class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light" type="submit" >Save Changes</button>
-          </div>
+      </header>
+      <!-- card-header end// -->
+      <div class="card-body">
+          <div class="table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                          <th scope="col">id</th>
+                          <th scope="col">image</th>
+                          <th scope="col">Banner name</th>
+                          <th scope="col">Description</th>
+                          <th scope="col">Action</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for c in banner %}
+                      <tr>
+                          <td> {{c.id}} </td>
+                          <td>
+                              <div style="width: 50px;" class="overflow-hidden">
+                                  <img class="w-100" src=" {{c.banner_image.url}} " alt="">
+                              </div>
+                          </td>
+                          <td> {{c.banner}} </td>
+                          <td> {{c.caption}} </td>
+                          <td>
+                              <!-- Button trigger modal -->
+                              <button type="button" class="btn btn spacer c"
+                                  style="background-color: rgb(246, 250, 10); color:rgb(102, 94, 94)"
+                                  data-bs-toggle="modal" data-bs-target="#confirmEdit{{forloop.counter}}"><i class="ti ti-edit"></i>
+                              Edit
+                              </button>
+                              
 
-        </form>
-    </div>
+
+
+
+                              <!--Edit Modal -->
+                              <div class="modal fade" id="confirmEdit{{forloop.counter}}" tabindex="-1"
+                                  aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+
+                                      <div class="modal-content">
+                                          <div class="modal-header">
+                                              <h3 class="modal-title fs-5" id="exampleModalLabel">Edit Banner</h3>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                  aria-label="Close"></button>
+                                          </div>
+                                          <div class="modal-body">
+                                              <form method="POST" action="{% url 'edit_banner' c.id %}"
+                                                  enctype="multipart/form-data">
+                                                  {% csrf_token %}
+
+                                                  <div style="width: 100px;"
+                                                      class="card-header category-img position-relative overflow-hidden bg-transparent border p-0">
+                                                      <img class="img-fluid w-100" src="{{c.banner_image.url}} "
+                                                          alt="">
+                                                  </div>
+
+                                                  <div class="form-outline mb-4">
+                                                      <input name="image" type="file"
+                                                          accept="image/png, image/jpeg, image/svg"
+                                                          class="form-control" id="image-inputs" />
+                                                      <small id="image-errors"
+                                                          class="text-danger text-center"></small>
+                                                  </div>
+
+                                                  <div class="form-outline mb-4">
+                                                      <input name="banner_name" value="{{c.banner}}" type="text"
+                                                          id="form3Example3cg" class="form-control form-control-lg" />
+                                                      <label class="form-label" for="form3Example3cg">Category
+                                                          name</label>
+                                                  </div>
+                                                  <div class="form-outline mb-4">
+                                                      <input name="banner_discription"
+                                                          value="{{c.caption}}" type="text"
+                                                          id="form3Example3cg" class="form-control form-control-lg" />
+                                                      <label class="form-label"
+                                                          for="form3Example3cg">Description</label>
+                                                  </div>
+                                                  <div class="d-flex justify-content-center">
+                                                      <button type="submit"
+                                                          class="btn btn-primary btn-lg gradient-custom-4 w-50 text-light"
+                                                          type="submit">Save Changes</button>
+                                                  </div>
+
+                                              </form>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+
+                              <!-- Button trigger modal -->
+
+                              <button type="button" class="btn btn c"
+                                  style="background-color: rgb(239, 7, 54); color:rgb(255, 255, 255)"
+                                  data-bs-toggle="modal" data-bs-target="#exampleModal{{forloop.counter}}"><i class="ti ti-trash"></i>
+                                  Delete
+                              </button>
+                          </td>
+                          <!-- Modal  for delete the Category -->
+                          <div class="modal fade" id="exampleModal{{forloop.counter}}" tabindex="-1"
+                              aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h1 class="modal-title fs-5" id="exampleModalLabel">Delete</h1>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                              aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                          delete Banner {{c.banner }}
+                                      </div>
+                                      <div class="modal-footer">
+                                          <!-- one here -->
+                                          <form action="{% url 'delete_banner' c.id %}">
+
+                                              <button type="submit" class="btn btn"
+                                                  style="background-color: rgb(239, 7, 54); color:rgb(255, 255, 255)">Confirm</button>
+                                          </form>
+                                          <button type="button" class="btn btn-secondary"
+                                              data-bs-dismiss="modal">Close</button>
+                                      </div>
+                                  </div>
+                              </div>
+
+                          </div>
+
+                          </td>
+                      </tr>
+                      {% endfor %}
+
+                  </tbody>
+              </table>
+          </div>
+          <!-- table-responsive //end -->
+      </div>
+      <!-- card-body end// -->
+  </div>
+  <!-- card end// -->
+
+</section>
+
+<div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Add Banner</h1>
+              <br>
+
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+
+              <form action="{% url 'add_banners' %}" enctype="multipart/form-data" method="POST">
+                  {% csrf_token %}
+                  <div style="width: 100px;" class="">
+                  </div>
+                  <div class="form-outline mb-4">
+                      <label class="form-label" for="form3Example3cg">Name</label>
+                      <input name="banner_name" value="" type="text" id="form3Example3cg"
+                          class="form-control form-control-lg" />
+                  </div>
+
+                  <div class="form-outline mb-4">
+                      <label class="form-label" for="form3Example3cg">Image</label>
+                      <input name="banner_image" type="file" accept="image/png, image/jpeg, image/svg, image/avif, image/WEBP"
+                          class="form-control" id="image-input" />
+                      <small id="image-error" class="text-danger text-center"></small>
+                  </div>
+
+                  <div class="form-outline mb-4">
+                      <label class="form-label" for="form3Example3cg">Description</label>
+                      <input name="banner_discription" value="" type="text" id="form3Example3cg"
+                          class="form-control form-control-lg" />
+                  </div>
+
+                  <div class="d-flex justify-content-center">
+                      <button type="submit" class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light"
+                          type="submit">Save </button>
+                  </div>
+              </form>
+          </div>
+      </div>
   </div>
 </div>
-</div>
-<!--end of add Category modal-->
 
 
-
-<section class="section dashboard">
-  <div class="row">
-
-    <!-- Left side columns -->
-    <div class="col-lg-12">
-      <div class="row">
-
-        <!-- Recent Sales -->
-        <div class="col-12">
-          <div class="card recent-sales overflow-auto">
-            <div class="card-body">
-
-              <table class="table table-borderless datatable">
-                <thead>
-                  <tr>
-                    <th scope="col">id</th>
-                    <th scope="col">image</th>
-                    <th scope="col">Banner name</th>
-                    <th scope="col">Discription</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
-                
-                {% for c in banner %}
-
-                  <tr>
-                    <td>  {{c.id}}  </td>
-                    <td>
-                      <div style="width: 60px;" class="overflow-hidden">
-                        <img class="w-100" src=" {{c.banners_image.url}} " alt="">
-                      </div>
-                    </td>
-                    <td>  {{c.banner_name}} </td>
-                    <td>  {{c.banner_discription}} </td>
-                    <td>  {{c.category}} </td>
-                  </tr>
-                {% endfor %}                                     
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div><!-- End Recent Sales -->
-        </div>
-      </div>
-    </div>
-
-      {% if message %}
-      <div class="message"><a href="{%url 'banner'%}"><h1 class="font-weight-bold text-center pt-5" style="color: #403c3c52;font-weight: bold;">{{ message }}</h4> </a></div>
-     {% endif %}
 {% endblock  %}

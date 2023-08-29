@@ -117,6 +117,8 @@ def change_status(request):
             total_value == 4
         elif total_count == Cancelled:
             total_value == 5
+        elif total_count == Return:
+            total_value == 6
         else:
             total_value = 1
     except:
@@ -188,6 +190,8 @@ def return_order(request,return_id):
             total_value == 4
         elif total_count == Cancelled:
             total_value == 5
+        elif total_count == Return:
+            total_value = 6
         else:
             total_value = 1
     except:

@@ -24,7 +24,7 @@
                               <ul class="list">
                                 {% for i in cat %}
                                   <li>
-                                      <a href="{% url 'cat_detail' i.id %}">{{i.categories}}</a>
+                                      <a href="{% url 'cat_detail' i.id %}"><h5>{{i.categories}}</h5></a>
                                       <!--<span>(250)</span>-->
                                   </li>
                                   {% endfor %}
@@ -84,7 +84,7 @@
                                 <h5 class="card-title">{{ c.variant.product.product_name }}</h5>
 
                                 {% if c.variant.product.offer %}
-                                <h6><del style="color: brown;">${{ c.variant.product.product_price }} </del>  <span style="color:white;">--</span> <span style="color: black;">${{c.variant.product.product_price|sub:c.variant.product.offer.discount_amount}}</span>
+                                <h6><del style="color: brown;">₹{{ c.variant.product.product_price }} </del>  <span style="color:white;">--</span> <span style="color: black;">₹{{c.variant.product.product_price|sub:c.variant.product.offer.discount_amount}}</span>
                                 </h6>
                                 {% else %}
                                 <h6>₹{{ c.variant.product.product_price }}</h6>

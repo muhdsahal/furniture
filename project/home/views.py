@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from variant.models import VariantImage,Variant
 from django.template.loader import render_to_string
-
+from banner.models import banner
 
 
 
@@ -14,8 +14,10 @@ from django.template.loader import render_to_string
 # Create your views here.
 def home(request):  
     cate=Category.objects.all()
+    banners =banner.objects.all()
     context={
        'cate' :cate,
+       'banners':banners,
    }
 
     return render (request,'home.html',context)

@@ -91,7 +91,7 @@ justify-content: space-between;
                           <ul class="list">
                             {% for i in cate %}
                             <li>
-                                <a href="{% url 'cat_detail' i.id %}">{{i.categories}}</a>
+                                <a href="{% url 'cat_detail' i.id %}"><h5>{{i.categories}}</h5></a>
                                 <!--<span>(250)</span>-->
                             </li>
                             {% endfor %} 

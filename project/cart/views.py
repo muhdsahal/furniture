@@ -109,13 +109,14 @@ def update_cart(request):
         product_id = request.POST.get('variant_id')
         print(product_id,'rrrrrrrrrrrrrrrrrr')
         if (Cart.objects.filter(user=request.user, variant=product_id)):
-            prod_qty = request.POST.get('product_qty')
+            prod_qty = int (request.POST.get('product_qty'))
             cart = Cart.objects.get(variant=product_id, user=request.user)
             cartes = cart.variant.quantity
             if int(cartes) >= int(prod_qty):
                 cart.product_qty = prod_qty
                 if cart.variant.product.offer:
                     offer_price =prod_qty*cart.variant.product.offer.discount_amount
+                    print(offer_price,'000000000000000000')
                     single=prod_qty*cart.variant.product.product_price
                     single =single-offer_price
                     cart.single_total = single

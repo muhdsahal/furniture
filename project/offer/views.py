@@ -27,6 +27,7 @@ def add_offer(request):
             messages.error(request,'Cannot Blank Offer Name !')
             return redirect('offer')
         
+        
         if discount.strip()== '':
             messages.error(request,'Cannot Blank Discount !')
             return redirect('offer')
@@ -66,9 +67,18 @@ def edit_offer(request,offer_id):
         if offername is None or offername.strip() == '':
             messages.error(request, "Order name cannot be blank.")
             return redirect('offer')
+        
         if discount.strip() == '':
             messages.error(request, "Cannot blank Offer field")
             return redirect('offer')
+        
+        discount = int(discount)
+        if discount <= 0:
+            messages.error(request,'positive numbers only!')
+            return redirect('offer')
+        
+        
+        
         if Offer.objects.filter(offer_name=offername,is_available=True).exclude(id=offer_id).exists():
             messages.error(request,'Offer name already  exist!')
             return redirect ('offer')
@@ -117,8 +127,10 @@ def offer_search(request):
     if search is None or search.strip()=='':
         messages.error(request,'field cannot empty!.')
         return redirect('offer')
-    offer = Offer.objects.filter(Q(offer_name__icontains=search) | Q(discount_amount__icontains=search)
-                                 | Q(start_date__icontains=search) | Q(end_date__icontains=search)
+    offer = Offer.objects.filter(Q(offer_name__icontains=search) 
+                                 | Q(discount_amount__icontains=search)
+                                 | Q(start_date__icontains=search) 
+                                 | Q(end_date__icontains=search)
                                  ,is_available =True)
     context={'offer':offer}
 

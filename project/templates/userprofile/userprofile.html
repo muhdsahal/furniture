@@ -30,8 +30,9 @@
   }
 
 </style>
-
-<link rel="stylesheet" href="{% static 'dashboard/css/styles.min.css'%}"/>
+{% comment %} 
+<link rel="stylesheet" href="{% static 'cart/css/styles.min.css'%}"/> {% endcomment %}
+<br>
 <br>
 
 <!-- Breadcrumb Section Begin -->
@@ -49,6 +50,7 @@
 </div>
 </section> 
 <!-- Breadcrumb Section End -->
+
 <section>
     <div class="container py-5">  
       <div class="row">
@@ -67,7 +69,7 @@
                  {% endif %} 
              </div>
              <a  data-bs-toggle="modal" data-bs-target="#changedp">
-               <button class="btn_1" style="font-size: 10px;">Change</button> 
+               {% comment %} <button class="btn_1" style="font-size: 10px;">Change</button>  {% endcomment %}
             </a>
             <!--change profile Modal -->
             <div class="modal fade" id="changedp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -64,7 +64,7 @@
             {% comment %} <h2>₹{{  variant.0.variant.product.product_price }}</h2> {% endcomment %}
 
             {% if variant.0.variant.product.offer %}
-            <h2><del style="color: brown;">${{ variant.0.variant.product.product_price }} </del>  <span style="color:white;">--</span> <span style="color: black;">${{ variant.0.variant.product.product_price|sub:variant.0.variant.product.offer.discount_amount}}</span>
+            <h2><del style="color: rose;">₹{{ variant.0.variant.product.product_price }} </del>  <span style="color:white;">--</span> <span style="color: black;">₹{{ variant.0.variant.product.product_price|sub:variant.0.variant.product.offer.discount_amount}}</span>
               </h2>
               {% else %}
               <h2>₹{{ variant.0.variant.product.product_price }}</h2>
@@ -104,7 +104,7 @@
             <div class="card_area d-flex justify-content-between align-items-center">
               <div class="product_count">
                 <span class="inumber-decrement"><i class="ti-minus"></i></span>
-                <input class="input-number" id="quantityCheck" type="number" value="1" min="1" max="{{ variant.0.variant.quantity }}" />
+                <input  readonly class="input-number" id="quantityCheck" type="number" value="1" min="1" max="{{ variant.0.variant.quantity }}" />
 
                 <span class="number-increment"><i class="ti-plus"></i></span>
               </div>

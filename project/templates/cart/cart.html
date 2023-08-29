@@ -3,8 +3,8 @@
 {% block body %}
 {% load static %}
 {% load mathfilters %}
-<link rel="stylesheet" type="text/css" href="{%static 'single/css/util.css'%}">
-<link rel="stylesheet" type="text/css" href="{%static 'single/css/main.css'%}">
+{% comment %} <link rel="stylesheet" type="text/css" href="{%static 'single/css/util.css'%}">
+<link rel="stylesheet" type="text/css" href="{%static 'single/css/main.css'%}"> {% endcomment %}
 <!-- ajax -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs/build/css/alertify.min.css"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs/build/css/themes/default.min.css"/>
@@ -72,14 +72,14 @@
                             
     
                                             
-                                            <div class="input-group quantity changeQuantity" data-productid="{{item.variant.id}}" style="width: 100px;">
+                                            <div class="input-group quantity changeQuantity" data-productid="{{item.variant.id}}" min="1" max="{{item.variant.quantity}}" style="width: 100px;">
                                                 <div class="input-group-btn">
                                                     <button data-price="{{item.variant.product.product_name }}"  class="btn btn-sm border border-secondary btn-minus " >
                                                         <i class="fa fa-minus"></i>
                                                     </button>
                                                 </div>
                                                 
-                                                <input readonly id="pro_qty{{item.variant.id}}" type="text" class="form-control form-control-sm  text-center" value="{{item.product_qty}}">
+                                                <input readonly id="pro_qty{{item.variant.id}}"  type="text" class="form-control form-control-sm  text-center" value="{{item.product_qty}}" >
                                                 
                                                 <div class="input-group-btn sahal">
                                                     <button data-price="{{item.variant.product.product_price}}"  class="btn btn-sm border border-secondary btn-plus ">

@@ -22,10 +22,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     # your URL patterns here
+    path('',include('home.urls')),
     path('admin/', admin.site.urls),
     path('user/',include('user.urls')),
     path('adminside/',include('adminside.urls')),
-    path('',include('home.urls')),
     path('categories/',include('categories.urls')),
     path('products/',include('products.urls')),
     path('userprofile/',include('userprofile.urls')),
@@ -36,6 +36,7 @@ urlpatterns = [
     path('offer/',include('offer.urls')),
     path('coupon/',include('coupon.urls')),
     path('order/',include('order.urls')),
+    path('banner/',include('banner.urls')),
 
 
     
