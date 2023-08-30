@@ -341,7 +341,7 @@
                                   {% for item in cartitems %}
                                   <li>
                                       <div class="product-details">
-                                          <img src="{{ item.variation.image.url }}" height="40px" alt="">
+                                          {% comment %} <img src="{{ item.variation.image.url }}" height="40px" alt=""> {% endcomment %}
                                           <div class="product-info">
                                               <h5 class="text-left">{{ item.variant.product.product_name }}</h5>
                                               <span>
@@ -353,21 +353,29 @@
                                                         <span  style="color: black;">₹{{ item.variant.product.product_price|sub:item.variant.product.offer.discount_amount }}</span>
                                                   </h5>
                                                   {% else %}
-                                                  {{ item.variant.product.product_price }}
+                                                  <h5 class="text-right">₹{{ item.variant.product.product_price }}</h5>
                                                   {% endif %}
                                               </span>
                                           </div>
                                       </div>
                                   </li>
-                                  {% endfor %}
                                   <li>
                                       <h5 class="text-left">Subtotal</h5>
-                                      <h5 class="text-right" ><span id="sub_total">₹ {{ total_price|floatformat:2 }}</span></h5>
+                                      <h5 class="text-right" ><span id="sub_total">₹ {{ total_price }}</span></h5>
                                   </li>
-                                  {% if request.session.coupon_session %}
+                                  <li>
+                                    <h5 class="text-left">tax</h5>
+                                    <h5 class="text-right" ><span >₹ {{ tax }}</span></h5>
+                                </li>
+                                  {% endfor %}
+                                  {% if coupon  %}
                                   <li>
                                       <h5 class="text-left">Discount</h5>
-                                      <h5 class="text-right"><span id="discount">₹ {{ request.session.coupon_session }}</span></h5>
+                                      <h5 class="text-right"><span id="discount">₹ {{coupon}}</span></h5>
+                                  </li>
+                                  <li>
+                                    <h5 class="text-left">Total</h5>
+                                      <span id="grand_total"> <h5 class="text-right">₹{{ grand_total|sub:coupon  }}</h5></span>
                                   </li>
                                   {% else %}
                                   <li>

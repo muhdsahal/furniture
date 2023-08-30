@@ -72,8 +72,10 @@
                                     <tr>
                                         <td>{{ order.id }}</td>
                                         <td>{{ order.tracking_no }}</td>
-                                        <td>${{ order.total_price }}</td>
+                                        <td>₹ {{ order.total_price }}</td>
+
                                         <td>{{ order.order_status }}</td>
+                                        
                                         <td>{{ order.created_at }}</td>
                                         {% if sales_report.start_date and sales_report.end_date %}
                                         <td>

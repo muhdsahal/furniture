@@ -2,6 +2,7 @@
 {% block title %}Order{% endblock %}
 {% load static %}
 {% block dashbody %}
+
 <div class="container-fluid">
 
 
@@ -89,7 +90,7 @@
                                     <span class="badge rounded-pill alert-warning">
                                         {{ i.order_status.order_status }}</span>
                                     {% elif i.order_status.order_status == 'Shipped' %}
-                                    <span class="badge rounded-pill alert-primary">
+                                    <span class="badge rounded-pill alert-danger">
                                         {{ i.order_status.order_status }}</span>
                                     {% elif i.order_status.order_status == 'Delivered' %}
                                     <span class="badge rounded-pill alert-success">

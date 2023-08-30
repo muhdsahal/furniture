@@ -2,6 +2,7 @@ from django.db import models
 from variant.models import Variant
 from userprofile.models import Address
 from products.models import Product
+from coupon.models import Coupon
 from django.contrib.auth.models  import User
 from datetime import timedelta,timezone
 
@@ -29,6 +30,7 @@ class Order(models.Model):
     created_at=models.DateTimeField(auto_now_add=True)
     update_at =models.DateTimeField(auto_now=True)
     order_status =models.ForeignKey(Orderstatus,on_delete=models.CASCADE ,null=True)
+    coupon = models.ForeignKey(Coupon,on_delete=models.CASCADE,null=True )
     return_total_price =models.IntegerField(null=True)
 
     @property

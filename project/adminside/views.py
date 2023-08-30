@@ -206,7 +206,7 @@ def sales_report(request):
         'Cancelled': orders.filter(order_status=5).count(),
         'Return': orders.filter(order_status=6).count(),
     }
-
+    print(sales_by_status,'oooooooooooooooooooooooooooooooooooooo')
     sales_report = {
         'start_date': start_date.strftime('%Y-%m-%d') if start_date else '',
         'end_date': end_date.strftime('%Y-%m-%d') if end_date else '',

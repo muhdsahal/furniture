@@ -91,10 +91,13 @@ def change_status(request):
 
     orderitems =OrderItem.objects.get(variant =order_variant,id= orderitem_id)
     item_status_instance =Itemstatus.objects.get(id=order_status)
-
+    
     orderitems.orderitem_status =item_status_instance
     orderitems.save()
     view_id =orderitems.order.id
+
+
+
 
     try:
         all_order_item =OrderItem.objects.filter(order=view_id)
@@ -110,15 +113,15 @@ def change_status(request):
         if total_count == Pending:
             total_value = 1
         elif total_count == Processing:
-            total_value == 2
+            total_value =2
         elif total_count == Shipped:
-            total_value == 3
+            total_value = 3
         elif total_count == Delivered:
-            total_value == 4
+            total_value = 4
         elif total_count == Cancelled:
-            total_value == 5
+            total_value = 5
         elif total_count == Return:
-            total_value == 6
+            total_value = 6
         else:
             total_value = 1
     except:
@@ -136,18 +139,19 @@ def change_status(request):
 def return_order(request,return_id):
     try:
         orderitem_id = OrderItem.objects.get(id= return_id)
+        
         view_id  = orderitem_id.order.id
     except:
-        return redirect ('userprofie')
+        return redirect ('profile')
     if request.method == 'POST':
         options =request.POST.get('options')
         reason = request.POST.get('reason')
 
         
-    
-    if options.strip == '':
-        messages.error(request,'enter your options !...')
-        return redirect ('order_view_user',view_id)
+    if options is None or options.strip() == '':
+        messages.error(request, 'Enter your options!')
+        return redirect('order_view_user', view_id)
+
     if reason.strip == '':
         messages.error(request,'enter your reasons !...')
         return redirect ('order_view_user',view_id)
@@ -165,7 +169,8 @@ def return_order(request,return_id):
     variant.save()
 
     order_item_id = Itemstatus.objects.get(id=6)
-    order_item_id.orderitem_status= order_item_id
+    print(order_item_id,'kkkkkkkkkkkkkkkkkkkkkkkkk')
+    orderitem_id.orderitem_status= order_item_id
     total_p = orderitem_id.price
     orderitem_id.save()
 
@@ -183,13 +188,13 @@ def return_order(request,return_id):
         if total_count == Pending:
             total_value = 1
         elif total_count == Processing:
-            total_value == 2
+            total_value = 2
         elif total_count == Shipped:
-            total_value == 3
+            total_value = 3
         elif total_count == Delivered:
-            total_value == 4
+            total_value = 4
         elif total_count == Cancelled:
-            total_value == 5
+            total_value = 5
         elif total_count == Return:
             total_value = 6
         else:
@@ -199,7 +204,7 @@ def return_order(request,return_id):
     
     change_all_items_status = Order.objects.get(id = view_id)
     item_status_instance_all = Orderstatus.objects.get(id=total_value)
-    change_all_items_status.order_status = item_status_instance_all
+    change_all_items_status.order_status=item_status_instance_all
     change_all_items_status.save()
 
     returnorder = Orderreturn.objects.create(user= request.user,order = order_id,
@@ -232,10 +237,15 @@ def return_order(request,return_id):
         wallet = Wallet.objects.get(user=request.user)
         wallet.wallet += total_price
         wallet.save()
+        messages.success(request,'your order return successfully!..')
+
+       
+
     except Wallet.DoesNotExist:
         wallet = Wallet.objects.create(user=request.user,wallet=total_price)
         orderitem_id.save()
         messages.success(request,'your order return successfully!..')
+       
         return redirect('order_view_user',view_id)
     return redirect('order_view_user',view_id)
         

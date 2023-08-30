@@ -2,7 +2,11 @@
 {% block title %}User_Page{% endblock  %}
 {% block body %}
 {% load static %}
-
+<style>
+  .mdfy{
+    margin-left: 30px;
+  }
+</style>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 <section class="confirmation_part padding_top cartdata ">
@@ -204,17 +208,20 @@
             </td>
       
                <td>
-                  {% if order_item.status == 'Delivered' %}
-                   {% if date %}
+                  {% if i.orderitem_status.item_status == 'Delivered' %}
+                  
                   <!-- Button trigger modal -->
                   {% comment %} <a type="button" data-bs-toggle="modal" data-bs-target="#editprofile">
                     <button class="btn btn-outline-dark">Return</button>
                   </a> {% endcomment %}
-                  <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
-                  data-bs-target="#exampleModals{{ forloop.counter }}">Return</button>
-                  <!--Reason Modal -->
-                  <div class="modal fade" id="editprofile" tabindex="-1" aria-labelledby="exampleModalLabel{{ forloop.counter }}"
-                    aria-hidden="true">
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                          data-bs-target="#examplereturn{{ forloop.counter }}">Return</button>
+                 
+                  <div class="modal fade" id="examplereturn{{ forloop.counter }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ forloop.counter }}"
+                      aria-hidden="true">
+                      
+
+
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
@@ -226,14 +233,27 @@
                         <div class="modal-body">
                           <form action="{% url 'return_order' i.id %}" enctype="multipart/form-data" method="POST">
                             {% csrf_token %}
-                            <div class="form-outline mb-4">
-                              <select class="form-select mb-1" aria-label="Default select example" name="options">
-                                <option value="damaged_roduct">Damaged Product</option>
-                                <option value="itemwrong">Item Wrong</option>
-                                <option value="nothing">Nothing</option>
-                              </select>
-                              <label class="form-label" for="form3Example3cg">Choose issue</label>
+                            <h5>Choose your reason</h5>
+                            <br>
+                            <div class="mdfy">
+                              <div class="form-outline mb-4">
+                                <input type="radio" class="form-check-input" name="options" id="damaged_product" value="damaged_product">
+                                <label class="form-check-label" for="damaged_product">Damaged Product</label>
+                              </div>
+                              
+                              <div class="form-outline mb-4">
+                                <input type="radio" class="form-check-input" name="options" id="item_wrong" value="item_wrong">
+                                <label class="form-check-label" for="item_wrong">Item Wrong</label>
+                              </div>
+                              
+                              <div class="form-outline mb-4">
+                                <input type="radio" class="form-check-input" name="options" id="nothing" value="nothing">
+                                <label class="form-check-label" for="nothing">Other</label>
+                              </div>
                             </div>
+
+                           
+                            
                             <div class="form-outline mb-4">
                               <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="reason"></textarea>
                               <label class="form-label" for="form3Example3cg">Reason</label>
@@ -248,8 +268,7 @@
                     </div>
                   </div>
                   </div>
-                  {% else %}
-                  {% endif %}
+                  
 
                   {% elif i.orderitem_status.item_status == 'Cancelled' or i.orderitem_status.item_status == 'Return' %}
                   {% else %}

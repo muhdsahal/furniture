@@ -86,7 +86,7 @@
 
                             <tr>
                                 <td><strong>Total price</strong></td>
-                                <td>:${{orderview.total_price}}</td>
+                                <td>:₹{{orderview.total_price}}</td>
                             </tr>
                             <tr>
                                 <td><strong>Payment method</strong></td>
@@ -109,12 +109,33 @@
                             </tr>
                             <tr>
                                 <td><strong>Ordered date</strong></td>
-                                <td>:{{orderview.created_at}}</td>
+                                <td> : {{orderview.created_at}}</td>
                             </tr>
                             <tr></tr>
                             <tr>
                                 <td><strong>Ordder status</strong></td>
-                                <td>:{{orderview.order_status.order_status}}</td>
+                                
+                                {% comment %} <td> : {{orderview.order_status}} {% endcomment %}
+                            <td>
+                            {% for k in products %}
+                            {% if k.orderitem_status.item_status == 'Pending' %}
+                            <span class="badge rounded-pill bg-secondary status-badge">
+                                {{ k.orderitem_status.item_status }}</span>
+                            {% elif k.orderitem_status.item_status == 'Processing' %}
+                            <span class="badge rounded-pill bg-warning status-badge">
+                                {{ k.orderitem_status.item_status }}</span>
+                            {% elif k.orderitem_status.item_status == 'Shipped' %}
+                            <span class="badge rounded-pill bg-primary status-badge">
+                                {{ k.orderitem_status.item_status }}</span>
+                            {% elif k.orderitem_status.item_status == 'Delivered' %}
+                            <span class="badge rounded-pill bg-success status-badge">
+                                {{ k.orderitem_status.item_status }}</span>
+                            {% elif k.orderitem_status.item_status == 'Cancelled' or k.orderitem_status.item_status == 'Return' %}
+                            <span class="badge rounded-pill bg-danger status-badge">
+                                {{k.orderitem_status.item_status }}</span>
+                            {% endif %}
+                            {% endfor %}
+                            </td>
                             </tr>
                             <br>
                             

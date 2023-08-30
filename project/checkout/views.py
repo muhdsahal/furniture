@@ -57,6 +57,8 @@ def checkout(request):
                 if grand_total >= check_coupons.min_price:
                     request.session['coupon_session'] = check_coupons.coupon_discount_amount
                     request.session['coupon_id'] = check_coupons.id
+                    coupon=check_coupons.coupon_discount_amount
+                    print(coupon,'yyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
                     messages.success(request, 'This coupon added successfully!')
                 else:
                     coupon = False
@@ -80,15 +82,16 @@ def checkout(request):
                 'offer' :offer_price_total,
                 'coupon_checkout':coupon_checkout,
                 'cartitems': cartitems,
-                'total-price': total_price,
+                'total_price': total_price,
                 'grand_total': grand_total,
                 'address' : address,
                 'cart_count':cart_count,
-                'coupon' :cart_count,
+                'coupon' :coupon,
                 'wishlist_count':wishlist_count,
+                'tax':tax,
             }
             
-           
+            return render(request,'checkout/checkout.html',context)
         except:
             messages.error(request, 'This coupon not valid!')
             return redirect('checkout')
@@ -142,7 +145,8 @@ def checkout(request):
         'address': address,
         'wishlist_count':wishlist_count,
         'cart_count' :cart_count,  
-        'coupon':coupon
+        'coupon':coupon,
+        'tax':tax,
     }
     if total_price==0:
        return redirect('home')
