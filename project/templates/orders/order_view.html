@@ -185,8 +185,12 @@
                 <h5 style="font-weight: bold;">{% if variant.products.product.offer %} <del class="text-danger"> {{orderview.total_price}}</del> {{order_item.product.get_offer}}{% else %} {{variation.product.product_price}} {% endif %}</h5>
 
               </td> 
+              
               <td>{{ i.variant.color }}</td>
               <td>{{ i.quantity }}</td>
+              
+              
+              
               <td class="cart__price total">{{ i.variant.product.product_price}}</td>
               <td>
                 {% if i.orderitem_status.item_status == 'Pending' %}

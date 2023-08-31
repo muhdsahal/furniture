@@ -28,7 +28,6 @@ def checkout(request):
             return redirect('checkout')
         try:
             check_coupons =Coupon.objects.filter(coupon_code=coupon).first()
-            print(check_coupons.coupon_discount_amount,'999999999999999999999')
             cartitems= Cart.objects.filter(user=request.user)
             total_price = 0
             grand_total = 0
@@ -45,8 +44,7 @@ def checkout(request):
                     total_price = total_price - offer_price_total
                     all_offer = all_offer + offer_price_total
                     tax = total_price * 0.18
-                    print(total_price,'000000000000000000000')
-                    
+
                 else:
                     product_price = item.variant.product.product_price
                     total_price += product_price * item.product_qty
@@ -58,7 +56,6 @@ def checkout(request):
                     request.session['coupon_session'] = check_coupons.coupon_discount_amount
                     request.session['coupon_id'] = check_coupons.id
                     coupon=check_coupons.coupon_discount_amount
-                    print(coupon,'yyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
                     messages.success(request, 'This coupon added successfully!')
                 else:
                     coupon = False
@@ -149,7 +146,7 @@ def checkout(request):
         'tax':tax,
     }
     if total_price==0:
-       return redirect('home')
+       return redirect('orders')
     else:
            
         return render(request,'checkout/checkout.html',context)
@@ -232,10 +229,10 @@ def placeorder(request):
 
             return JsonResponse({'status': "Your order has been placed successfully"})
            
-    return redirect('checkout')
+    return redirect ('orders')
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
-@login_required(login_url='signin')
+@login_required(login_url='user_login1')
 def addcheckoutaddr(request):
     if request.method == 'POST':
         address = Address()
