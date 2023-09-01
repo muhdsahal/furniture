@@ -228,8 +228,9 @@ def changepassword(request):
 
 def deleteaddress(request,delete_id):
     address=Address.objects.get(id=delete_id)
-    address.delete()
-    messages.success(request,'Address Deleted Successfully!')
+    address.is_available = False
+    address.save()
+    messages.success(request, 'Address Deleted Successfully!')
     return redirect('profile')
 
 def order_view_user(request,view_id):

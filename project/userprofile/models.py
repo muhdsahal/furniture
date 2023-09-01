@@ -13,6 +13,8 @@ class Address(models.Model):
     city=models.CharField(max_length=50)
     pincode=models.CharField(max_length=50)
     order_note=models.CharField(max_length=50)
+    is_available =models.BooleanField(null=True,default=True)
+
     def __str__(self):
         return f"{self.id}"
 

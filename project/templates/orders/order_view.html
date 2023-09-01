@@ -2,6 +2,7 @@
 {% block title %}User_Page{% endblock  %}
 {% block body %}
 {% load static %}
+{% load mathfilters %}
 <style>
   .mdfy{
     margin-left: 30px;
@@ -146,7 +147,9 @@
               <h5 class="card-text">Tracking Id<span> : {{orderview.tracking_no}}</span></p>
               <h5 class="card-text">Order Date<span> : {{orderview.created_at}}</span></p>
               <h5 class="card-text">Payment Method<span> : {{orderview.payment_mode}}</span></p>
-              
+              <h5 class="card-text">Tax<span> : {{orderview.total_price |mul:0.18 |floatformat:2 }}</span></p>
+              <h5 class="card-text">Coupon amount<span> : {{ orderview.coupon_amount  }}</span></p>
+
             </div>
           </div>
         </div>

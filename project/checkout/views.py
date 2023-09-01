@@ -22,13 +22,12 @@ def checkout(request):
     
     if request.method == 'POST':
         coupon = request.POST.get('coupon')
-        print(coupon,'444444444444444444444444')
         if coupon is None:
             messages.error(request, 'coupon field is cannot empty!')
             return redirect('checkout')
         try:
             check_coupons =Coupon.objects.filter(coupon_code=coupon).first()
-            cartitems= Cart.objects.filter(user=request.user)
+            cartitems = Cart.objects.filter(user=request.user)
             total_price = 0
             grand_total = 0
             offer_price = 0
@@ -53,9 +52,12 @@ def checkout(request):
             grand_total=total_price + tax
             if coupon:                                             
                 if grand_total >= check_coupons.min_price:
+                    coupon_amount = request.POST.get('coupon_amount')
                     request.session['coupon_session'] = check_coupons.coupon_discount_amount
                     request.session['coupon_id'] = check_coupons.id
                     coupon=check_coupons.coupon_discount_amount
+                    coupon_amount = coupon
+                    print(coupon_amount,'coupon_amountyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
                     messages.success(request, 'This coupon added successfully!')
                 else:
                     coupon = False
@@ -86,18 +88,14 @@ def checkout(request):
                 'coupon' :coupon,
                 'wishlist_count':wishlist_count,
                 'tax':tax,
+                'coupon_amount':coupon_amount,
             }
             
             return render(request,'checkout/checkout.html',context)
         except:
             messages.error(request, 'This coupon not valid!')
             return redirect('checkout')
-    # if total_price == 0 :
-    #      redirect ('home')
-    # else:
-    #     return render(request,'checkout/checkout.html',context)
             
-        
     cartitems = Cart.objects.filter(user=request.user)
     total_price = 0
     grand_total = 0
@@ -105,6 +103,7 @@ def checkout(request):
     tax = 0
     offer_price_total= 0
     all_offer = 0
+    
     for item in cartitems:
         if item.variant.product.offer:
             product_price = item.variant.product.product_price
@@ -127,6 +126,7 @@ def checkout(request):
     wishlist_count =Wishlist.objects.filter(user=request.user).count()
     coupon_checkout =Coupon.objects.filter(is_available=True)
     coupon = False
+
     if offer_price_total ==0:
         offer_price_total =False
     else:
@@ -213,7 +213,8 @@ def placeorder(request):
                 order=neworder,
                 variant=item.variant,
                 price=item.variant.product.product_price,
-                quantity=item.product_qty
+                coupon_amount = coupon,
+                quantity=item.product_qty,
             )
 
             product=Variant.objects.filter(id=item.variant.id).first()
@@ -223,7 +224,7 @@ def placeorder(request):
             cart_items.delete()
 
         payment_mode = request.POST.get('payment_method')
-        if payment_mode == 'cod' or payment_mode == 'razorpay' :
+        if payment_mode == 'cod' or payment_mode == 'razorpay':
             del request.session['coupon_session']
             del request.session['coupon_id']
 
@@ -258,7 +259,9 @@ def addcheckoutaddr(request):
 @login_required(login_url='signin')
 def deleteaddresscheckout(request,delete_id):
     address = Address.objects.filter(id=delete_id)
-    address.delete()
+    address.is_avilable = False
+    address.save()
+    messages.error(request,'address deleted successfully!.')
     return redirect('placeorder')
 
 
@@ -282,7 +285,6 @@ def razarpaycheck(request):
             total_price = total_price + item.variant.product.product_price * item.product_qty
             tax = total_price * 0.18
         session_coupon=request.session.get('coupon_session')
-        print(session_coupon,'ooooooooooooorpppppppppprrrrrrrr')
         total_price = total_price - session_coupon 
         total_price += tax
 

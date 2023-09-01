@@ -46,9 +46,13 @@ class OrderItem(models.Model):
         
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     variant = models.ForeignKey(Variant,on_delete=models.CASCADE,null=True)
-    price=models.FloatField(null=True)
-    quantity=models.IntegerField(null=False)
-    orderitem_status =models.ForeignKey(Itemstatus, on_delete=models.CASCADE ,null=True,default=1)
+    price= models.FloatField(null=True)
+    tax = models.FloatField(null=True)
+    offer_amount = models.FloatField(null=True)
+    coupon_amount = models.FloatField(null=True)
+    grand_total = models.FloatField(null=True)
+    quantity= models.IntegerField(null=False)
+    orderitem_status = models.ForeignKey(Itemstatus, on_delete=models.CASCADE ,null=True,default=1)
     ORDER_STATUSES  = [
         ('pending','pending'),
         ('Processing','Processing'),
