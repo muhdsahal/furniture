@@ -5,6 +5,7 @@ from checkout.models import Order,OrderItem,Orderstatus,Itemstatus
 from .models import Order_cancelled,Orderreturn
 from userprofile.models import Address,Wallet
 from variant.models import Variant,VariantImage
+from coupon.models import Coupon
 from cart.models import Cart
 from django.contrib import messages
 from django.db.models import Q
@@ -14,6 +15,7 @@ def orders(request):
     user = request.user
     orders = Order.objects.filter(user=user).order_by('-created_at')
     orderitems = OrderItem.objects.filter(order__in=orders).order_by('-order__created_at')
+
 
     context = {
         'orders': orders,
@@ -40,6 +42,7 @@ def order_view_user(request,view_id):
         variant_ids =[product.variant.id for product in products]
         image = VariantImage.objects.filter(variant__id__in=variant_ids).distinct('variant__color')
         item_status_o = Itemstatus.objects.all()
+       
 
         
         context = {

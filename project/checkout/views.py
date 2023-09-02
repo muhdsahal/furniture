@@ -187,16 +187,18 @@ def placeorder(request):
                 product_price = item.variant.product.product_price
                 cart_total_price += product_price * item.product_qty 
                 offer_total_price =item.variant.product.offer.discount_amount
-                offer_total_price = offer_total_price*item.product_qty
+                offer_total_price = offer_total_price*item.product_qtyj
                 cart_total_price = cart_total_price - offer_total_price
+                tax = cart_total_price * 0.18
             else:
                 product_price = item.variant.product.product_price
                 cart_total_price += product_price * item.product_qty
-        
+                tax = cart_total_price * 0.18
+        neworder.tax = int(tax)
         session_coupon=request.session.get('coupon_session')
         cart_total_price = cart_total_price - session_coupon
-        neworder.total_price = cart_total_price
-    
+        neworder.total_price = cart_total_price + tax
+        print(cart_total_price,'rrrrrrrrrrrrrrrrrrrrrrr')
         trackno = random.randint(1111111, 9999999)
         while Order.objects.filter(tracking_no=trackno).exists():
             trackno = random.randint(1111111, 9999999)
@@ -209,20 +211,22 @@ def placeorder(request):
         neworder.save()
 
         for item in cart_items:
+            
             OrderItem.objects.create(
                 order=neworder,
                 variant=item.variant,
                 price=item.variant.product.product_price,
-                coupon_amount = coupon,
+                offer_amount = item.variant.product.offer,
                 quantity=item.product_qty,
+                
             )
-
+            
             product=Variant.objects.filter(id=item.variant.id).first()
             product.quantity -= item.product_qty
             product.save()
             # Delete the cart items after the order is placed 
             cart_items.delete()
-
+        
         payment_mode = request.POST.get('payment_method')
         if payment_mode == 'cod' or payment_mode == 'razorpay':
             del request.session['coupon_session']
@@ -256,7 +260,7 @@ def addcheckoutaddr(request):
     return redirect('checkout')
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
-@login_required(login_url='signin')
+@login_required(login_url='user_login1')
 def deleteaddresscheckout(request,delete_id):
     address = Address.objects.filter(id=delete_id)
     address.is_avilable = False

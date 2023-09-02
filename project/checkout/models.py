@@ -1,4 +1,5 @@
 from django.db import models
+from offer.models import Offer
 from variant.models import Variant
 from userprofile.models import Address
 from products.models import Product
@@ -32,6 +33,7 @@ class Order(models.Model):
     order_status =models.ForeignKey(Orderstatus,on_delete=models.CASCADE ,null=True)
     coupon = models.ForeignKey(Coupon,on_delete=models.CASCADE,null=True )
     return_total_price =models.IntegerField(null=True)
+    tax = models.IntegerField(null=True)
 
     @property
     def expected_delivery(self):
@@ -47,9 +49,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     variant = models.ForeignKey(Variant,on_delete=models.CASCADE,null=True)
     price= models.FloatField(null=True)
-    tax = models.FloatField(null=True)
-    offer_amount = models.FloatField(null=True)
-    coupon_amount = models.FloatField(null=True)
+    offer_amount = models.ForeignKey(Offer,on_delete=models.CASCADE,null=True)
     grand_total = models.FloatField(null=True)
     quantity= models.IntegerField(null=False)
     orderitem_status = models.ForeignKey(Itemstatus, on_delete=models.CASCADE ,null=True,default=1)

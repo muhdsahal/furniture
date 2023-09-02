@@ -147,8 +147,20 @@
               <h5 class="card-text">Tracking Id<span> : {{orderview.tracking_no}}</span></p>
               <h5 class="card-text">Order Date<span> : {{orderview.created_at}}</span></p>
               <h5 class="card-text">Payment Method<span> : {{orderview.payment_mode}}</span></p>
-              <h5 class="card-text">Tax<span> : {{orderview.total_price |mul:0.18 |floatformat:2 }}</span></p>
-              <h5 class="card-text">Coupon amount<span> : {{ orderview.coupon_amount  }}</span></p>
+              <h5 class="card-text">Tax<span> : {{orderview.tax }}</span></p>
+                {% if orderview.coupon.coupon_discount_amount is null %}
+              <h5 class="card-text">Coupon amount<span> : 0</span></p>
+                {% else %}
+              <h5 class="card-text">Coupon amount<span> : {{ orderview.coupon.coupon_discount_amount  }}</span></p>
+                {% endif %}
+                {% for i in products  %}
+                {% if i.offer_amount.discount_amount is null %}
+                <h5 class="card-text">Discount amount<span> : 0 </span></p>
+                  {% else %}
+              <h5 class="card-text">Discount amount<span> : {{ i.offer_amount.discount_amount|mul:i.quantity  }}</span></p>
+                {% endif %}
+                {% endfor %}
+              <h5 class="card-text">Grand Total<span> :{{orderview.total_price}} </span></p>
 
             </div>
           </div>
@@ -160,10 +172,10 @@
           <thead>
             <tr>
               <th>Product</th>
-              <th>Name & Price</th>
+              <th>Name</th>
               <th>Color</th>
               <th>Quantity</th>
-              <th>Total</th>
+              <th>Price</th>
               <th>Status</th>
               <th></th>
               <th></th>
